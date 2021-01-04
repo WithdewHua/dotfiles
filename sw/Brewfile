@@ -29,14 +29,12 @@ brew "mas"
 brew "neofetch"
 # User interface to the TELNET protocol
 brew "telnet"
-# Programatically correct mistyped console commands
+# Programmatically correct mistyped console commands
 brew "thefuck"
 # Display directories as trees (with optional color/HTML output)
 brew "tree"
 # Internet file retriever
 brew "wget"
-# Tools for the WireGuard secure network tunnel
-brew "wireguard-tools"
 # General-purpose lossless data-compression library
 brew "zlib"
 cask "electerm"
@@ -45,7 +43,6 @@ mas "AutoSwitchInput", id: 1470350547
 mas "Bitwarden", id: 1352778147
 mas "Evernote Web Clipper", id: 1481669779
 mas "FastClip", id: 1476085650
-mas "Hidden Bar", id: 1452453066
 mas "iMovie", id: 408981434
 mas "Keynote", id: 409183694
 mas "Microsoft Remote Desktop", id: 1295203466

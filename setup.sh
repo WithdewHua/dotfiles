@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 #
 # withdewhua
 # usage: ./setup.sh
@@ -18,7 +18,6 @@ echo "# ========================================================================
 
 OH_MY_ZSH=$HOME"/.oh-my-zsh"
 ZSH_CUSTOM=$OH_MY_ZSH"/custom"
-PURE_PROMPT=$HOME"/.zsh/pure"
 POETRY_PLUGIN=$ZSH_CUSTOM"/plugins/poetry"
 
 IS_BASH=0
