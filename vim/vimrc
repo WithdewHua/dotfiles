@@ -1,0 +1,2 @@
+set nu  " Set the line number
+syntax on  " Syntax highlighting

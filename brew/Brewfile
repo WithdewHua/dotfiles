@@ -1,0 +1,56 @@
+tap "homebrew/bundle"
+tap "homebrew/cask", "https://mirrors.tuna.tsinghua.edu.cn/git/homebrew/homebrew-cask.git"
+tap "homebrew/core", "https://mirrors.tuna.tsinghua.edu.cn/git/homebrew/homebrew-core.git"
+# Freely available high-quality data compressor
+brew "bzip2"
+# GNU compiler collection
+brew "gcc"
+# Cryptography and SSL/TLS Toolkit
+brew "openssl@1.1"
+# Library for command-line editing
+brew "readline"
+# Command-line interface for SQLite
+brew "sqlite"
+# General-purpose data compression with high compression ratio
+brew "xz"
+# Core application library for C
+brew "glib"
+# Improved top (interactive process viewer)
+brew "htop"
+# Interpreted, interactive, object-oriented programming language
+brew "python@3.8"
+# Tools and libraries to manipulate images in many formats
+brew "imagemagick"
+# Tool to measure maximum TCP and UDP bandwidth
+brew "iperf"
+# Mac App Store command-line interface
+brew "mas"
+# Fast, highly customisable system info script
+brew "neofetch"
+# User interface to the TELNET protocol
+brew "telnet"
+# Programatically correct mistyped console commands
+brew "thefuck"
+# Display directories as trees (with optional color/HTML output)
+brew "tree"
+# Internet file retriever
+brew "wget"
+# Tools for the WireGuard secure network tunnel
+brew "wireguard-tools"
+# General-purpose lossless data-compression library
+brew "zlib"
+cask "electerm"
+cask "vnote"
+mas "AutoSwitchInput", id: 1470350547
+mas "Bitwarden", id: 1352778147
+mas "Evernote Web Clipper", id: 1481669779
+mas "FastClip", id: 1476085650
+mas "Hidden Bar", id: 1452453066
+mas "iMovie", id: 408981434
+mas "Keynote", id: 409183694
+mas "Microsoft Remote Desktop", id: 1295203466
+mas "Numbers", id: 409203825
+mas "Pages", id: 409201541
+mas "Spark", id: 1176895641
+mas "WeChat", id: 836500024
+mas "WireGuard", id: 1451685025

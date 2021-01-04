@@ -1,0 +1,41 @@
+# =============================================================================================== #
+#                                                                                                 #
+#  __      __.__  __  .__         .___              ___ ___              ___________              #
+# /  \    /  \__|/  |_|  |__    __| _/______  _  __/   |   \ __ _______  \_   _____/ _______  __  #
+# \   \/\/   /  \   __\  |  \  / __ |/ __ \ \/ \/ /    ~    \  |  \__  \  |    __)_ /    \  \/ /  #
+#  \        /|  ||  | |   Y  \/ /_/ \  ___/\     /\    Y    /  |  // __ \_|        \   |  \   /   #
+#   \__/\  / |__||__| |___|  /\____ |\___  >\/\_/  \___|_  /|____/(____  /_______  /___|  /\_/    #
+#        \/                \/      \/    \/              \/            \/        \/     \/        #
+#                                                                                                 #
+# =============================================================================================== #
+
+
+# path env functions
+source ~/.shell_config/exports.sh
+
+# pyenv
+if [ -d "$HOME/.pyenv" ]; then
+    source ~/.tools/pyenv.sh
+fi
+
+# poetry
+if [ -d "$HOME/.poetry" ]; then
+    source ~/.tools/poetry.sh
+fi
+
+# thefuck
+eval $(thefuck --alias)
+
+# brew
+if [ "$(uname)" = "Darwin" ]; then
+    # > python-build
+    BREW_PREFIX=$(brew --prefix)
+    export CFLAGS="-I${BREW_PREFIX}/opt/zlib/include -I${BREW_PREFIX}/opt/sqlite/include -I${BREW_PREFIX}/opt/bzip2/include -I${BREW_PREFIX}/opt/openssl/include -I${BREW_PREFIX}/opt/readline/include -I$(xcrun --show-sdk-path)/usr/include"
+    export LDFLAGS="-L${BREW_PREFIX}/opt/openssl/lib -L${BREW_PREFIX}/opt/readline/lib -L${BREW_PREFIX}/opt/bzip2/lib -L${BREW_PREFIX}/opt/zlib/lib -L${BREW_PREFIX}/opt/sqlite/lib"
+elif [ "$(uname)" = "Linux" ]; then
+    HOMEBREW_PREFIX=/home/linuxbrew/.linuxbrew
+    [ -d ${HOMEBREW_PREFIX} ] && eval $(${HOMEBREW_PREFIX}/bin/brew shellenv)
+fi
+
+# remove duplicate path
+normalize_path

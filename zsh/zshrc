@@ -1,0 +1,80 @@
+# =============================================================================================== #
+#                                                                                                 #
+#  __      __.__  __  .__         .___              ___ ___              ___________              #
+# /  \    /  \__|/  |_|  |__    __| _/______  _  __/   |   \ __ _______  \_   _____/ _______  __  #
+# \   \/\/   /  \   __\  |  \  / __ |/ __ \ \/ \/ /    ~    \  |  \__  \  |    __)_ /    \  \/ /  #
+#  \        /|  ||  | |   Y  \/ /_/ \  ___/\     /\    Y    /  |  // __ \_|        \   |  \   /   #
+#   \__/\  / |__||__| |___|  /\____ |\___  >\/\_/  \___|_  /|____/(____  /_______  /___|  /\_/    #
+#        \/                \/      \/    \/              \/            \/        \/     \/        #
+#                                                                                                 #
+# =============================================================================================== #
+
+
+
+# For Performance Debug purpose
+export ENABLE_PERFORMANCE_PROFILING="false"
+
+if [[ "${ENABLE_PERFORMANCE_PROFILING:-}" == "true" ]]; then
+    zmodload zsh/zprof
+
+    zmodload zsh/datetime
+
+    setopt PROMPT_SUBST
+    PS4='+$EPOCHREALTIME %N:%i> '
+    rm -rf zsh_profile*
+    __zsh_profiling_logfile=$(mktemp zsh_profile.XXXXXX)
+    echo "Logging to $__zsh_profiling_logfile"
+    exec 3>&2 2>$__zsh_profiling_logfile
+
+    setopt XTRACE
+fi
+
+# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
+# Initialization code that may require console input (password prompts, [y/n]
+# confirmations, etc.) must go above this block; everything else may go below.
+if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+fi
+
+# Use the default config, then overwrite it.
+. ~/.oh-my-zsh/templates/zshrc.zsh-template
+
+ZSH_THEME='powerlevel10k/powerlevel10k'
+plugins=(git z zsh-autosuggestions zsh-syntax-highlighting poetry)
+
+ZSH=$HOME/.oh-my-zsh
+source $ZSH/oh-my-zsh.sh
+
+# path env functions
+source ~/.shell_config/exports.sh
+
+# pyenv
+if [ -d "$HOME/.pyenv" ]; then
+    source ~/.tools/pyenv.sh
+fi
+
+# poetry
+if [ -d "$HOME/.poetry" ]; then
+    source ~/.tools/poetry.sh
+fi
+
+# thefuck
+type thefuck > /dev/null 2>&1 && eval $(thefuck --alias)
+
+# brew
+if [ "$(uname)" = "Darwin" ]; then
+    # > python-build
+    BREW_PREFIX=$(brew --prefix)
+    export CFLAGS="-I${BREW_PREFIX}/opt/zlib/include -I${BREW_PREFIX}/opt/sqlite/include -I${BREW_PREFIX}/opt/bzip2/include -I${BREW_PREFIX}/opt/openssl/include -I${BREW_PREFIX}/opt/readline/include -I$(xcrun --show-sdk-path)/usr/include"
+    export LDFLAGS="-L${BREW_PREFIX}/opt/openssl/lib -L${BREW_PREFIX}/opt/readline/lib -L${BREW_PREFIX}/opt/bzip2/lib -L${BREW_PREFIX}/opt/zlib/lib -L${BREW_PREFIX}/opt/sqlite/lib"
+elif [ "$(uname)" = "Linux" ]; then
+    HOMEBREW_PREFIX=/home/linuxbrew/.linuxbrew
+    [ -d ${HOMEBREW_PREFIX} ] && eval $(${HOMEBREW_PREFIX}/bin/brew shellenv)
+fi
+
+# p10k
+# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
+[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+
+# remove duplicate path
+normalize_path
