@@ -92,6 +92,7 @@ config_vim() {
 # GIT
 config_git() {
     create_symlinks "git/gitconfig" ".gitconfig"
+    create_symlinks "git/gitignore" ".gitignore_global"
 }
 
 _config_shell() {
