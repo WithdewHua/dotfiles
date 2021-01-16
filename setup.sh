@@ -162,7 +162,15 @@ _install_oh_my_zsh() {
 config_zsh() {
     _install_oh_my_zsh
     create_symlinks "zsh/zshrc" ".zshrc"
-    create_symlinks "zsh/p10k.zsh" ".p10k.zsh"
+    read -p "Choose p10k config (1. with_font / 2. non_font)" _font
+    if [ ${_font} == "1" ]; then
+        create_symlinks "zsh/p10k_with_font.zsh" ".p10k.zsh"
+    elif [ ${_font} == "2" ]; then
+        create_symlinks "zsh/p10k_non_font.zsh" ".p10k.zsh"
+    else
+        echo "[ERROR] please input correct num!"
+        exit 1
+    fi
     _config_shell
 }
 
