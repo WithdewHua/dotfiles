@@ -26,6 +26,7 @@ IS_PIP3=0
 IS_VIM=0
 IS_GIT=0
 IS_POETRY=0
+IS_TMUX=0
 
 # Choose shell
 read -p "CHOOSE SHELL (bash or zsh): " _shell
@@ -43,7 +44,7 @@ fi
 
 # Pre check
 check_installed() {
-    softwares=("pip3" "git" "vim" "poetry")
+    softwares=("pip3" "git" "vim" "poetry" "tmux")
     # bash >= 4.2
     if [ -v IS_BASH ]; then
         softwares+=("bash")
@@ -183,11 +184,17 @@ config_pip() {
     create_symlinks "pip/pip.conf" ".pip/pip.conf"
 }
 
+# tmux
+config_tmux() {
+    create_symlinks "tmux/tmux.conf" ".tmux.conf"
+}
+
 check_installed
 [ $IS_VIM -eq 1 ] && config_vim
 [ $IS_GIT -eq 1 ] && config_git
 [ -v IS_BASH ] && [ "$IS_BASH" -eq 1 ] && config_bash
 [ -v IS_ZSH ] && [ "$IS_ZSH" -eq 1 ] && config_zsh
 [ $IS_PIP3 -eq 1 ] && config_pip
+[ $IS_TMUX -eq 1 ] && config_tmux
 
 echo "[SETUP END]"

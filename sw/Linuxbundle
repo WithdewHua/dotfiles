@@ -6,3 +6,5 @@ git
 tree
 iproute2
 screen
+htop
+tmux
