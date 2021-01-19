@@ -186,6 +186,13 @@ config_pip() {
 
 # tmux
 config_tmux() {
+    if [ -d ~/.tmux/plugins/tpm ]; then
+        echo "[INFO] tmux plugin manager is already installed. Git pull to update..."
+        git -C ~/.tmux/plugins/tpm pull
+    else
+        echo "[INFO] Installing tmux plugin tmp"
+        git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+    fi
     create_symlinks "tmux/tmux.conf" ".tmux.conf"
 }
 
