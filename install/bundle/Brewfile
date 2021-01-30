@@ -1,6 +1,10 @@
 tap "homebrew/bundle"
 tap "homebrew/cask", "https://mirrors.tuna.tsinghua.edu.cn/git/homebrew/homebrew-cask.git"
 tap "homebrew/core", "https://mirrors.tuna.tsinghua.edu.cn/git/homebrew/homebrew-core.git"
+# Strip or convert ANSI codes into HTML, (La)Tex, RTF, or BBCode
+brew "ansifilter"
+# Clone of cat(1) with syntax highlighting and Git integration
+brew "bat"
 # Freely available high-quality data compressor
 brew "bzip2"
 # GNU compiler collection
@@ -31,23 +35,17 @@ brew "neofetch"
 brew "telnet"
 # Programmatically correct mistyped console commands
 brew "thefuck"
+# Terminal multiplexer
+brew "tmux"
 # Display directories as trees (with optional color/HTML output)
 brew "tree"
 # Internet file retriever
 brew "wget"
 # General-purpose lossless data-compression library
 brew "zlib"
+# Menu bar icon organizer
+cask "bartender"
+# Terminal/ssh/serial port/sftp client
 cask "electerm"
+# Note-taking application that knows programmers and Markdown better
 cask "vnote"
-mas "AutoSwitchInput", id: 1470350547
-mas "Bitwarden", id: 1352778147
-mas "Evernote Web Clipper", id: 1481669779
-mas "FastClip", id: 1476085650
-mas "iMovie", id: 408981434
-mas "Keynote", id: 409183694
-mas "Microsoft Remote Desktop", id: 1295203466
-mas "Numbers", id: 409203825
-mas "Pages", id: 409201541
-mas "Spark", id: 1176895641
-mas "WeChat", id: 836500024
-mas "WireGuard", id: 1451685025
