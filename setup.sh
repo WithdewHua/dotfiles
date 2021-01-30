@@ -204,4 +204,6 @@ check_installed
 [ $IS_PIP3 -eq 1 ] && config_pip
 [ $IS_TMUX -eq 1 ] && config_tmux
 
+exec zsh
+
 echo "[SETUP END]"
