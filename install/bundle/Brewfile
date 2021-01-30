@@ -47,5 +47,44 @@ brew "zlib"
 cask "bartender"
 # Terminal/ssh/serial port/sftp client
 cask "electerm"
+# Web browser
+cask "firefox"
+# Download accelerator and organizer
+cask "free-download-manager"
+# Web browser
+cask "google-chrome"
+# Free and open-source media player
+cask "iina"
+# iPhone management application
+cask "imazing"
+# Terminal emulator as alternative to Apple's Terminal app
+cask "iterm2"
+# Home media server
+cask "plex"
+# Snip or pin screenshots
+cask "snipaste"
+cask "spark"
+# Remote desktop control and monitoring tool
+cask "sunloginclient"
+# Messaging app with a focus on speed and security
+cask "telegram"
+cask "tencent-lemon"
+# Configurable document editor that supports Markdown
+cask "typora"
+# Open-source code editor
+cask "visual-studio-code"
 # Note-taking application that knows programmers and Markdown better
 cask "vnote"
+# Free messaging and calling application
+cask "wechat"
+mas "AutoSwitchInput", id: 1470350547
+mas "Bitwarden", id: 1352778147
+mas "Evernote Web Clipper", id: 1481669779
+mas "FastClip", id: 1476085650
+mas "iMovie", id: 408981434
+mas "Keynote", id: 409183694
+mas "Microsoft Remote Desktop", id: 1295203466
+mas "Numbers", id: 409203825
+mas "Pages", id: 409201541
+mas "Spark", id: 1176895641
+mas "WireGuard", id: 1451685025
