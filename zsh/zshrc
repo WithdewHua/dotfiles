@@ -39,7 +39,10 @@ fi
 # Use the default config, then overwrite it.
 . ~/.oh-my-zsh/templates/zshrc.zsh-template
 
+# omz theme
 ZSH_THEME='powerlevel10k/powerlevel10k'
+
+# omz plugins
 plugins=(git z zsh-autosuggestions zsh-syntax-highlighting poetry docker docker-compose)
 
 ZSH=$HOME/.oh-my-zsh

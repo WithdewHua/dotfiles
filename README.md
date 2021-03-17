@@ -3,7 +3,7 @@
 ## Intro
 
 - personal dotfiles for macOS/Linux;
-- fork from [tankywoo/dotfiles](https://github.com/tankywoo/dotfiles)
+- forked from [tankywoo/dotfiles](https://github.com/tankywoo/dotfiles)
 
 ## Installation
 

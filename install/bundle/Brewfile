@@ -45,6 +45,8 @@ brew "wget"
 brew "zlib"
 # Menu bar icon organizer
 cask "bartender"
+# App to build and share containerized applications and microservices
+cask "docker"
 # Terminal/ssh/serial port/sftp client
 cask "electerm"
 # Web browser
@@ -77,10 +79,11 @@ cask "visual-studio-code"
 cask "vnote"
 # Free messaging and calling application
 cask "wechat"
+# Network protocol analyzer
+cask "wireshark"
 mas "AutoSwitchInput", id: 1470350547
 mas "Bitwarden", id: 1352778147
 mas "Evernote Web Clipper", id: 1481669779
-mas "FastClip", id: 1476085650
 mas "iMovie", id: 408981434
 mas "Keynote", id: 409183694
 mas "Microsoft Remote Desktop", id: 1295203466
