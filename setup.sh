@@ -111,12 +111,8 @@ config_bash() {
 _install_oh_my_zsh() {
     # oh-my-zsh
     if [ -d "${OH_MY_ZSH}" ]; then
-        cd "${OH_MY_ZSH}"
-        echo "[INFO] Change directory to $(pwd)"
         echo "[INFO] ${OH_MY_ZSH} exists. Git pull to update..."
-        git pull
-        cd - >/dev/null 2>&1
-        echo "[INFO] Change directory back to $(pwd)"
+        git -C ${OH_MY_ZSH} pull
     else
         echo "[INFO] ${OH_MY_ZSH} not exists. Install..."
         sh -c "$(wget https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh -O -)"
