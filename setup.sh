@@ -199,11 +199,9 @@ config_tmux() {
 check_installed
 [ $IS_VIM -eq 1 ] && config_vim
 [ $IS_GIT -eq 1 ] && config_git
-[ -v IS_BASH ] && [ "$IS_BASH" -eq 1 ] && config_bash
-[ -v IS_ZSH ] && [ "$IS_ZSH" -eq 1 ] && config_zsh
 [ $IS_PIP3 -eq 1 ] && config_pip
 [ $IS_TMUX -eq 1 ] && config_tmux
-
-exec zsh
+[ -v IS_BASH ] && [ "$IS_BASH" -eq 1 ] && config_bash && exec bash
+[ -v IS_ZSH ] && [ "$IS_ZSH" -eq 1 ] && config_zsh && exec zsh
 
 echo "[SETUP END]"
