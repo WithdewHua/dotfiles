@@ -37,6 +37,8 @@ brew "telnet"
 brew "thefuck"
 # Terminal multiplexer
 brew "tmux"
+# Command-line interface to the freedesktop.org trashcan
+brew "trash-cli"
 # Display directories as trees (with optional color/HTML output)
 brew "tree"
 # Internet file retriever
@@ -61,7 +63,7 @@ cask "iina"
 cask "imazing"
 # Terminal emulator as alternative to Apple's Terminal app
 cask "iterm2"
-# Home media server
+# Home media player
 cask "plex"
 # Snip or pin screenshots
 cask "snipaste"
@@ -71,6 +73,8 @@ cask "sunloginclient"
 # Messaging app with a focus on speed and security
 cask "telegram"
 cask "tencent-lemon"
+# Terminal for a more modern age
+cask "terminus"
 # Configurable document editor that supports Markdown
 cask "typora"
 # Open-source code editor
