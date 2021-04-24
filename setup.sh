@@ -31,6 +31,7 @@ IS_GIT=0
 IS_POETRY=0
 IS_TMUX=0
 IS_FZF=0
+IS_PYENV=0
 
 # ----------------
 # Common Functions
@@ -49,7 +50,7 @@ ask() {
 }
 
 check_installed() {
-    softwares=("pip3" "git" "vim" "poetry" "tmux" "fzf")
+    softwares=("pip3" "git" "vim" "poetry" "tmux" "fzf" "pyenv")
     # bash >= 4.2
     if [ -v IS_BASH ]; then
         softwares+=("bash")
@@ -62,9 +63,7 @@ check_installed() {
         # Dynamic naming:
         # - https://stackoverflow.com/a/13717788/1276501
         # - https://stackoverflow.com/a/18124325/1276501
-        type ${sw} >/dev/null 2>&1 &&
-            { printf -v "${flag}" 1; } ||
-            { echo >&2 "[WARNING] \`${sw}' is not installed, ignore it."; }
+        type ${sw} >/dev/null 2>&1 && { printf -v "${flag}" 1; }
     done
 }
 
@@ -99,7 +98,6 @@ create_symlinks() {
 
 # Choose shell
 choose_shell() {
-    echo "[SETUP START]"
     ask "Choose shell, yes for zsh and no for bash:"
     if [ $? -eq 0 ]; then
         unset IS_ZSH
@@ -109,6 +107,16 @@ choose_shell() {
         echo "[ERROR] Invalid shell type, exit."
         exit 1
     fi
+}
+
+install() {
+    ask "Install ${1}?"
+    [ $? -eq 1 ] && {
+        "${@:2}"
+        echo "[INFO] Installed $1 successfully"
+        sw="IS_${1^^}"
+        { printf -v "${sw}" 1; }
+    }
 }
 
 # -----------------
@@ -164,8 +172,15 @@ install_oh_my_zsh() {
 }
 
 install_fzf() {
-    git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
-    ~/.fzf/install --key-bindings --completion --no-update-rc
+    install fzf git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf && ~/.fzf/install --key-bindings --completion --no-update-rc
+}
+
+install_pyenv() {
+    install pyenv git clone https://github.com/pyenv/pyenv.git ~/.pyenv
+}
+
+install_poetry() {
+    install poetry curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python - --no-modify-path
 }
 
 # ----------------
@@ -228,14 +243,11 @@ config_tmux() {
     create_symlinks "tmux/tmux.conf" ".tmux.conf"
 }
 
-# fzf
-config_fzf() {
-    [ $IS_FZF -eq 0 ] && install_fzf && IS_FZF=1
-}
-
 # -----
 # MAIN
 # -----
+
+echo "[SETUP START]"
 
 choose_shell
 check_installed
@@ -243,7 +255,9 @@ check_installed
 [ $IS_GIT -eq 1 ] && config_git
 [ $IS_PIP3 -eq 1 ] && config_pip
 [ $IS_TMUX -eq 1 ] && config_tmux
-config_fzf
+[ $IS_PYENV -eq 0 ] && install_pyenv
+[ $IS_POETRY -eq 0 ] && install_poetry
+[ $IS_FZF -eq 0 ] && install_fzf
 [ -v IS_BASH ] && [ "$IS_BASH" -eq 1 ] && config_bash && exec bash
 [ -v IS_ZSH ] && [ "$IS_ZSH" -eq 1 ] && config_zsh && exec zsh
 
