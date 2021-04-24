@@ -14,14 +14,10 @@
 source ~/.shell_config/exports.sh
 
 # pyenv
-if [ -d "$HOME/.pyenv" ]; then
-    source ~/.tools/pyenv.sh
-fi
+[ -d "$HOME/.pyenv" ] && source ~/.tools/pyenv.sh
 
 # poetry
-if [ -d "$HOME/.poetry" ]; then
-    source ~/.tools/poetry.sh
-fi
+[ -d "$HOME/.poetry" ] && source ~/.tools/poetry.sh
 
 # thefuck
 type thefuck > /dev/null 2>&1 && eval $(thefuck --alias)
@@ -36,6 +32,9 @@ elif [ "$(uname)" = "Linux" ]; then
     HOMEBREW_PREFIX=/home/linuxbrew/.linuxbrew
     [ -d ${HOMEBREW_PREFIX} ] && eval $(${HOMEBREW_PREFIX}/bin/brew shellenv)
 fi
+
+# fzf
+[ -f ~/.fzf.bash ] && source ~/.fzf.bash
 
 # remove duplicate path
 normalize_path

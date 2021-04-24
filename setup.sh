@@ -15,6 +15,9 @@ echo "#        \/                \/      \/    \/              \/            \/ 
 echo "#                                                                                                 #"
 echo "# =============================================================================================== #"
 
+# --------------
+# ENV PARAMETERS
+# --------------
 
 OH_MY_ZSH=$HOME"/.oh-my-zsh"
 ZSH_CUSTOM=$OH_MY_ZSH"/custom"
@@ -27,24 +30,26 @@ IS_VIM=0
 IS_GIT=0
 IS_POETRY=0
 IS_TMUX=0
+IS_FZF=0
 
-# Choose shell
-read -p "CHOOSE SHELL (bash or zsh): " _shell
+# ----------------
+# Common Functions
+# ----------------
 
-echo "[SETUP START]"
+ask() {
+  while true; do
+    read -p "$1 ([y]/n) " -r
+    REPLY=${REPLY:-"y"}
+    if [[ $REPLY =~ ^[Yy]$ ]]; then
+      return 1
+    elif [[ $REPLY =~ ^[Nn]$ ]]; then
+      return 0
+    fi
+  done
+}
 
-if [ "$_shell" = "bash" ]; then
-    unset IS_ZSH
-elif [ "$_shell" = "zsh" ]; then
-    unset IS_BASH
-else
-    echo "[ERROR] Invalid shell type, exit."
-    exit 1
-fi
-
-# Pre check
 check_installed() {
-    softwares=("pip3" "git" "vim" "poetry" "tmux")
+    softwares=("pip3" "git" "vim" "poetry" "tmux" "fzf")
     # bash >= 4.2
     if [ -v IS_BASH ]; then
         softwares+=("bash")
@@ -92,36 +97,31 @@ create_symlinks() {
     fi
 }
 
-# VIM
-config_vim() {
-    create_symlinks "vim/vimrc" ".vimrc"
+# Choose shell
+choose_shell() {
+    echo "[SETUP START]"
+    ask "Choose shell, yes for zsh and no for bash:"
+    if [ $? -eq 0 ]; then
+        unset IS_ZSH
+    elif [ $? -eq 1 ]; then
+        unset IS_BASH
+    else
+        echo "[ERROR] Invalid shell type, exit."
+        exit 1
+    fi
 }
 
-# GIT
-config_git() {
-    create_symlinks "git/gitconfig" ".gitconfig"
-    create_symlinks "git/gitignore" ".gitignore_global"
-}
+# -----------------
+# Install Functions
+# -----------------
 
-_config_shell() {
-    create_symlinks "shell_config" ".shell_config"
-    create_symlinks "tools" ".tools"
-}
-
-# BASH
-config_bash() {
-    create_symlinks "bash/bashrc" ".bashrc"
-    _config_shell
-}
-
-# ZSH
-_install_oh_my_zsh() {
+install_oh_my_zsh() {
     # oh-my-zsh
     if [ -d "${OH_MY_ZSH}" ]; then
-        echo "[INFO] ${OH_MY_ZSH} exists. Git pull to update..."
+        echo "[INFO] ${OH_MY_ZSH} exists. Update..."
         git -C ${OH_MY_ZSH} pull
     else
-        echo "[INFO] ${OH_MY_ZSH} not exists. Install..."
+        echo "[INFO] ${OH_MY_ZSH} does not exist. Install..."
         sh -c "$(wget https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh -O -)"
     fi
 
@@ -163,18 +163,47 @@ _install_oh_my_zsh() {
     fi
 }
 
+install_fzf() {
+    git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
+    ~/.fzf/install --key-bindings --completion --no-update-rc
+}
+
+# ----------------
+# Config Functions
+# ----------------
+
+_config_shell() {
+    create_symlinks "shell_config" ".shell_config"
+    create_symlinks "tools" ".tools"
+}
+
+# VIM
+config_vim() {
+    create_symlinks "vim/vimrc" ".vimrc"
+}
+
+# GIT
+config_git() {
+    create_symlinks "git/gitconfig" ".gitconfig"
+    create_symlinks "git/gitignore" ".gitignore_global"
+}
+
+# BASH
+config_bash() {
+    create_symlinks "bash/bashrc" ".bashrc"
+    _config_shell
+}
+
+# ZSH
 config_zsh() {
-    _install_oh_my_zsh
-    create_symlinks "zsh/zshrc" ".zshrc"
-    read -p "Choose p10k config (1. with_font / 2. non_font)" _font
-    if [ ${_font} == "1" ]; then
+    install_oh_my_zsh
+    ask "Config p10k theme with fonts?"
+    if [ $? -eq 1 ]; then
         create_symlinks "zsh/p10k_with_font.zsh" ".p10k.zsh"
-    elif [ ${_font} == "2" ]; then
+    elif [ $? -eq 0 ]; then
         create_symlinks "zsh/p10k_non_font.zsh" ".p10k.zsh"
-    else
-        echo "[ERROR] please input correct num!"
-        exit 1
     fi
+    create_symlinks "zsh/zshrc" ".zshrc"
     _config_shell
 }
 
@@ -187,7 +216,7 @@ config_pip() {
     create_symlinks "pip/pip.conf" ".pip/pip.conf"
 }
 
-# tmux
+# Tmux
 config_tmux() {
     if [ -d ~/.tmux/plugins/tpm ]; then
         echo "[INFO] tmux plugin manager is already installed. Git pull to update..."
@@ -199,11 +228,22 @@ config_tmux() {
     create_symlinks "tmux/tmux.conf" ".tmux.conf"
 }
 
+# fzf
+config_fzf() {
+    [ $IS_FZF -eq 0 ] && install_fzf && IS_FZF=1
+}
+
+# -----
+# MAIN
+# -----
+
+choose_shell
 check_installed
 [ $IS_VIM -eq 1 ] && config_vim
 [ $IS_GIT -eq 1 ] && config_git
 [ $IS_PIP3 -eq 1 ] && config_pip
 [ $IS_TMUX -eq 1 ] && config_tmux
+config_fzf
 [ -v IS_BASH ] && [ "$IS_BASH" -eq 1 ] && config_bash && exec bash
 [ -v IS_ZSH ] && [ "$IS_ZSH" -eq 1 ] && config_zsh && exec zsh
 

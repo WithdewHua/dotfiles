@@ -56,14 +56,10 @@ source $ZSH/oh-my-zsh.sh
 source ~/.shell_config/exports.sh
 
 # pyenv
-if [ -d "$HOME/.pyenv" ]; then
-    source ~/.tools/pyenv.sh
-fi
+[ -d "$HOME/.pyenv" ] && source ~/.tools/pyenv.sh
 
 # poetry
-if [ -d "$HOME/.poetry" ]; then
-    source ~/.tools/poetry.sh
-fi
+[ -d "$HOME/.poetry" ] && source ~/.tools/poetry.sh
 
 # thefuck
 type thefuck > /dev/null 2>&1 && eval $(thefuck --alias)
@@ -82,6 +78,9 @@ fi
 # p10k
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+
+# fzf
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
 # remove duplicate path
 normalize_path
