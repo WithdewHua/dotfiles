@@ -77,7 +77,14 @@ create_symlinks() {
             ln -sf $PWD/$dotfile_src $dotfile_dst
             echo "[INFO] Update existed symlink $dotfile_dst"
         else
-            echo "[WARNING] Ignore due to $dotfile_dst exists and is not a symlink"
+            read -p "Delete existent ${dotfile_dst}? [Y/n]" _del
+            if [ "$_del" = "Y" || "$_del" = "y" ]; then
+                rm $dotfile_dst
+                ln -sf $PWD/$dotfile_src $dotfile_dst
+                echo "[INFO] Create symlink $dotfile_dst"
+            else
+                echo "[WARNING] Ignore due to $dotfile_dst exists and is not a symlink"
+            fi
         fi
     else
         ln -sf $PWD/$dotfile_src $dotfile_dst
