@@ -8,7 +8,7 @@
 ## Installation
 
 ```bash
-git clone https://github.com/holman/dotfiles.git ~/.dotfiles
+git clone https://github.com/WithdewHua/dotfiles.git ~/.dotfiles
 cd ~/.dotfiles
 ./setup.sh
 ```
