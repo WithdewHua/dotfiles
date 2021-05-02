@@ -4,20 +4,25 @@
 # usage: ./setup.sh
 #
 
-echo "# =============================================================================================== #"
-echo "#                                                                                                 #"
-echo "#  __      __.__  __  .__         .___              ___ ___              ___________              #"
-echo "# /  \    /  \__|/  |_|  |__    __| _/______  _  __/   |   \ __ _______  \_   _____/ _______  __  #"
-echo "# \   \/\/   /  \   __\  |  \  / __ |/ __ \ \/ \/ /    ~    \  |  \__  \  |    __)_ /    \  \/ /  #"
-echo "#  \        /|  ||  | |   Y  \/ /_/ \  ___/\     /\    Y    /  |  // __ \_|        \   |  \   /   #"
-echo "#   \__/\  / |__||__| |___|  /\____ |\___  >\/\_/  \___|_  /|____/(____  /_______  /___|  /\_/    #"
-echo "#        \/                \/      \/    \/              \/            \/        \/     \/        #"
-echo "#                                                                                                 #"
-echo "# =============================================================================================== #"
+echo -e "# =============================================================================================== #"
+echo -e "#                                                                                                 #"
+echo -e "#  __      __.__  __  .__         .___              ___ ___              ___________              #"
+echo -e "# /  \    /  \__|/  |_|  |__    __| _/______  _  __/   |   \ __ _______  \_   _____/ _______  __  #"
+echo -e "# \   \/\/   /  \   __\  |  \  / __ |/ __ \ \/ \/ /    ~    \  |  \__  \  |    __)_ /    \  \/ /  #"
+echo -e "#  \        /|  ||  | |   Y  \/ /_/ \  ___/\     /\    Y    /  |  // __ \_|        \   |  \   /   #"
+echo -e "#   \__/\  / |__||__| |___|  /\____ |\___  >\/\_/  \___|_  /|____/(____  /_______  /___|  /\_/    #"
+echo -e "#        \/                \/      \/    \/              \/            \/        \/     \/        #"
+echo -e "#                                                                                                 #"
+echo -e "# =============================================================================================== #"
 
 # --------------
 # ENV PARAMETERS
 # --------------
+
+red='\033[0;31m'
+green='\033[0;32m'
+yellow='\033[0;33m'
+plain='\033[0m'
 
 OH_MY_ZSH=$HOME"/.oh-my-zsh"
 ZSH_CUSTOM=$OH_MY_ZSH"/custom"
@@ -81,20 +86,20 @@ create_symlinks() {
         if [ -h $dotfile_dst ]; then
             rm $dotfile_dst
             ln -sf $PWD/$dotfile_src $dotfile_dst
-            echo "[INFO] Update existed symlink $dotfile_dst"
+            echo -e "[${green}INFO${plain}] Update existed symlink $dotfile_dst"
         else
             read -p "Delete existent ${dotfile_dst}? [Y/n]" _del
             if [ "$_del" = "Y" || "$_del" = "y" ]; then
                 rm $dotfile_dst
                 ln -sf $PWD/$dotfile_src $dotfile_dst
-                echo "[INFO] Create symlink $dotfile_dst"
+                echo -e "[${green}INFO${plain}] Create symlink $dotfile_dst"
             else
-                echo "[WARNING] Ignore due to $dotfile_dst exists and is not a symlink"
+                echo -e "[${yellow}WARNING${plain}] Ignore due to $dotfile_dst exists and is not a symlink"
             fi
         fi
     else
         ln -sf $PWD/$dotfile_src $dotfile_dst
-        echo "[INFO] Create symlink $dotfile_dst"
+        echo -e "[${green}INFO${plain}] Create symlink $dotfile_dst"
     fi
 }
 
@@ -112,7 +117,7 @@ install() {
     ask "Install ${1}?"
     [ $? -eq 1 ] && {
         "${@:2}"
-        echo "[INFO] Installed $1 successfully"
+        echo -e "[${green}INFO${plain}] Installed $1 successfully"
         sw="IS_${1^^}"
         { printf -v "${sw}" 1; }
     }
@@ -147,45 +152,45 @@ install_bundle() {
 install_oh_my_zsh() {
     # oh-my-zsh
     if [ -d "${OH_MY_ZSH}" ]; then
-        echo "[INFO] ${OH_MY_ZSH} exists. Update..."
+        echo -e "[${green}INFO${plain}] ${OH_MY_ZSH} exists. Update..."
         git -C ${OH_MY_ZSH} pull
     else
-        echo "[INFO] ${OH_MY_ZSH} does not exist. Install..."
+        echo -e "[${green}INFO${plain}] ${OH_MY_ZSH} does not exist. Install..."
         sh -c "$(wget https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh -O -)"
     fi
 
     # oh-my-zsh theme
     if [ -d ${ZSH_CUSTOM}/themes/powerlevel10k ]; then
-        echo "[INFO] powerlevel10k is already installed. Git pull to update..."
+        echo -e "[${green}INFO${plain}] powerlevel10k is already installed. Git pull to update..."
         git -C ${ZSH_CUSTOM}/themes/powerlevel10k pull
     else
-        echo "[INFO] Installing theme p10k"
+        echo -e "[${green}INFO${plain}] Installing theme p10k"
         git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM}/themes/powerlevel10k
     fi
 
     # oh-my-zsh plugin
     # > zsh-syntax-highlighting
     if [ -d ${ZSH_CUSTOM}/plugins/zsh-syntax-highlighting ]; then
-        echo "[INFO] zsh-syntax-highlighting is already installed. Git pull to update..."
+        echo -e "[${green}INFO${plain}] zsh-syntax-highlighting is already installed. Git pull to update..."
         git -C ${ZSH_CUSTOM}/plugins/zsh-syntax-highlighting pull
     else
-        echo "[INFO] Installing plugin zsh-syntax-highlighting"
+        echo -e "[${green}INFO${plain}] Installing plugin zsh-syntax-highlighting"
         git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM}/plugins/zsh-syntax-highlighting
     fi
     # > zsh-autosuggestions
     if [ -d ${ZSH_CUSTOM}/plugins/zsh-autosuggestions ]; then
-        echo "[INFO] zsh-autosuggestions is already installed. Git pull to update..."
+        echo -e "[${green}INFO${plain}] zsh-autosuggestions is already installed. Git pull to update..."
         git -C ${ZSH_CUSTOM}/plugins/zsh-autosuggestions pull
     else
-        echo "[INFO] Installing plugin zsh-autosuggestions"
+        echo -e "[${green}INFO${plain}] Installing plugin zsh-autosuggestions"
         git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM}/plugins/zsh-autosuggestions
     fi
     # > poetry completions
     if [ $IS_POETRY -eq 1 ]; then
         if [ -d "${POETRY_PLUGIN}" ]; then
-            echo "[INFO] zsh-poetry is already installed"
+            echo -e "[${green}INFO${plain}] zsh-poetry is already installed"
         else
-            echo "[INFO] Installing plugin poetry"
+            echo -e "[${green}INFO${plain}] Installing plugin poetry"
             mkdir ${POETRY_PLUGIN}
             poetry completions zsh >${POETRY_PLUGIN}/_poetry
         fi
@@ -247,7 +252,7 @@ config_zsh() {
 config_pip() {
     [ -d ${HOME}/.pip ] || {
         mkdir $HOME/.pip
-        echo "[INFO] mkdir $HOME/.pip"
+        echo -e "[${green}INFO${plain}] mkdir $HOME/.pip"
     }
     create_symlinks "pip/pip.conf" ".pip/pip.conf"
 }
@@ -255,10 +260,10 @@ config_pip() {
 # Tmux
 config_tmux() {
     if [ -d ~/.tmux/plugins/tpm ]; then
-        echo "[INFO] tmux plugin manager is already installed. Git pull to update..."
+        echo -e "[${green}INFO${plain}] tmux plugin manager is already installed. Git pull to update..."
         git -C ~/.tmux/plugins/tpm pull
     else
-        echo "[INFO] Installing tmux plugin tmp"
+        echo -e "[${green}INFO${plain}] Installing tmux plugin tmp"
         git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
     fi
     create_symlinks "tmux/tmux.conf" ".tmux.conf"
@@ -268,7 +273,7 @@ config_tmux() {
 # MAIN
 # -----
 
-echo "[SETUP START]"
+echo -e "[SETUP START]"
 
 choose_shell
 install_bundle
@@ -283,4 +288,4 @@ check_installed
 [ $IS_BASH -eq 1 ] && config_bash && exec bash
 [ $IS_ZSH -eq 1 ] && config_zsh && exec zsh
 
-echo "[SETUP END]"
+echo -e "[SETUP END]"

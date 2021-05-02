@@ -1,10 +1,15 @@
 #!/usr/bin/env bash
 
+red='\033[0;31m'
+green='\033[0;32m'
+yellow='\033[0;33m'
+plain='\033[0m'
+
 if type brew > /dev/null 2>&1; then
-    echo "[INFO] brew is installed already."
+    echo -e "[${green}INFO${plain}] brew is installed already."
     exit 0
 else
-    echo "[INFO] Installing Homebrew/Linuxbrew"
+    echo -e "[${green}INFO${plain}] Installing Homebrew/Linuxbrew"
 
     OS=$uname
 
