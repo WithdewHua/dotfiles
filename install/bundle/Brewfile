@@ -72,7 +72,6 @@ cask "spark"
 cask "sunloginclient"
 # Messaging app with a focus on speed and security
 cask "telegram"
-cask "tencent-lemon"
 # Terminal for a more modern age
 cask "terminus"
 # Configurable document editor that supports Markdown
@@ -85,7 +84,6 @@ cask "vnote"
 cask "wechat"
 # Network protocol analyzer
 cask "wireshark"
-mas "AutoSwitchInput", id: 1470350547
 mas "Bitwarden", id: 1352778147
 mas "Evernote Web Clipper", id: 1481669779
 mas "iMovie", id: 408981434

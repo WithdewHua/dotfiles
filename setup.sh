@@ -33,38 +33,40 @@ IS_TMUX=0
 IS_FZF=0
 IS_PYENV=0
 
+softwares=("pip3" "git" "vim" "poetry" "tmux" "fzf" "pyenv")
+
 # ----------------
 # Common Functions
 # ----------------
 
 ask() {
-  while true; do
-    read -p "$1 ([y]/n) " -r
-    REPLY=${REPLY:-"y"}
-    if [[ $REPLY =~ ^[Yy]$ ]]; then
-      return 1
-    elif [[ $REPLY =~ ^[Nn]$ ]]; then
-      return 0
-    fi
-  done
+    while true; do
+        read -p "$1 ([y]/n) " -r
+        REPLY=${REPLY:-"y"}
+        if [[ $REPLY =~ ^[Yy]$ ]]; then
+            return 1
+        elif [[ $REPLY =~ ^[Nn]$ ]]; then
+            return 0
+        fi
+    done
 }
 
 check_installed() {
-    softwares=("pip3" "git" "vim" "poetry" "tmux" "fzf" "pyenv")
     # bash >= 4.2
-    if [ -v IS_BASH ]; then
-        softwares+=("bash")
-    else
-        softwares+=("zsh")
-    fi
     for sw in "${softwares[@]}"; do
         flag="IS_${sw^^}" # bash >= 4.0
         # Notice the semicolon
         # Dynamic naming:
         # - https://stackoverflow.com/a/13717788/1276501
         # - https://stackoverflow.com/a/18124325/1276501
-        type ${sw} >/dev/null 2>&1 && { printf -v "${flag}" 1; }
+        check_single_installed ${sw}
+        [ $? -eq 1 ] && { printf -v "${flag}" 1; }
+        # type ${sw} >/dev/null 2>&1 && { printf -v "${flag}" 1; }
     done
+}
+
+check_single_installed() {
+    type $1 > /dev/null 2>&1 && return 1 || return 0
 }
 
 create_symlinks() {
@@ -100,12 +102,9 @@ create_symlinks() {
 choose_shell() {
     ask "Choose shell, yes for zsh and no for bash:"
     if [ $? -eq 0 ]; then
-        unset IS_ZSH
+        IS_BASH=1
     elif [ $? -eq 1 ]; then
-        unset IS_BASH
-    else
-        echo "[ERROR] Invalid shell type, exit."
-        exit 1
+        IS_ZSH=1
     fi
 }
 
@@ -119,9 +118,31 @@ install() {
     }
 }
 
+get_package_manager() {
+    if grep -Eqi "debian|raspbian" /proc/version; then
+        PKG="apt"
+        INSTALL_PARAM='install -y'
+    fi
+}
+
 # -----------------
 # Install Functions
 # -----------------
+
+install_bundle() {
+    ask "Install bundle (including some useful applications)?"
+    [ $? -eq 1 ] && {
+        local os=$uname
+        if [ $os == "Darwin" ]; then
+            ./install/install_brew.sh && brew bundle install --file=./install/bundle/Brewfile
+        elif [ $os == "Linux" ]; then
+            get_package_manager
+            cat ./install/bundle/Linuxbundle | xargs -n1 $PKG $INSTALL_PARAM
+        fi
+        check_single_installed pip3
+        [ $? -eq 1 ] && pip3 install -r ./install/bundle/pipbundle
+    }
+}
 
 install_oh_my_zsh() {
     # oh-my-zsh
@@ -250,6 +271,7 @@ config_tmux() {
 echo "[SETUP START]"
 
 choose_shell
+install_bundle
 check_installed
 [ $IS_VIM -eq 1 ] && config_vim
 [ $IS_GIT -eq 1 ] && config_git
@@ -258,7 +280,7 @@ check_installed
 [ $IS_PYENV -eq 0 ] && install_pyenv
 [ $IS_POETRY -eq 0 ] && install_poetry
 [ $IS_FZF -eq 0 ] && install_fzf
-[ -v IS_BASH ] && [ "$IS_BASH" -eq 1 ] && config_bash && exec bash
-[ -v IS_ZSH ] && [ "$IS_ZSH" -eq 1 ] && config_zsh && exec zsh
+[ $IS_BASH -eq 1 ] && config_bash && exec bash
+[ $IS_ZSH -eq 1 ] && config_zsh && exec zsh
 
 echo "[SETUP END]"
