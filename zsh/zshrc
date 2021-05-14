@@ -66,6 +66,8 @@ type thefuck > /dev/null 2>&1 && eval $(thefuck --alias)
 
 # brew
 if [ "$(uname)" = "Darwin" ]; then
+    # arm mac
+    pathprepend "/opt/homebrew/bin"
     # > python-build
     BREW_PREFIX=$(brew --prefix)
     export CFLAGS="-I${BREW_PREFIX}/opt/zlib/include -I${BREW_PREFIX}/opt/sqlite/include -I${BREW_PREFIX}/opt/bzip2/include -I${BREW_PREFIX}/opt/openssl/include -I${BREW_PREFIX}/opt/readline/include -I$(xcrun --show-sdk-path)/usr/include"
