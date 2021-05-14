@@ -1,6 +1,6 @@
 tap "homebrew/bundle"
 tap "homebrew/cask", "https://mirrors.tuna.tsinghua.edu.cn/git/homebrew/homebrew-cask.git"
-tap "homebrew/core", "https://mirrors.tuna.tsinghua.edu.cn/git/homebrew/homebrew-core.git"
+tap "homebrew/core"
 # Strip or convert ANSI codes into HTML, (La)Tex, RTF, or BBCode
 brew "ansifilter"
 # Clone of cat(1) with syntax highlighting and Git integration
@@ -21,8 +21,6 @@ brew "xz"
 brew "glib"
 # Improved top (interactive process viewer)
 brew "htop"
-# Interpreted, interactive, object-oriented programming language
-brew "python@3.8"
 # Tools and libraries to manipulate images in many formats
 brew "imagemagick"
 # Tool to measure maximum TCP and UDP bandwidth
@@ -31,6 +29,10 @@ brew "iperf"
 brew "mas"
 # Fast, highly customisable system info script
 brew "neofetch"
+# Git repository summary on your terminal
+brew "onefetch"
+# Interpreted, interactive, object-oriented programming language
+brew "python@3.8"
 # User interface to the TELNET protocol
 brew "telnet"
 # Programmatically correct mistyped console commands
@@ -45,10 +47,6 @@ brew "tree"
 brew "wget"
 # General-purpose lossless data-compression library
 brew "zlib"
-# Menu bar icon organizer
-cask "bartender"
-# App to build and share containerized applications and microservices
-cask "docker"
 # Terminal/ssh/serial port/sftp client
 cask "electerm"
 # Web browser
@@ -61,17 +59,10 @@ cask "google-chrome"
 cask "iina"
 # iPhone management application
 cask "imazing"
-# Terminal emulator as alternative to Apple's Terminal app
-cask "iterm2"
 # Home media player
 cask "plex"
 # Snip or pin screenshots
 cask "snipaste"
-cask "spark"
-# Remote desktop control and monitoring tool
-cask "sunloginclient"
-# Messaging app with a focus on speed and security
-cask "telegram"
 # Terminal for a more modern age
 cask "terminus"
 # Configurable document editor that supports Markdown
@@ -82,14 +73,10 @@ cask "visual-studio-code"
 cask "vnote"
 # Free messaging and calling application
 cask "wechat"
-# Network protocol analyzer
-cask "wireshark"
 mas "Bitwarden", id: 1352778147
-mas "Evernote Web Clipper", id: 1481669779
-mas "iMovie", id: 408981434
 mas "Keynote", id: 409183694
 mas "Microsoft Remote Desktop", id: 1295203466
 mas "Numbers", id: 409203825
 mas "Pages", id: 409201541
 mas "Spark", id: 1176895641
-mas "WireGuard", id: 1451685025
+mas "WeChat", id: 836500024
