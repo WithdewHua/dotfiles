@@ -1,2 +1,128 @@
-set nu  " Set the line number
+"+---------+
+"+ plugins +
+"+---------+
+
+" Automatic installation
+let data_dir = has('nvim') ? stdpath('data') . '/site' : '~/.vim'
+if empty(glob(data_dir . '/autoload/plug.vim'))
+  silent execute '!curl -fLo '.data_dir.'/autoload/plug.vim --create-dirs  https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
+  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+endif
+
+" Run PlugInstall if there are missing plugins
+autocmd VimEnter * if len(filter(values(g:plugs), '!isdirectory(v:val.dir)'))
+  \| PlugInstall --sync | source $MYVIMRC
+\| endif
+
+" Plugins will be downloaded under the specified directory.
+call plug#begin(has('nvim') ? stdpath('data') . '/plugged' : '~/.vim/plugged')
+
+" Declare the list of plugins.
+
+
+" coc {{{
+    Plug 'neoclide/coc.nvim', {'branch': 'release'}
+" }}}
+
+
+" 窗口控制 {{{
+    Plug 'christoomey/vim-tmux-navigator'
+" }}}
+
+
+" 自动补充括号 {{{
+    Plug 'jiangmiao/auto-pairs'
+" }}}
+
+" nerdtree {{{
+    Plug 'preservim/nerdtree'
+    " NERDTree settings            
+                                
+    " open a NERDTree automatically when vim starts up if no files were specified    
+    autocmd StdinReadPre * let s:std_in=1    
+    autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif    
+                                
+    " open NERDTree automatically when vim starts up on opening a directory    
+    autocmd StdinReadPre * let s:std_in=1    
+    autocmd VimEnter * if argc() == 1 && isdirectory(argv()[0]) && !exists("s:std_in") | exe 'NERDTree' argv()[0] | wincmd p | ene | exe 'cd '.argv()[0] | endif
+
+    " map a specific key or shortcut to open NERDTree
+    map <C-n> :NERDTreeToggle<CR>
+
+    " close vim if the only window left open is a NERDTree
+    autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
+
+    " Let NERDTree igonre files
+    let NERDTreeIgnore = ['\.pyc$', '\.swp$']
+" }}}
+  
+
+" status line {{{
+    Plug 'vim-airline/vim-airline'
+    Plug 'vim-airline/vim-airline-themes'
+" }}}
+
+" gruvbox colorscheme {{{
+    Plug 'morhetz/gruvbox'
+" }}}
+
+" Quick comment {{{
+    Plug 'preservim/nerdcommenter'
+" }}}
+
+
+" markdown {{{
+    Plug 'tpope/vim-markdown', { 'for': 'markdown' }
+" }}}
+
+
+" rainbow {{{
+    Plug 'luochen1990/rainbow'
+    let g:rainbow_active = 1
+" }}}
+
+
+" List ends here. Plugins become visible to Vim after this call.
+
+call plug#end()
+
+
+"+---------+
+"+  basic  +
+"+---------+
+
+set autoread    " detect when a file is changed
+set number  " Set the line number
+set autoindent  " automatically set indent of new line
+set encoding=UTF-8
+set updatetime=300
+set ignorecase  " no case sensitive
+
+set clipboard=unnamed
+set history=1000
+set textwidth=120
+
+" Tab settings
+set ts=4
+set softtabstop=4
+set shiftwidth=4
+set expandtab   " Always use spaces instead of tabs
+
+if has('mouse')
+    set mouse=a
+endif
+
 syntax on  " Syntax highlighting
+filetype plugin indent on
+
+" enable 24 bit color support if supported
+if (has("termguicolors"))
+    if (!(has("nvim")))
+        let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
+        let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
+    endif
+    set termguicolors
+endif
+
+" colorscheme
+colorscheme gruvbox
