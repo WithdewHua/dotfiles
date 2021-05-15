@@ -22,16 +22,32 @@ call plug#begin(has('nvim') ? stdpath('data') . '/plugged' : '~/.vim/plugged')
 
 " coc {{{
     Plug 'neoclide/coc.nvim', {'branch': 'release'}
+    let g:coc_global_extensions = ['coc-json', 'coc-yaml', 'coc-git', 'coc-markdownlint', 'coc-pyright', 'coc-pairs', 'coc-lists']
+
+    " coc-list {{{
+        " Mappings for CoCList
+        " Show all diagnostics.
+        nnoremap <silent><nowait> <space>a  :<C-u>CocList diagnostics<cr>
+        " Manage extensions.
+        nnoremap <silent><nowait> <space>e  :<C-u>CocList extensions<cr>
+        " Show commands.
+        nnoremap <silent><nowait> <space>c  :<C-u>CocList commands<cr>
+        " Find symbol of current document.
+        nnoremap <silent><nowait> <space>o  :<C-u>CocList outline<cr>
+        " Search workspace symbols.
+        nnoremap <silent><nowait> <space>s  :<C-u>CocList -I symbols<cr>
+        " Do default action for next item.
+        nnoremap <silent><nowait> <space>j  :<C-u>CocNext<CR>
+        " Do default action for previous item.
+        nnoremap <silent><nowait> <space>k  :<C-u>CocPrev<CR>
+        " Resume latest coc list.
+        nnoremap <silent><nowait> <space>p  :<C-u>CocListResume<CR>
+    " }}}
 " }}}
 
 
 " 窗口控制 {{{
     Plug 'christoomey/vim-tmux-navigator'
-" }}}
-
-
-" 自动补充括号 {{{
-    Plug 'jiangmiao/auto-pairs'
 " }}}
 
 " nerdtree {{{
@@ -45,6 +61,9 @@ call plug#begin(has('nvim') ? stdpath('data') . '/plugged' : '~/.vim/plugged')
     " open NERDTree automatically when vim starts up on opening a directory    
     autocmd StdinReadPre * let s:std_in=1    
     autocmd VimEnter * if argc() == 1 && isdirectory(argv()[0]) && !exists("s:std_in") | exe 'NERDTree' argv()[0] | wincmd p | ene | exe 'cd '.argv()[0] | endif
+    
+    " show bookmarks
+    let NERDTreeShowBookmarks=1
 
     " map a specific key or shortcut to open NERDTree
     map <C-n> :NERDTreeToggle<CR>
@@ -66,8 +85,32 @@ call plug#begin(has('nvim') ? stdpath('data') . '/plugged' : '~/.vim/plugged')
     Plug 'morhetz/gruvbox'
 " }}}
 
+" show indentline {{{
+    Plug 'Yggdroot/indentLine'
+    let g:indent_guides_guide_size = 1  " 指定对齐线的尺寸
+    let g:indent_guides_start_level = 2  " 从第二层开始可视化显示缩进
+" }}}
+
 " Quick comment {{{
     Plug 'preservim/nerdcommenter'
+    "add spaces after comment delimiters by default
+    let g:NERDSpaceDelims = 1
+    au FileType python let g:NERDSpaceDelims = 0
+
+    " Use compact syntax for prettified multi-line comments
+    let g:NERDCompactSexyComs = 1
+
+    " Align line-wise comment delimiters flush left instead of following code indentation
+    let g:NERDDefaultAlign = 'left'
+
+    " Allow commenting and inverting empty lines (useful when commenting a region)
+    let g:NERDCommentEmptyLines = 1
+
+    " Enable trimming of trailing whitespace when uncommenting
+    let g:NERDTrimTrailingWhitespace = 1
+
+    " Enable NERDCommenterToggle to check all selected lines is commented or not
+    let g:NERDToggleCheckAllLines = 1
 " }}}
 
 

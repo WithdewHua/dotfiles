@@ -65,20 +65,20 @@ source ~/.shell_config/exports.sh
 type thefuck > /dev/null 2>&1 && eval $(thefuck --alias)
 
 # brew
-type brew > /dev/null 2>&1 && {
-    export HOMEBREW_NO_AUTO_UPDATE=true
     if [ "$(uname)" = "Darwin" ]; then
         # arm mac
-        pathprepend "/opt/homebrew/bin"
-        # > python-build
-        BREW_PREFIX=$(brew --prefix)
-        export CFLAGS="-I${BREW_PREFIX}/opt/zlib/include -I${BREW_PREFIX}/opt/sqlite/include -I${BREW_PREFIX}/opt/bzip2/include -I${BREW_PREFIX}/opt/openssl/include -I${BREW_PREFIX}/opt/readline/include -I$(xcrun --show-sdk-path)/usr/include"
-        export LDFLAGS="-L${BREW_PREFIX}/opt/openssl/lib -L${BREW_PREFIX}/opt/readline/lib -L${BREW_PREFIX}/opt/bzip2/lib -L${BREW_PREFIX}/opt/zlib/lib -L${BREW_PREFIX}/opt/sqlite/lib"
+        [ -d "/opt/homebrew" ] && {
+            pathprepend "/opt/homebrew/bin"
+            # > python-build
+            BREW_PREFIX=$(brew --prefix)
+            export HOMEBREW_NO_AUTO_UPDATE=true
+            export CFLAGS="-I${BREW_PREFIX}/opt/zlib/include -I${BREW_PREFIX}/opt/sqlite/include -I${BREW_PREFIX}/opt/bzip2/include -I${BREW_PREFIX}/opt/openssl/include -I${BREW_PREFIX}/opt/readline/include -I$(xcrun --show-sdk-path)/usr/include"
+            export LDFLAGS="-L${BREW_PREFIX}/opt/openssl/lib -L${BREW_PREFIX}/opt/readline/lib -L${BREW_PREFIX}/opt/bzip2/lib -L${BREW_PREFIX}/opt/zlib/lib -L${BREW_PREFIX}/opt/sqlite/lib"
+        }
     elif [ "$(uname)" = "Linux" ]; then
         HOMEBREW_PREFIX=/home/linuxbrew/.linuxbrew
         [ -d ${HOMEBREW_PREFIX} ] && eval $(${HOMEBREW_PREFIX}/bin/brew shellenv)
     fi
-}
 
 # p10k
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
