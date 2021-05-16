@@ -124,6 +124,13 @@ call plug#begin(has('nvim') ? stdpath('data') . '/plugged' : '~/.vim/plugged')
     let g:rainbow_active = 1
 " }}}
 
+" python {{{
+    Plug "nvie/vim-flake8", { 'for', 'python' } " map F7
+" }}}
+
+" formatter {{{
+    Plug "Chiel92/vim-autoformat"
+" }}}
 
 " List ends here. Plugins become visible to Vim after this call.
 
@@ -134,9 +141,12 @@ call plug#end()
 "+  basic  +
 "+---------+
 
+set nocompatible
 set autoread    " detect when a file is changed
 set number  " Set the line number
 set autoindent  " automatically set indent of new line
+set smartindent
+set hlsearch
 set encoding=UTF-8
 set updatetime=300
 set ignorecase  " no case sensitive

@@ -1,4 +1,7 @@
-# python-client 
+# python packages
 
 thefuck
 tldr
+flake8  # syntax check
+black   # format
+pynvim  # for neovim

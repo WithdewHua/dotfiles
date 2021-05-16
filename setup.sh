@@ -256,6 +256,12 @@ config_pip() {
         echo -e "[${green}INFO${plain}] mkdir $HOME/.pip"
     }
     create_symlinks "pip/pip.conf" ".pip/pip.conf"
+    ask "Symlink python code formatter?"
+    [ $? -eq 1 ] && {
+        create_symlinks "pip/flake8" ".config/flake8"
+        create_symlinks "pip/black" ".config/black"
+        create_symlinks "pip/isort.cfg" ".isort.cfg"
+    }
 }
 
 # Tmux
