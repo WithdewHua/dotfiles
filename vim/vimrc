@@ -43,6 +43,29 @@ call plug#begin(has('nvim') ? stdpath('data') . '/plugged' : '~/.vim/plugged')
         " Resume latest coc list.
         nnoremap <silent><nowait> <space>p  :<C-u>CocListResume<CR>
     " }}}
+
+    " coc-git {{{
+        " statusline
+        set statusline^=%{get(g:,'coc_git_status','')}%{get(b:,'coc_git_status','')}%{get(b:,'coc_git_blame','')}
+        " update statusline
+        autocmd User CocGitStatusChange {command}
+        " key map
+        " navigate chunks of current buffer
+        nmap [g <Plug>(coc-git-prevchunk)
+        nmap ]g <Plug>(coc-git-nextchunk)
+        " navigate conflicts of current buffer
+        nmap [c <Plug>(coc-git-prevconflict)
+        nmap ]c <Plug>(coc-git-nextconflict)
+        " show chunk diff at current position
+        nmap gs <Plug>(coc-git-chunkinfo)
+        " show commit contains current position
+        nmap gc <Plug>(coc-git-commit)
+        " create text object for git chunks
+        omap ig <Plug>(coc-git-chunk-inner)
+        xmap ig <Plug>(coc-git-chunk-inner)
+        omap ag <Plug>(coc-git-chunk-outer)
+        xmap ag <Plug>(coc-git-chunk-outer)
+    " }}}
 " }}}
 
 
@@ -79,6 +102,10 @@ call plug#begin(has('nvim') ? stdpath('data') . '/plugged' : '~/.vim/plugged')
 " status line {{{
     Plug 'vim-airline/vim-airline'
     Plug 'vim-airline/vim-airline-themes'
+    " enable tabline
+    let g:airline#externsions#tabline#enabled = 1
+    " show git branch info
+    let g:airline#extensions#branch#enabled=1
 " }}}
 
 " gruvbox colorscheme {{{
@@ -136,10 +163,16 @@ call plug#begin(has('nvim') ? stdpath('data') . '/plugged' : '~/.vim/plugged')
     " }}}
 " }}}
 
+" version control {{{
+    " vim-fugitive {{{
+        Plug 'tpope/vim-fugitive'
+    " }}}
 
-" git blamer {{{
-    Plug 'APZelos/blamer.nvim'
-    let g:blamer_enabled = 1
+    " git blamer {{{
+        Plug 'APZelos/blamer.nvim'
+        let g:blamer_enabled = 1
+    " }}}
+
 " }}}
 
 " List ends here. Plugins become visible to Vim after this call.
