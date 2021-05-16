@@ -125,11 +125,21 @@ call plug#begin(has('nvim') ? stdpath('data') . '/plugged' : '~/.vim/plugged')
 " }}}
 
 " python {{{
-    Plug "nvie/vim-flake8", { 'for', 'python' } " map F7
+    let g:python3_host_prog = "$HOME/.pyenv/shims/python3"
+    """ syntax check {{{
+        Plug 'nvie/vim-flake8' " map F7
+        autocmd BufWritePost *.py call flake8#Flake8() " check when open a python file
+    " }}}
+    " formatter {{{
+        Plug 'Chiel92/vim-autoformat'
+        noremap <F3> :Autoformat<CR>    " map F3
+    " }}}
 " }}}
 
-" formatter {{{
-    Plug "Chiel92/vim-autoformat"
+
+" git blamer {{{
+    Plug 'APZelos/blamer.nvim'
+    let g:blamer_enabled = 1
 " }}}
 
 " List ends here. Plugins become visible to Vim after this call.
@@ -154,6 +164,11 @@ set ignorecase  " no case sensitive
 set clipboard=unnamed
 set history=1000
 set textwidth=120
+
+" backup settings
+set nobackup
+set nowb
+set noswapfile
 
 " Tab settings
 set ts=4
