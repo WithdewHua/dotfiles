@@ -61,6 +61,9 @@ source ~/.shell_config/exports.sh
 # poetry
 [ -d "$HOME/.poetry" ] && source ~/.tools/poetry.sh
 
+# binenv
+[ -d "$HOME/.binenv" ] && pathprepend "$HOME/.binenv" && source <(binenv completion zsh)
+
 # thefuck
 type thefuck > /dev/null 2>&1 && eval $(thefuck --alias)
 
