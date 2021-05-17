@@ -103,7 +103,7 @@ call plug#begin(has('nvim') ? stdpath('data') . '/plugged' : '~/.vim/plugged')
     Plug 'vim-airline/vim-airline'
     Plug 'vim-airline/vim-airline-themes'
     " enable tabline
-    let g:airline#externsions#tabline#enabled = 1
+    let g:airline#extensions#tabline#enabled = 1
     " show git branch info
     let g:airline#extensions#branch#enabled=1
 " }}}
@@ -152,7 +152,12 @@ call plug#begin(has('nvim') ? stdpath('data') . '/plugged' : '~/.vim/plugged')
 " }}}
 
 " python {{{
-    let g:python3_host_prog = "$HOME/.pyenv/shims/python3"
+    " Figure out the system Python for Neovim.
+    if exists("$VIRTUAL_ENV")
+        let g:python3_host_prog=substitute(system("which -a python3 | head -n2 | tail -n1"), "\n", '', 'g')
+    else
+        let g:python3_host_prog=substitute(system("which python3"), "\n", '', 'g')
+    endif    
     """ syntax check {{{
         Plug 'nvie/vim-flake8' " map F7
         autocmd BufWritePost *.py call flake8#Flake8() " check when open a python file
