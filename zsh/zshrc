@@ -90,5 +90,8 @@ fi
 # fzf
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
+# vim/nvim
+type nvim > /dev/null 2>&1 && alias vim='nvim'
+
 # remove duplicate path
 normalize_path
