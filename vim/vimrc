@@ -165,7 +165,7 @@ call plug#begin(has('nvim') ? stdpath('data') . '/plugged' : '~/.vim/plugged')
     " }}}
     " formatter {{{
         Plug 'Chiel92/vim-autoformat'
-        noremap <F3> :Autoformat<CR>    " map F3
+        noremap <F5> :Autoformat<CR>    " map F5
     " }}}
 " }}}
 
