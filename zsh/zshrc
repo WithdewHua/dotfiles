@@ -55,11 +55,14 @@ source $ZSH/oh-my-zsh.sh
 # path env functions
 source ~/.shell_config/exports.sh
 
-# pyenv
+# pyenv with virtualenv
 [ -d "$HOME/.pyenv" ] && source ~/.tools/pyenv.sh
 
 # poetry
 [ -d "$HOME/.poetry" ] && source ~/.tools/poetry.sh
+
+# binenv
+[ -d "$HOME/.binenv" ] && pathprepend "$HOME/.binenv" && source <(binenv completion zsh)
 
 # thefuck
 type thefuck > /dev/null 2>&1 && eval $(thefuck --alias)
@@ -86,6 +89,9 @@ fi
 
 # fzf
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+# vim/nvim
+type nvim > /dev/null 2>&1 && alias vim='nvim'
 
 # remove duplicate path
 normalize_path
