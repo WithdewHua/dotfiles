@@ -246,7 +246,7 @@ config_zsh() {
         create_symlinks "zsh/p10k_non_font.zsh" ".p10k.zsh"
     fi
     create_symlinks "zsh/zshrc" ".zshrc"
-    create_symlinks "zsh/zshenv" ".zshenv"
+    # create_symlinks "zsh/zshenv" ".zshenv"
     _config_shell
 }
 

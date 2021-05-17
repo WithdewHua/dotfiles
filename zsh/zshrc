@@ -55,7 +55,7 @@ source $ZSH/oh-my-zsh.sh
 # path env functions
 source ~/.shell_config/exports.sh
 
-# pyenv
+# pyenv with virtualenv
 [ -d "$HOME/.pyenv" ] && source ~/.tools/pyenv.sh
 
 # poetry
