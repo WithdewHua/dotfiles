@@ -1,0 +1,13 @@
+{
+    // coc settins
+    "coc.preferences.extensionUpdateCheck": "daily",
+    // Python via pyright
+    "python.linting.enabled": true,
+    "python.analysis.autoImportCompletions": false,
+    "python.linting.flake8Enabled": true,
+    "python.linting.lintOnSave": true,
+    "python.formatting.provider": "black",
+    "python.formatting.blackArgs": ["--line-length=128"],
+    "pyright.organizeimports.provider": "isort",
+    "python.sortImports.args": ["--profile=black"]
+}

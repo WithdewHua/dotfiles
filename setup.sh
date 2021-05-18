@@ -221,7 +221,10 @@ _config_shell() {
 # VIM
 config_vim() {
     create_symlinks "vim/vimrc" ".vimrc"
-    type nvim > /dev/null 2>&1 && mkdir -p $HOME/.config/nvim && create_symlinks "vim/vimrc" ".config/nvim/init.vim"
+    type nvim > /dev/null 2>&1 && mkdir -p $HOME/.config/nvim && {
+        create_symlinks "vim/vimrc" ".config/nvim/init.vim"
+        create_symlinks "vim/coc-settings.json" ".config/nvim/coc-settings.json"
+    }
 }
 
 # GIT
