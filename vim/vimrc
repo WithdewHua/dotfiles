@@ -38,13 +38,6 @@ call plug#begin(has('nvim') ? stdpath('data') . '/plugged' : '~/.vim/plugged')
     return !col || getline('.')[col - 1]  =~# '\s'
     endfunction
 
-    " Use <c-space> to trigger completion.
-    if has('nvim')
-    inoremap <silent><expr> <c-space> coc#refresh()
-    else
-    inoremap <silent><expr> <c-@> coc#refresh()
-    endif
-
     " Make <CR> auto-select the first completion item and notify coc.nvim to
     " format on enter, <cr> could be remapped by other vim plugin
     inoremap <silent><expr> <cr> pumvisible() ? coc#_select_confirm()
@@ -80,12 +73,15 @@ call plug#begin(has('nvim') ? stdpath('data') . '/plugged' : '~/.vim/plugged')
     " Symbol renaming.
     nmap <leader>rn <Plug>(coc-rename)
 
+    " Add `:Format` command to format current buffer.
+    command! -nargs=0 Format :call CocAction('format')
+
     " Add `:Fold` command to fold current buffer.
     command! -nargs=? Fold :call     CocAction('fold', <f-args>)
 
     " Add `:OR` command for organize imports of the current buffer.
     command! -nargs=0 OR   :call     CocAction('runCommand', 'editor.action.organizeImport')
-    
+
     " coc-list {{{
         " Mappings for CoCList
         " Show all diagnostics.
@@ -241,15 +237,6 @@ call plug#begin(has('nvim') ? stdpath('data') . '/plugged' : '~/.vim/plugged')
     else
         let g:python3_host_prog=substitute(system("which -a python3 | head -n2 | tail -n1"), "\n", '', 'g')
     endif
-
-    " syntax check {{{
-        Plug 'nvie/vim-flake8' " map F7
-        autocmd BufWritePost *.py call flake8#Flake8() " check when open a python file
-    " }}}
-    " formatter {{{
-        Plug 'Chiel92/vim-autoformat'
-        noremap <F5> :Autoformat<CR>    " map F5
-    " }}}
 " }}}
 
 " version control {{{
@@ -278,14 +265,27 @@ set autoread    " detect when a file is changed
 set number  " Set the line number
 set autoindent  " automatically set indent of new line
 set smartindent
-set hlsearch
 set encoding=UTF-8
 set updatetime=300
 set ignorecase  " no case sensitive
+set smartcase
+set nowrap 
 
 set clipboard=unnamed
 set history=1000
 set textwidth=120
+
+" search highlight settings
+noremap n :set hlsearch<cr>n
+noremap N :set hlsearch<cr>N
+noremap / :set hlsearch<cr>/
+noremap ? :set hlsearch<cr>?
+noremap * *:set hlsearch<cr>
+
+nnoremap <c-h> :call DisableHighlight()<cr>
+function! DisableHighlight()
+    set nohlsearch
+endfunc
 
 " backup settings
 set nobackup
