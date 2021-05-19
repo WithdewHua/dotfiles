@@ -163,7 +163,7 @@ call plug#begin(has('nvim') ? stdpath('data') . '/plugged' : '~/.vim/plugged')
     let g:airline_theme='gruvbox'
     " enable tabline
     let g:airline#extensions#tabline#enabled = 1
-    let g:airline#extensions#tabline#buffer_nr_show = 0 
+    let g:airline#extensions#tabline#buffer_nr_show = 1 
     let g:airline#extensions#tabline#show_tab_nr = 1
     " index mode
     let g:airline#extensions#tabline#buffer_idx_mode = 1
@@ -260,20 +260,60 @@ call plug#end()
 "+  basic  +
 "+---------+
 
+" leader settings
+let mapleader = ","
+let g:mapleader = ","
+
 set nocompatible
+
+" read settings
 set autoread    " detect when a file is changed
+au CursorHold * checktime
+call feedkeys("lh")
+
+" write settings
+set autowriteall
+
 set number  " Set the line number
+
+" indent settings
 set autoindent  " automatically set indent of new line
 set smartindent
+
 set encoding=UTF-8
 set updatetime=300
+
+" case settings
 set ignorecase  " case insensitive
 set smartcase   " case sensitive when uc present
-set nowrap  " do not wrap line
 
-set clipboard=unnamed
 set history=1000
-set textwidth=120
+
+" wrap settings
+set nowrap  " not wrap long line
+set textwidth=0
+
+" delete settings
+nnoremap x "_x
+nnoremap X "_X
+nnoremap d "_d
+nnoremap dd "_dd
+nnoremap D "_D
+vnoremap d "_d
+
+if has('unnamedplus')
+  set clipboard=unnamed,unnamedplus
+  nnoremap <leader>d "+d
+  nnoremap <leader>dd "+dd
+  nnoremap <leader>D "+D
+  vnoremap <leader>d "+d
+else
+  set clipboard=unnamed
+  nnoremap <leader>d "*d
+  nnoremap <leader>dd "*dd
+  nnoremap <leader>D "*D
+  vnoremap <leader>d "*d
+endif
 
 " search highlight settings
 autocmd cursorhold * set nohlsearch
