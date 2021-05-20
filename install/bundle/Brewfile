@@ -3,6 +3,8 @@ tap "homebrew/cask", "https://mirrors.tuna.tsinghua.edu.cn/git/homebrew/homebrew
 tap "homebrew/core"
 # Strip or convert ANSI codes into HTML, (La)Tex, RTF, or BBCode
 brew "ansifilter"
+# Bourne-Again SHell, a UNIX command interpreter
+brew "bash"
 # Clone of cat(1) with syntax highlighting and Git integration
 brew "bat"
 # Freely available high-quality data compressor
@@ -37,6 +39,8 @@ brew "node"
 brew "onefetch"
 # Interpreted, interactive, object-oriented programming language
 brew "python@3.8"
+# SMART hard drive monitoring
+brew "smartmontools"
 # User interface to the TELNET protocol
 brew "telnet"
 # Programmatically correct mistyped console commands
@@ -67,8 +71,6 @@ cask "imazing"
 cask "plex"
 # Snip or pin screenshots
 cask "snipaste"
-# Terminal for a more modern age
-cask "terminus"
 # Configurable document editor that supports Markdown
 cask "typora"
 # Open-source code editor

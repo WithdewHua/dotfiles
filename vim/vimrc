@@ -143,6 +143,10 @@ call plug#begin(has('nvim') ? stdpath('data') . '/plugged' : '~/.vim/plugged')
     autocmd StdinReadPre * let s:std_in=1    
     autocmd VimEnter * if argc() == 1 && isdirectory(argv()[0]) && !exists("s:std_in") | exe 'NERDTree' argv()[0] | wincmd p | ene | exe 'cd '.argv()[0] | endif
     
+    " If another buffer tries to replace NERDTree, put it in the other window, and bring back NERDTree.
+    autocmd BufEnter * if bufname('#') =~ 'NERD_tree_\d\+' && bufname('%') !~ 'NERD_tree_\d\+' && winnr('$') > 1 |
+        \ let buf=bufnr() | buffer# | execute "normal! \<C-W>w" | execute 'buffer'.buf | endif
+    
     " show bookmarks
     let NERDTreeShowBookmarks=1
 
@@ -153,7 +157,10 @@ call plug#begin(has('nvim') ? stdpath('data') . '/plugged' : '~/.vim/plugged')
     autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 
     " Let NERDTree igonre files
-    let NERDTreeIgnore = ['\.pyc$', '\.swp$']
+    let NERDTreeIgnore = ['\.pyc$', '\.swp$', '__pycache__$']
+
+    " delete invalid buffer
+    let NERDTreeAutoDeleteBuffer=1
 " }}}
   
 
