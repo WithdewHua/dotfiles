@@ -275,8 +275,7 @@ set nocompatible
 
 " read settings
 set autoread    " detect when a file is changed
-au CursorHold * checktime
-call feedkeys("lh")
+au CursorHold * checktime | call feedkeys("lh")
 
 " write settings
 set autowriteall
