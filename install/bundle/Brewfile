@@ -1,8 +1,13 @@
 tap "homebrew/bundle"
 tap "homebrew/cask", "https://mirrors.tuna.tsinghua.edu.cn/git/homebrew/homebrew-cask.git"
-tap "homebrew/core"
+tap "homebrew/core", "https://mirrors.tuna.tsinghua.edu.cn/git/homebrew/homebrew-core.git"
+tap "knqyf263/pet"
 # Strip or convert ANSI codes into HTML, (La)Tex, RTF, or BBCode
 brew "ansifilter"
+# Cryptography and SSL/TLS Toolkit
+brew "openssl@1.1"
+# Light UNIX download accelerator
+brew "axel"
 # Bourne-Again SHell, a UNIX command interpreter
 brew "bash"
 # Clone of cat(1) with syntax highlighting and Git integration
@@ -11,8 +16,6 @@ brew "bat"
 brew "bzip2"
 # GNU compiler collection
 brew "gcc"
-# Cryptography and SSL/TLS Toolkit
-brew "openssl@1.1"
 # Library for command-line editing
 brew "readline"
 # Command-line interface for SQLite
@@ -55,6 +58,8 @@ brew "tree"
 brew "wget"
 # General-purpose lossless data-compression library
 brew "zlib"
+# Simple command-line snippet manager
+brew "knqyf263/pet/pet"
 # Terminal/ssh/serial port/sftp client
 cask "electerm"
 # Web browser
@@ -67,6 +72,10 @@ cask "google-chrome"
 cask "iina"
 # iPhone management application
 cask "imazing"
+# Provides updates to various Microsoft products
+cask "microsoft-auto-update"
+# Multi-platform web browser
+cask "microsoft-edge"
 # Home media player
 cask "plex"
 # Snip or pin screenshots
