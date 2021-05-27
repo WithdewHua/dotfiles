@@ -49,6 +49,9 @@ for plugin in "${other_plugins[@]}"; do
     type ${plugin} >/dev/null 2>&1 && plugins+=(${plugin})
 done
 
+# path env functions
+source ~/.shell_config/exports.sh
+
 # brew
 if [ "$(uname)" = "Darwin" ]; then
     # arm mac
@@ -71,9 +74,6 @@ fi
 
 ZSH=$HOME/.oh-my-zsh
 source $ZSH/oh-my-zsh.sh
-
-# path env functions
-source ~/.shell_config/exports.sh
 
 # pyenv with virtualenv
 [ -d "$HOME/.pyenv" ] && source ~/.tools/pyenv.sh
