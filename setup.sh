@@ -226,10 +226,10 @@ config_vim() {
         type nvim > /dev/null 2>&1 && mkdir -p $HOME/.config/nvim && {
             create_symlinks "vim/vimrc" ".config/nvim/init.vim"
             create_symlinks "vim/coc-settings.json" ".config/nvim/coc-settings.json"
-        } || {
-            create_symlinks "vim/vimrc-basic" ".vimrc"
-            type nvim > /dev/null 2>&1 && mkdir -p $HOME/.config/nvim && create_symlinks "vim/vimrc-basic" ".config/nvim/init.vim"
-        }
+        }     
+    } || {
+        create_symlinks "vim/vimrc-basic" ".vimrc"
+        type nvim > /dev/null 2>&1 && mkdir -p $HOME/.config/nvim && create_symlinks "vim/vimrc-basic" ".config/nvim/init.vim"
     }
 }
 
