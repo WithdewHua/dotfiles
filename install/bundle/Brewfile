@@ -1,5 +1,6 @@
 tap "homebrew/bundle"
 tap "homebrew/cask", "https://mirrors.tuna.tsinghua.edu.cn/git/homebrew/homebrew-cask.git"
+tap "homebrew/cask-versions"
 tap "homebrew/core", "https://mirrors.tuna.tsinghua.edu.cn/git/homebrew/homebrew-core.git"
 tap "knqyf263/pet"
 # Strip or convert ANSI codes into HTML, (La)Tex, RTF, or BBCode
@@ -60,12 +61,14 @@ brew "wget"
 brew "zlib"
 # Simple command-line snippet manager
 brew "knqyf263/pet/pet"
+# Stand alone ad blocker
+cask "adguard"
+# GUI based on Clash
+cask "clash-for-windows"
 # Terminal/ssh/serial port/sftp client
 cask "electerm"
 # Web browser
 cask "firefox"
-# Download accelerator and organizer
-cask "free-download-manager"
 # Web browser
 cask "google-chrome"
 # Free and open-source media player
@@ -80,10 +83,14 @@ cask "microsoft-edge"
 cask "plex"
 # Snip or pin screenshots
 cask "snipaste"
+# Terminal for a more modern age
+cask "terminus"
 # Configurable document editor that supports Markdown
 cask "typora"
 # Open-source code editor
 cask "visual-studio-code"
+# Code editor
+cask "visual-studio-code-insiders"
 # Note-taking application that knows programmers and Markdown better
 cask "vnote"
 # Free messaging and calling application
