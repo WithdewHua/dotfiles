@@ -27,8 +27,12 @@ set smartcase   " case sensitive when uc present
 set history=1000
 
 " wrap settings
-set nowrap  " not wrap long line
-set textwidth=0
+" set nowrap  " not wrap long line
+" set textwidth=0
+set wrap
+set linebreak
+set breakat-=_
+set showbreak=->
 
 " delete settings
 nnoremap x "_x
