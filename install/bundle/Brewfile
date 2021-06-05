@@ -65,6 +65,8 @@ brew "knqyf263/pet/pet"
 cask "adguard"
 # GUI based on Clash
 cask "clash-for-windows"
+# Rule-based custom proxy with GUI based on clash
+cask "clashx-pro"
 # Terminal/ssh/serial port/sftp client
 cask "electerm"
 # Web browser

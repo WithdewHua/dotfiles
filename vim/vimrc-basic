@@ -24,7 +24,7 @@ set updatetime=300
 set ignorecase  " case insensitive
 set smartcase   " case sensitive when uc present
 
-set history=1000
+set history=8000
 
 " wrap settings
 " set nowrap  " not wrap long line
