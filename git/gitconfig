@@ -6,4 +6,4 @@
 	editor = vim
 	excludesfile = ~/.gitignore_global
 [pull]
-	rebase = false
+	rebase = true
