@@ -276,6 +276,14 @@ call plug#begin(has('nvim') ? stdpath('data') . '/plugged' : '~/.vim/plugged')
 "   }}}
 " }}}
 
+" doc generate {{{
+    " vim-doge {{{
+        Plug 'kkoomen/vim-doge', { 'do': { -> doge#install() } }
+        let g:doge_enable_mappings = 1
+        let g:doge_mapping = '<F2>'
+    " }}}
+" }}}
+
 " List ends here. Plugins become visible to Vim after this call.
 
 call plug#end()
