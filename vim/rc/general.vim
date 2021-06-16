@@ -1,7 +1,3 @@
-"+---------+
-"+  basic  +
-"+---------+
-
 " leader settings
 let mapleader = ","
 let g:mapleader = ","
@@ -38,28 +34,6 @@ set linebreak
 set breakat-=_
 set showbreak=->
 
-" delete settings
-nnoremap x "_x
-nnoremap X "_X
-nnoremap d "_d
-nnoremap dd "_dd
-nnoremap D "_D
-vnoremap d "_d
-
-if has('unnamedplus')
-  set clipboard=unnamed,unnamedplus
-  nnoremap <leader>d "+d
-  nnoremap <leader>dd "+dd
-  nnoremap <leader>D "+D
-  vnoremap <leader>d "+d
-else
-  set clipboard=unnamed
-  nnoremap <leader>d "*d
-  nnoremap <leader>dd "*dd
-  nnoremap <leader>D "*D
-  vnoremap <leader>d "*d
-endif
-
 " search highlight settings
 autocmd cursorhold * set nohlsearch
 noremap n :set hlsearch<cr>n
@@ -84,6 +58,7 @@ set softtabstop=4
 set shiftwidth=4
 set expandtab   " Always use spaces instead of tabs
 
+" mouse settings
 if has('mouse')
     set mouse=a
 endif
@@ -99,3 +74,4 @@ if (has("termguicolors"))
     endif
     set termguicolors
 endif
+
