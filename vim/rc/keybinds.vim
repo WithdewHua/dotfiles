@@ -1,3 +1,7 @@
+" leader settings
+let mapleader = ","
+let g:mapleader = ","
+
 " delete settings
 nnoremap x "_x
 nnoremap X "_X
@@ -104,6 +108,7 @@ endif
         xmap ig <Plug>(coc-git-chunk-inner)
         omap ag <Plug>(coc-git-chunk-outer)
         xmap ag <Plug>(coc-git-chunk-outer)
+    " }}}
 " }}}
 
 " vim-airline {{{
@@ -120,4 +125,11 @@ endif
     nmap <leader>0 <Plug>AirlineSelectTab0
     nmap <leader>- <Plug>AirlineSelectPrevTab
     nmap <leader>+ <Plug>AirlineSelectNextTab
+" }}}
+" NERDTree {{{
+    " map a specific key or shortcut to open NERDTree
+    map <C-n> :NERDTreeToggle<CR>
+" }}}
+" vim-doge {{{
+    let g:doge_mapping = '<space>d'
 " }}}

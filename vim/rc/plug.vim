@@ -28,6 +28,7 @@ Plug 'APZelos/blamer.nvim'
 Plug 'tpope/vim-obsession'
 Plug 'dhruvasagar/vim-prosession'
 Plug 'kkoomen/vim-doge', { 'do': { -> doge#install() } }
+Plug 'preservim/nerdtree'
 Plug 'ryanoasis/vim-devicons'
 " List ends here. Plugins become visible to Vim after this call.
 

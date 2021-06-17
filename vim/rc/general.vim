@@ -1,7 +1,3 @@
-" leader settings
-let mapleader = ","
-let g:mapleader = ","
-
 set nocompatible
 
 " read settings
