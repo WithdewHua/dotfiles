@@ -13,3 +13,6 @@ let g:airline#extensions#branch#enabled=1
 " enable vim-obsession intergration
 let g:airline#extensions#obsession#enabled = 1
 let g:airline#extensions#obsession#indicator_text = '$'
+
+" display the nerdtree specific statusline
+let g:airline#extensions#nerdtree_statusline = 1

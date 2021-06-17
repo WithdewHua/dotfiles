@@ -1,6 +1,7 @@
 " indentLine {{{
     let g:indent_guides_guide_size = 1  " 指定对齐线的尺寸
     let g:indent_guides_start_level = 2  " 从第二层开始可视化显示缩进
+    let g:indentLine_fileTypeExclude = ['coc-explorer']
 " }}}
 
 " nerdcommenter {{{
@@ -37,7 +38,6 @@
 " }}}
 " vim-doge {{{
     let g:doge_enable_mappings = 1
-    let g:doge_mapping = '<space>d'
 " }}} 
 " vim-devicons {{{
     let g:webdevicons_enable = 1
