@@ -35,6 +35,7 @@
 " vim-prosession {{{
     " enable tmux window name updates
     let g:prosession_tmux_title = 1
+    let g:prosession_tmux_title_format = "vim-@@@"
 " }}}
 " vim-doge {{{
     let g:doge_enable_mappings = 1
