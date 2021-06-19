@@ -1,5 +1,6 @@
 tap "homebrew/bundle"
 tap "homebrew/cask", "https://mirrors.tuna.tsinghua.edu.cn/git/homebrew/homebrew-cask.git"
+tap "homebrew/cask-fonts"
 tap "homebrew/cask-versions"
 tap "homebrew/core", "https://mirrors.tuna.tsinghua.edu.cn/git/homebrew/homebrew-core.git"
 tap "knqyf263/pet"
@@ -33,6 +34,8 @@ brew "imagemagick"
 brew "iperf"
 # Mac App Store command-line interface
 brew "mas"
+# Remote terminal application
+brew "mosh"
 # Fast, highly customisable system info script
 brew "neofetch"
 # Ambitious Vim-fork focused on extensibility and agility
@@ -43,6 +46,8 @@ brew "node"
 brew "onefetch"
 # Interpreted, interactive, object-oriented programming language
 brew "python@3.8"
+# Search tool like grep and The Silver Searcher
+brew "ripgrep"
 # SMART hard drive monitoring
 brew "smartmontools"
 # User interface to the TELNET protocol
@@ -63,14 +68,13 @@ brew "zlib"
 brew "knqyf263/pet/pet"
 # Stand alone ad blocker
 cask "adguard"
-# GUI based on Clash
-cask "clash-for-windows"
 # Rule-based custom proxy with GUI based on clash
 cask "clashx-pro"
 # Terminal/ssh/serial port/sftp client
 cask "electerm"
 # Web browser
 cask "firefox"
+cask "font-caskaydia-cove-nerd-font"
 # Web browser
 cask "google-chrome"
 # Free and open-source media player
@@ -97,6 +101,7 @@ cask "visual-studio-code-insiders"
 cask "vnote"
 # Free messaging and calling application
 cask "wechat"
+mas "AdGuard for Safari", id: 1440147259
 mas "Bitwarden", id: 1352778147
 mas "Hidden Bar", id: 1452453066
 mas "Keynote", id: 409183694
