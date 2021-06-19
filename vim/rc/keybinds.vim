@@ -74,15 +74,15 @@ endif
     " coc-list {{{
         " Mappings for CoCList
         " Show all diagnostics.
-        nnoremap <silent><nowait> <space>a  :<C-u>CocList diagnostics<cr>
+        nnoremap <silent><nowait> <space>A  :<C-u>CocList diagnostics<cr>
         " Manage extensions.
-        nnoremap <silent><nowait> <space>e  :<C-u>CocList extensions<cr>
+        nnoremap <silent><nowait> <space>E  :<C-u>CocList extensions<cr>
         " Show commands.
-        nnoremap <silent><nowait> <space>c  :<C-u>CocList commands<cr>
+        nnoremap <silent><nowait> <space>C  :<C-u>CocList commands<cr>
         " Find symbol of current document.
-        nnoremap <silent><nowait> <space>o  :<C-u>CocList outline<cr>
+        nnoremap <silent><nowait> <space>O  :<C-u>CocList outline<cr>
         " Search workspace symbols.
-        nnoremap <silent><nowait> <space>s  :<C-u>CocList -I symbols<cr>
+        nnoremap <silent><nowait> <space>S  :<C-u>CocList -I symbols<cr>
         " Do default action for next item.
         nnoremap <silent><nowait> <space>j  :<C-u>CocNext<CR>
         " Do default action for previous item.
@@ -132,4 +132,23 @@ endif
 " }}}
 " vim-doge {{{
     let g:doge_mapping = '<space>d'
+" }}}
+" fzf {{{
+    nnoremap <silent> <expr> <space>f (expand('%') =~ 'NERD_tree' ? "\<c-w>\<c-w>" : '').":Files\<cr>"
+	nnoremap <silent> <space>c    :Commands<CR>
+	nnoremap <silent> <space>bb    :Buffers<CR>
+	nnoremap <silent> <space>bl    :BLines<CR>
+	nnoremap <silent> <space>l    :Lines<CR>
+	nnoremap <silent> <space>ag   :Ag <C-R><C-W><CR>
+	nnoremap <silent> <space>AG   :Ag <C-R><C-A><CR>
+	xnoremap <silent> <space>ag   y:Ag <C-R>"<CR>
+	nnoremap <silent> <space>mk    :Marks<CR>
+	nnoremap <silent> <space>mp    :Maps<CR>
+    nnoremap <silent> <space>hh    :History<CR>
+    nnoremap <silent> <space>h:   :History:<CR>
+    nnoremap <silent> <space>h/   :History/<CR>
+    nnoremap <silent> <space>gc   :Commits<CR>
+    nnoremap <silent> <space>gbc  :BCommits<CR>
+	nnoremap <silent> <space>gf   :GFiles<CR>
+	nnoremap <silent> <space>gs   :GFiles?<CR>
 " }}}
