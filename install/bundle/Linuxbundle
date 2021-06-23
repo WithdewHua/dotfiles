@@ -1,3 +1,4 @@
+axel
 bat
 curl
 git
@@ -11,4 +12,5 @@ tmux
 trash-cli
 tree
 vim
+wget
 xclip
