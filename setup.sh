@@ -206,7 +206,7 @@ install_pyenv() {
 }
 
 install_poetry() {
-    install poetry curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python - --no-modify-path
+    install poetry curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/install-poetry.py | python3 - 
 }
 
 # ----------------
