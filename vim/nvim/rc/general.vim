@@ -63,11 +63,15 @@ syntax on  " Syntax highlighting
 filetype plugin indent on
 
 " enable 24 bit color support if supported
-if (has("termguicolors"))
-    if (!(has("nvim")))
-        let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
-        let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
-    endif
-    set termguicolors
+if exists('+termguicolors')
+  let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
+  let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
+  set termguicolors
+endif
+
+if exists("$VIRTUAL_ENV")	
+    let g:python3_host_prog=substitute(system("which -a python3 | head -n3 | tail -n1"), "\n", '', 'g')
+else
+    let g:python3_host_prog=substitute(system("which -a python3 | head -n2 | tail -n1"), "\n", '', 'g')	
 endif
 
