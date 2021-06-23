@@ -74,7 +74,7 @@ source $ZSH/oh-my-zsh.sh
 [ -d "$HOME/.pyenv" ] && source ~/.tools/pyenv.sh
 
 # poetry
-[ -d "$HOME/.poetry" ] && source ~/.tools/poetry.sh
+[ -L "$HOME/.local/bin/poetry" ] && source ~/.tools/poetry.sh
 
 # binenv
 [ -d "$HOME/.binenv" ] && pathprepend "$HOME/.binenv" && source <(binenv completion zsh)
