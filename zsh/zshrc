@@ -55,7 +55,7 @@ source ~/.shell_config/exports.sh
 # brew
 if [ "$(uname)" = "Darwin" ]; then
     # arm mac
-    [ -d "/opt/homebrew" ] && pathprepend "/opt/homebrew/bin"
+    [ -d "/opt/homebrew" ] && pathprepend_f "/opt/homebrew/bin"
 fi
 
 if type brew &>/dev/null; then
@@ -74,7 +74,7 @@ source $ZSH/oh-my-zsh.sh
 [ -d "$HOME/.pyenv" ] && source ~/.tools/pyenv.sh
 
 # poetry
-[ -L "$HOME/.local/bin/poetry" ] && source ~/.tools/poetry.sh
+[ -d "$HOME/.poetry/bin" ] && source ~/.tools/poetry.sh
 
 # binenv
 [ -d "$HOME/.binenv" ] && pathprepend "$HOME/.binenv" && source <(binenv completion zsh)
