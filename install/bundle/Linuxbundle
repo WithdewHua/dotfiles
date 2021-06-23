@@ -8,6 +8,7 @@ neovim
 ripgrep
 screen
 tmux
+trash-cli
 tree
 vim
-trash-cli
+xclip
