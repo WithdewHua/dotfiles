@@ -1,1 +1,1 @@
-pathappend $HOME/.poetry/bin
+pathappend $HOME/.local/bin
