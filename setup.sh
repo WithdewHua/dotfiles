@@ -37,8 +37,9 @@ IS_POETRY=0
 IS_TMUX=0
 IS_FZF=0
 IS_PYENV=0
+IS_ALACRITTY=0
 
-softwares=("pip3" "git" "vim" "poetry" "tmux" "fzf" "pyenv")
+softwares=("pip3" "git" "vim" "poetry" "tmux" "fzf" "pyenv" "alacritty")
 
 # ----------------
 # Common Functions
@@ -284,6 +285,11 @@ config_tmux() {
     create_symlinks "tmux/tmux.conf" ".tmux.conf"
 }
 
+# Alacritty
+config_alacritty() {
+    mkdir -p $HOME/.config/alacritty && create_symlinks "alacritty/alacritty.yml" ".config/alacritty/alacritty.yml"
+}
+
 # -----
 # MAIN
 # -----
@@ -300,6 +306,7 @@ check_installed
 [ $IS_PYENV -eq 0 ] && install_pyenv
 [ $IS_POETRY -eq 0 ] && install_poetry
 [ $IS_FZF -eq 0 ] && install_fzf
+[ $IS_ALACRITTY -eq 0 ] && config_alacritty
 [ $IS_BASH -eq 1 ] && config_bash && exec bash
 [ $IS_ZSH -eq 1 ] && config_zsh && exec zsh
 
