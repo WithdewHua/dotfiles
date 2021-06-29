@@ -4,4 +4,5 @@ thefuck
 tldr
 flake8  # syntax check
 black   # format
+isort   # sort import
 pynvim  # for neovim
