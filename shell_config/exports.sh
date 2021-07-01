@@ -60,3 +60,12 @@ export TZ='Asia/Shanghai'
 export EDITOR='vim'
 export LANG='en_US.UTF-8'
 export LC_CTYPE='en_US.UTF-8'
+
+# rg & fzf
+type rg > /dev/null 2>&1 && {
+    # Setting rg as the default source for fzf
+    export FZF_DEFAULT_COMMAND='rg --files --no-ignore --hidden --follow -g "!{.git}/*" 2> /dev/null'
+    # To apply the command to CTRL-T as well
+    export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+}
+

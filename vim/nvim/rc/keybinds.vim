@@ -126,10 +126,6 @@ endif
     nmap <leader>- <Plug>AirlineSelectPrevTab
     nmap <leader>+ <Plug>AirlineSelectNextTab
 " }}}
-" NERDTree {{{
-    " map a specific key or shortcut to open NERDTree
-    map <C-n> :NERDTreeToggle<CR>
-" }}}
 " vim-doge {{{
     let g:doge_mapping = '<space>d'
 " }}}

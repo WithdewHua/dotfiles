@@ -86,17 +86,11 @@ type thefuck > /dev/null 2>&1 && eval $(thefuck --alias)
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
-# fzf && rg
+# fzf
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-type rg > /dev/null 2>&1 && {
-    # Setting rg as the default source for fzf
-    export FZF_DEFAULT_COMMAND='rg --files --no-ignore --hidden --follow -g "!{.git}/*" 2> /dev/null'
-    # To apply the command to CTRL-T as well
-    export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
-}
 
-# vim/nvim
-type nvim > /dev/null 2>&1 && alias vim='nvim'
+# alias
+source ~/.shell_config/alias.sh
 
 # remove duplicate path
 normalize_path

@@ -4,6 +4,7 @@ tap "homebrew/cask-fonts"
 tap "homebrew/cask-versions"
 tap "homebrew/core", "https://mirrors.tuna.tsinghua.edu.cn/git/homebrew/homebrew-core.git"
 tap "knqyf263/pet"
+tap "mistertea/et"
 # Strip or convert ANSI codes into HTML, (La)Tex, RTF, or BBCode
 brew "ansifilter"
 # Cryptography and SSL/TLS Toolkit
@@ -48,12 +49,14 @@ brew "onefetch"
 brew "python@3.8"
 # Search tool like grep and The Silver Searcher
 brew "ripgrep"
+# Rust toolchain installer
+brew "rustup-init"
 # SMART hard drive monitoring
 brew "smartmontools"
 # User interface to the TELNET protocol
 brew "telnet"
 # Programmatically correct mistyped console commands
-brew "thefuck"
+brew "thefuck", link: false
 # Terminal multiplexer
 brew "tmux"
 # Command-line interface to the freedesktop.org trashcan
@@ -66,6 +69,8 @@ brew "wget"
 brew "zlib"
 # Simple command-line snippet manager
 brew "knqyf263/pet/pet"
+# Remote terminal with IP roaming
+brew "mistertea/et/et"
 # Stand alone ad blocker
 cask "adguard"
 # Rule-based custom proxy with GUI based on clash
@@ -83,7 +88,7 @@ cask "iina"
 cask "imazing"
 # Provides updates to various Microsoft products
 cask "microsoft-auto-update"
-# Multi-platform web browser
+# Web browser
 cask "microsoft-edge"
 # Home media player
 cask "plex"
@@ -110,3 +115,4 @@ mas "Numbers", id: 409203825
 mas "Pages", id: 409201541
 mas "Spark", id: 1176895641
 mas "WeChat", id: 836500024
+mas "WireGuard", id: 1451685025
