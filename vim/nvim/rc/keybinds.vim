@@ -135,7 +135,7 @@ endif
 	nnoremap <silent> <space>bb    :Buffers<CR>
 	nnoremap <silent> <space>bl    :BLines<CR>
 	nnoremap <silent> <space>l    :Lines<CR>
-	nnoremap <silent> <space>rg   :Rg<C-R><C-W><CR>
+	nnoremap <silent> <space>rg   :Rg<CR>
 	nnoremap <silent> <space>mk    :Marks<CR>
 	nnoremap <silent> <space>mp    :Maps<CR>
     nnoremap <silent> <space>hh    :History<CR>
