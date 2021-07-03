@@ -140,7 +140,7 @@ get_package_manager() {
 install_bundle() {
     ask "Install bundle (including some useful applications)?"
     [ $? -eq 1 ] && {
-        local os=$uname
+        local os=$(uname)
         if [ $os == "Darwin" ]; then
             ./install/install_brew.sh && brew bundle install --file=./install/bundle/Brewfile
         elif [ $os == "Linux" ]; then
