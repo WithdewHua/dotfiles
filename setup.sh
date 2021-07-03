@@ -133,6 +133,14 @@ get_package_manager() {
     fi
 }
 
+get_current_user() {
+    if [ `whoami` == "root" ]; then
+        return 1
+    else
+        return 0
+    fi
+}
+
 # -----------------
 # Install Functions
 # -----------------
@@ -145,7 +153,8 @@ install_bundle() {
             ./install/install_brew.sh && brew bundle install --file=./install/bundle/Brewfile
         elif [ $os == "Linux" ]; then
             get_package_manager
-            cat ./install/bundle/Linuxbundle | xargs -n1 $PKG $INSTALL_PARAM
+            get_current_user
+            [ $? -eq 1 ] && cat ./install/bundle/Linuxbundle | xargs -n1 $PKG $INSTALL_PARAM || cat ./install/bundle/Linuxbundle | xargs -n1 sudo $PKG $INSTALL_PARAM
         fi
         check_single_installed pip3
         [ $? -eq 1 ] && pip3 install -r ./install/bundle/pipbundle
