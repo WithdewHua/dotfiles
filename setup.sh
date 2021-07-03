@@ -129,7 +129,7 @@ get_package_manager() {
         INSTALL_PARAM='install -y'
     elif grep -Eqi "archlinux" /proc/version; then
         PKG="pacman"
-        INSTALL_PARAM="-S"
+        INSTALL_PARAM="-Sy"
     fi
 }
 
