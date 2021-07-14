@@ -10,13 +10,14 @@ local pack_use = function()
     ------------------------------------------------\\
     use { "nvim-lua/plenary.nvim", module = "plenary" }
 	use { "nvim-lua/popup.nvim", module = "popup" }
-    use {
-        "kyazdani42/nvim-web-devicons",
-        module = "nvim-web-devicons",
-        config = function()
-            require("nvim-web-devicons").setup { default = true }
-        end,
-    }
+    use "ryanoasis/vim-devicons"
+    --use {
+        --"kyazdani42/nvim-web-devicons",
+        --module = "nvim-web-devicons",
+        --config = function()
+            --require("nvim-web-devicons").setup { default = true }
+        --end,
+    --}
 
     ------------------------------------------------\\
     -- LSP, Autocomplete code related stuff
@@ -79,6 +80,12 @@ local pack_use = function()
     -- Bufferline, Statusline and theme related stuff
     ------------------------------------------------\\
     use {"npxbr/gruvbox.nvim", requires = {"rktjmp/lush.nvim"}}
+    use {
+        "vim-airline/vim-airline",
+        config = function()
+            require("plugins.airline").config()
+        end
+    }
 
 
     ------------------------------------------------\\
@@ -95,7 +102,22 @@ local pack_use = function()
     ------------------------------------------------\\
     -- Utils
     ------------------------------------------------\\
-
+    -- smooth scroll
+    use {
+        "karb94/neoscroll.nvim",
+        event = "WinScrolled",
+        config = function()
+            require("neoscroll").setup()
+        end
+    }
+    -- indent line
+    use {
+        "lukas-reineke/indent-blankline.nvim",
+        event = "BufRead",
+        setup = function()
+            require("utils").indentline()
+        end
+    }
 end
 
 
