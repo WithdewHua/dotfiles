@@ -40,7 +40,7 @@ brew "mosh"
 # Fast, highly customisable system info script
 brew "neofetch"
 # Ambitious Vim-fork focused on extensibility and agility
-brew "neovim"
+brew "neovim", args: ["HEAD"]
 # Platform built on V8 to build network applications
 brew "node"
 # Git repository summary on your terminal
@@ -75,8 +75,6 @@ brew "mistertea/et/et"
 cask "adguard"
 # Rule-based custom proxy with GUI based on clash
 cask "clashx-pro"
-# Terminal/ssh/serial port/sftp client
-cask "electerm"
 # Web browser
 cask "firefox"
 cask "font-caskaydia-cove-nerd-font"
@@ -94,6 +92,8 @@ cask "microsoft-edge"
 cask "plex"
 # Snip or pin screenshots
 cask "snipaste"
+# Network toolbox
+cask "surge"
 # Terminal for a more modern age
 cask "terminus"
 # Configurable document editor that supports Markdown
@@ -102,10 +102,14 @@ cask "typora"
 cask "visual-studio-code"
 # Code editor
 cask "visual-studio-code-insiders"
+# Remote desktop application focusing on security
+cask "vnc-viewer"
 # Note-taking application that knows programmers and Markdown better
 cask "vnote"
 # Free messaging and calling application
 cask "wechat"
+# Network protocol analyzer
+cask "wireshark"
 mas "AdGuard for Safari", id: 1440147259
 mas "Bitwarden", id: 1352778147
 mas "Hidden Bar", id: 1452453066
