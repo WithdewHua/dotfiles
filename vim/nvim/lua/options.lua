@@ -15,6 +15,8 @@ o.autowriteall = true
 
 -- line number settings
 o.number = true
+o.relativenumber = true
+o.cursorline = true
 
 -- indent settings
 o.autoindent = true
