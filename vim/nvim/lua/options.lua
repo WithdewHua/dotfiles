@@ -80,3 +80,10 @@ g.loaded_spec = 0
 
 -- clipboard settings
 o.clipboard = "unnamedplus"
+
+-- highlight
+vim.cmd("syntax on")
+
+-- filetype settings
+vim.cmd("filetype plugin indent on")
+

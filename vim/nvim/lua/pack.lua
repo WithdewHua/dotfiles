@@ -135,6 +135,7 @@ return packer.startup(
         ------------------------------------------------\\
         use {
             "nvim-treesitter/nvim-treesitter",
+            run = ':TSUpdate',
             event = "BufRead",
             config = function()
                 require("plugins.treesitter").config()
@@ -213,5 +214,14 @@ return packer.startup(
         --     end
         -- }
 
+        -- rainbow parentheses
+        use {
+            'p00f/nvim-ts-rainbow',
+            after = 'nvim-treesitter',
+            config = function()
+                require("plugins.treesitter").config_ts_rainbow()
+            end
+        }
+        
     end  -- plugins end
 )
