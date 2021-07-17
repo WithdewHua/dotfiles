@@ -1,7 +1,7 @@
 local o = vim.o
 local g = vim.g
 
-o.nocomatible = true
+o.compatible = false
 o.encoding = "UTF-8"
 o.updatetime = 300
 o.history = 8000
@@ -34,9 +34,9 @@ o.showbreak = '->'
 vim.cmd("autocmd cursorhold * set nohlsearch")
 
 -- backup settings
-o.nobackup = true
-o.nowb = true
-o.noswapfile = true
+o.backup = false
+o.wb = false
+o.swapfile = false
 
 -- Tab settings
 o.ts = 4
@@ -64,3 +64,17 @@ else
     g.python3_host_prog = vim.fn.substitute(vim.fn.system("which -a python3 | head -n2 | tail -n1"), "\n", '', 'g')
 end
 
+-- disable builtin vim plugins
+g.loaded_gzip = 0
+g.loaded_tar = 0
+g.loaded_tarPlugin = 0
+g.loaded_zipPlugin = 0
+g.loaded_2html_plugin = 0
+g.loaded_netrw = 0
+g.loaded_netrwPlugin = 0
+g.loaded_matchit = 0
+g.loaded_matchparen = 0
+g.loaded_spec = 0
+
+-- clipboard settings
+o.clipboard = "unnamedplus"

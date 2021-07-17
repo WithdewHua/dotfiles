@@ -234,11 +234,11 @@ _config_shell() {
 config_vim() {
     create_symlinks "vim/vimrc" ".vimrc"
     type nvim > /dev/null 2>&1 && {
-        ask "Use nvim with plug?"
+        ask "Use nvim with plugins?"
         [ $? -eq 1 ] && {
             mkdir -p $HOME/.config/nvim
-            create_symlinks "vim/nvim/init.vim" ".config/nvim/init.vim"
-            create_symlinks "vim/nvim/rc" ".config/nvim/rc"
+            create_symlinks "vim/nvim/init.lua" ".config/nvim/init.lua"
+            create_symlinks "vim/nvim/lua" ".config/nvim/lua"
             create_symlinks "vim/nvim/coc-settings.json" ".config/nvim/coc-settings.json"
         } || {
             mkdir -p $HOME/.config/nvim

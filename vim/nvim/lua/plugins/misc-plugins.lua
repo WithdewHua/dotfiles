@@ -1,4 +1,4 @@
-local M
+local M = {}
 
 M.indentline = function()
     vim.g.indentLine_enabled = 1
