@@ -20,8 +20,8 @@ M.config = function()
         },
     }
 
-    vim.o.foldmethod = "expr"
-    vim.cmd("set foldexpr=nvim_treesitter#foldexpr()")
+    -- vim.o.foldmethod = "expr"
+    -- vim.cmd("set foldexpr=nvim_treesitter#foldexpr()")
 end
 
 M.config_ts_rainbow = function()
