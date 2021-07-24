@@ -28,8 +28,6 @@ OH_MY_ZSH=$HOME"/.oh-my-zsh"
 ZSH_CUSTOM=$OH_MY_ZSH"/custom"
 POETRY_PLUGIN=$ZSH_CUSTOM"/plugins/poetry"
 
-IS_BASH=0
-IS_ZSH=0
 IS_PIP3=0
 IS_VIM=0
 IS_GIT=0
@@ -103,16 +101,6 @@ create_symlinks() {
     fi
 }
 
-# Choose shell
-choose_shell() {
-    ask "Choose shell, yes for zsh and no for bash:"
-    if [ $? -eq 0 ]; then
-        IS_BASH=1
-    elif [ $? -eq 1 ]; then
-        IS_ZSH=1
-    fi
-}
-
 install() {
     ask "Install ${1}?"
     [ $? -eq 1 ] && {
@@ -161,54 +149,6 @@ install_bundle() {
     }
 }
 
-install_oh_my_zsh() {
-    # oh-my-zsh
-    if [ -d "${OH_MY_ZSH}" ]; then
-        echo -e "[${green}INFO${plain}] ${OH_MY_ZSH} exists. Update..."
-        git -C ${OH_MY_ZSH} pull
-    else
-        echo -e "[${green}INFO${plain}] ${OH_MY_ZSH} does not exist. Install..."
-        sh -c "$(wget https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh -O -)"
-    fi
-
-    # oh-my-zsh theme
-    if [ -d ${ZSH_CUSTOM}/themes/powerlevel10k ]; then
-        echo -e "[${green}INFO${plain}] powerlevel10k is already installed. Git pull to update..."
-        git -C ${ZSH_CUSTOM}/themes/powerlevel10k pull
-    else
-        echo -e "[${green}INFO${plain}] Installing theme p10k"
-        git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM}/themes/powerlevel10k
-    fi
-
-    # oh-my-zsh plugin
-    # > zsh-syntax-highlighting
-    if [ -d ${ZSH_CUSTOM}/plugins/zsh-syntax-highlighting ]; then
-        echo -e "[${green}INFO${plain}] zsh-syntax-highlighting is already installed. Git pull to update..."
-        git -C ${ZSH_CUSTOM}/plugins/zsh-syntax-highlighting pull
-    else
-        echo -e "[${green}INFO${plain}] Installing plugin zsh-syntax-highlighting"
-        git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM}/plugins/zsh-syntax-highlighting
-    fi
-    # > zsh-autosuggestions
-    if [ -d ${ZSH_CUSTOM}/plugins/zsh-autosuggestions ]; then
-        echo -e "[${green}INFO${plain}] zsh-autosuggestions is already installed. Git pull to update..."
-        git -C ${ZSH_CUSTOM}/plugins/zsh-autosuggestions pull
-    else
-        echo -e "[${green}INFO${plain}] Installing plugin zsh-autosuggestions"
-        git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM}/plugins/zsh-autosuggestions
-    fi
-    # > poetry completions
-    if [ $IS_POETRY -eq 1 ]; then
-        if [ -d "${POETRY_PLUGIN}" ]; then
-            echo -e "[${green}INFO${plain}] zsh-poetry is already installed"
-        else
-            echo -e "[${green}INFO${plain}] Installing plugin poetry"
-            mkdir ${POETRY_PLUGIN}
-            poetry completions zsh >${POETRY_PLUGIN}/_poetry
-        fi
-    fi
-}
-
 install_fzf() {
     install fzf git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf && ~/.fzf/install --key-bindings --completion --no-update-rc
 }
@@ -226,8 +166,11 @@ install_poetry() {
 # ----------------
 
 _config_shell() {
-    create_symlinks "shell_config" ".shell_config"
-    create_symlinks "tools" ".tools"
+    mkdir -p $HOME/.zsh/tools
+    create_symlinks "shell_config" ".zsh/shell_config"
+    [ -d "$HOME/.pyenv" ] && create_symlinks "tools/pyenv.sh" ".zsh/tools/pyenv.sh"
+    [ -d "$HOME/.poetry/bin" ] && create_symlinks "tools/poetry.sh" ".zsh/tools/poetry.sh"
+    create_symlinks "tools/brew.sh" ".zsh/tools/brew.sh"
 }
 
 # VIM
@@ -253,15 +196,9 @@ config_git() {
     create_symlinks "git/gitignore" ".gitignore_global"
 }
 
-# BASH
-config_bash() {
-    create_symlinks "bash/bashrc" ".bashrc"
-    _config_shell
-}
-
 # ZSH
 config_zsh() {
-    install_oh_my_zsh
+    # install_oh_my_zsh
     ask "Config p10k theme with fonts?"
     if [ $? -eq 1 ]; then
         create_symlinks "zsh/p10k_with_font.zsh" ".p10k.zsh"
@@ -312,7 +249,6 @@ config_alacritty() {
 
 echo -e "[SETUP START]"
 
-choose_shell
 install_bundle
 check_installed
 [ $IS_VIM -eq 1 ] && config_vim
@@ -323,7 +259,6 @@ check_installed
 [ $IS_POETRY -eq 0 ] && install_poetry
 [ $IS_FZF -eq 0 ] && install_fzf
 config_alacritty
-[ $IS_BASH -eq 1 ] && config_bash && exec bash
-[ $IS_ZSH -eq 1 ] && config_zsh && exec zsh
+config_zsh && exec zsh
 
 echo -e "[SETUP END]"
