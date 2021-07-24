@@ -10,25 +10,6 @@
 # =============================================================================================== #
 
 
-
-# For Performance Debug purpose
-export ENABLE_PERFORMANCE_PROFILING="false"
-
-if [[ "${ENABLE_PERFORMANCE_PROFILING:-}" == "true" ]]; then
-    zmodload zsh/zprof
-
-    zmodload zsh/datetime
-
-    setopt PROMPT_SUBST
-    PS4='+$EPOCHREALTIME %N:%i> '
-    rm -rf zsh_profile*
-    __zsh_profiling_logfile=$(mktemp zsh_profile.XXXXXX)
-    echo "Logging to $__zsh_profiling_logfile"
-    exec 3>&2 2>$__zsh_profiling_logfile
-
-    setopt XTRACE
-fi
-
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
 # Initialization code that may require console input (password prompts, [y/n]
 # confirmations, etc.) must go above this block; everything else may go below.
