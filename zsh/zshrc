@@ -35,6 +35,7 @@ zinit light zsh-users/zsh-completions
 zinit snippet OMZ::lib/completion.zsh
 zinit snippet OMZ::lib/history.zsh
 zinit snippet OMZ::lib/key-bindings.zsh
+zinit snippet OMZ::lib/theme-and-appearance.zsh
 zinit snippet OMZ::plugins/colored-man-pages/colored-man-pages.plugin.zsh
 zinit snippet OMZ::plugins/sudo/sudo.plugin.zsh
 
@@ -44,6 +45,7 @@ zinit snippet OMZ::plugins/git/git.plugin.zsh
 zinit ice pick"async.zsh" src"pure.zsh"
 zinit light sindresorhus/pure
 
+# zinit ice depth=1; zinit light romkatv/powerlevel10k
 
 # --------
 # p10k
