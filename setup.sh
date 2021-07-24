@@ -166,11 +166,11 @@ install_poetry() {
 # ----------------
 
 _config_shell() {
-    mkdir -p $HOME/.zsh/tools
+    mkdir -p $HOME/.zsh/tools $HOME/.zsh/completions
     create_symlinks "shell_config" ".zsh/shell_config"
-    [ -d "$HOME/.pyenv" ] && create_symlinks "tools/pyenv.sh" ".zsh/tools/pyenv.sh"
-    [ -d "$HOME/.poetry/bin" ] && create_symlinks "tools/poetry.sh" ".zsh/tools/poetry.sh"
-    create_symlinks "tools/brew.sh" ".zsh/tools/brew.sh"
+    [ -d "$HOME/.pyenv" ] && create_symlinks "tools/pyenv.zsh" ".zsh/tools/pyenv.zsh"
+    [ -d "$HOME/.poetry/bin" ] && create_symlinks "tools/poetry.zsh" ".zsh/tools/poetry.zsh"
+    create_symlinks "tools/brew.zsh" ".zsh/tools/brew.zsh"
 }
 
 # VIM

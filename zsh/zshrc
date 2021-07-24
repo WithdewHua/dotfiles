@@ -67,12 +67,13 @@ zinit light sindresorhus/pure
 # --------
 
 ZSH=$HOME/.zsh
+fpath+=$ZSH/completions
 
 # path env functions
 source $ZSH/shell_config/exports.sh
 
 # useful tools: pyenv/poetry etc
-for tool in $ZSH/tools/*.sh;do
+for tool in $ZSH/tools/*.zsh;do
     source $tool
 done
 
@@ -87,3 +88,5 @@ source $ZSH/shell_config/alias.sh
 
 # remove duplicate path
 normalize_path
+
+export PATH="$HOME/.poetry/bin:$PATH"

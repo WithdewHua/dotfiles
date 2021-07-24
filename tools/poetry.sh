@@ -1,1 +1,0 @@
-pathappend $HOME/.poetry/bin
