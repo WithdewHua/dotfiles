@@ -89,4 +89,3 @@ source $ZSH/shell_config/alias.sh
 # remove duplicate path
 normalize_path
 
-export PATH="$HOME/.poetry/bin:$PATH"
