@@ -21,7 +21,7 @@ fi
 source ~/.zinit/bin/zinit.zsh
 
 zinit ice lucid wait='1'
-zinit light skywind3000/z.lua
+zinit light agkozak/zsh-z
 
 zinit ice lucid wait='0' atinit='zpcompinit'
 zinit light zdharma/fast-syntax-highlighting
