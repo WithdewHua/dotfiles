@@ -9,9 +9,6 @@ end
 
 local opt = {}
 
--- leader settings
-vim.g.mapleader = ','
-
 -- set hlsearch
 map('n', 'n', ':set hlsearch<cr>n', opt)
 map('n', 'N', ':set hlsearch<cr>N', opt)
@@ -112,3 +109,24 @@ map("n", "<space>law", [[<Cmd>Telescope lsp_workspace_diagnostics<CR>]], opt)
 -- extensions
 map("n", "<space>fp", [[<Cmd>lua require('telescope').extensions.media_files.media_files()<CR>]], opt)
 map("n", "<space>ss", [[<Cmd>SaveSession<CR><CR>]], opt)
+
+-- format code
+map("n", "<leader>fm", ":Neoformat<CR>", opt)
+
+-- Packer commands till because we are not loading it at startup
+vim.cmd("silent! command PackerCompile lua require 'pack' require('packer').compile()")
+vim.cmd("silent! command PackerInstall lua require 'pack' require('packer').install()")
+vim.cmd("silent! command PackerStatus lua require 'pack' require('packer').status()")
+vim.cmd("silent! command PackerSync lua require 'pack' require('packer').sync()")
+vim.cmd("silent! command PackerUpdate lua require 'pack' require('packer').update()")
+
+-- get out of terminal with jk
+map("t", "jk", "<C-\\><C-n>", opt)
+
+-- Allow moving the cursor through wrapped lines with j, k, <Up> and <Down>
+-- http://www.reddit.com/r/vim/comments/2k4cbr/problem_with_gj_and_gk/
+-- empty mode is same as using :map
+map("", "j", 'v:count ? "j" : "gj"', {expr = true})
+map("", "k", 'v:count ? "k" : "gk"', {expr = true})
+map("", "<Down>", 'v:count ? "j" : "gj"', {expr = true})
+map("", "<Up>", 'v:count ? "k" : "gk"', {expr = true})

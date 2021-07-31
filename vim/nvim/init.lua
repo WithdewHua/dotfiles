@@ -1,31 +1,8 @@
--- load general options
-require "options"
+local modules = {
+    "options",
+    "mappings",
+}
 
--- load plugins
-require "pack"
-
--- load keybindings 
-require "mappings"
-
--- load theme
-require "theme"
-
-if require "theme" then
-    local async
-    async = 
-        vim.loop.new_async(
-            vim.schedule_wrap(
-                function()
-                    require "pack"
-                    require "mappings"
-
-                    async:close()
-                end
-            )
-        )
-    async:send()
-else
-    require "pack"
-    print("Now PackerSync will be executed, after completion, restart nvim.\n")
-    vim.cmd("PackerSync")
+for i = 1, #modules, 1 do
+    pcall(require, modules[i])
 end

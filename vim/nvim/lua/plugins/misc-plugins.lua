@@ -11,4 +11,9 @@ M.indentline = function()
     vim.g.indent_blankline_show_first_indent_level = false
 end
 
+M.escape = function ()
+    vim.g.better_escape_interval = 300
+    vim.g.better_escape_shortcut = {"jk"}
+end
+
 return M

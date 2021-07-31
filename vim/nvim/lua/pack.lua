@@ -13,12 +13,12 @@ else
 end
 
 
-local use = require("packer").use
+local use = packer.use
 
 -- plugin list
 return packer.startup(
     function()
-        use { "wbthomason/packer.nvim" }
+        use { "wbthomason/packer.nvim", event = "VimEnter" }
         use { "dstein64/vim-startuptime", cmd = "StartupTime" }
 
         ------------------------------------------------\\
@@ -32,6 +32,15 @@ return packer.startup(
                 --require("nvim-web-devicons").setup { default = true }
             --end,
         --}
+
+        use {
+            "nvim-lua/plenary.nvim",
+            event = "BufRead"
+        }
+        use {
+            "nvim-lua/popup.nvim",
+            after = "plenary.nvim"
+        }
 
         ------------------------------------------------\\
         -- LSP, Autocomplete code related stuff
@@ -113,10 +122,7 @@ return packer.startup(
         ------------------------------------------------\\
         use {
             "nvim-telescope/telescope.nvim",
-            requires = {
-                {"nvim-lua/popup.nvim"},
-                {"nvim-lua/plenary.nvim"}
-            },
+            wants = { "plenary.nvim", "popup.nvim" },
             cmd = "Telescope",
             config = function()
                 require "plugins.telescope"
@@ -147,9 +153,15 @@ return packer.startup(
         -- Bufferline, Statusline and theme related stuff
         ------------------------------------------------\\
         -- use {"npxbr/gruvbox.nvim", requires = {"rktjmp/lush.nvim"}}
-        use "gruvbox-community/gruvbox"
+        use { 
+            "gruvbox-community/gruvbox", 
+            config = function()
+                require("theme")
+            end 
+        }
         use {
             "vim-airline/vim-airline",
+            after = "gruvbox",
             config = function()
                 require("plugins.airline").config()
             end
@@ -173,6 +185,13 @@ return packer.startup(
             config = function()
                 require "plugins.gitsigns"
             end
+        }
+
+        use {
+            "tpope/vim-fugitive",
+            cmd = {
+                "Git"
+            }
         }
 
         ------------------------------------------------\\
@@ -222,6 +241,16 @@ return packer.startup(
                 require("plugins.treesitter").config_ts_rainbow()
             end
         }
-        
-    end  -- plugins end
+
+        -- escape insert mode 
+        use {
+            "jdhao/better-escape.vim",
+            event = "InsertEnter",
+            config = function ()
+                require "plugins.misc-plugins".escape()
+            end
+        }
+
+    -- plugins end    
+    end
 )

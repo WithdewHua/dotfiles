@@ -77,5 +77,10 @@ if
         end
     )
 then
-    vim.cmd("PackerSync")
+    -- This should only trigger when in need of PackerSync, so better do it
+    print("After completion of PackerSync, restart neovim.")
+    -- Trigger packer compile on PackerComplete, so it properly waits for PackerSync
+    vim.cmd 'autocmd User PackerComplete ++once lua require("packer").compile()'
+    require "pack"
+    require("packer").sync("telescope-fzf-native.nvim", "telescope-media-files.nvim")   
 end
