@@ -1,6 +1,7 @@
 axel
 bat
 curl
+exa
 git
 htop
 iproute2
@@ -12,7 +13,7 @@ ripgrep
 screen
 tmux
 trash-cli
-tree
 vim
 wget
 xclip
+zoxide

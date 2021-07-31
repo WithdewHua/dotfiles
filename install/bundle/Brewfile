@@ -17,6 +17,8 @@ brew "bash"
 brew "bat"
 # Freely available high-quality data compressor
 brew "bzip2"
+# Modern replacement for 'ls'
+brew "exa"
 # GNU compiler collection
 brew "gcc"
 # Library for command-line editing
@@ -33,6 +35,8 @@ brew "htop"
 brew "imagemagick"
 # Tool to measure maximum TCP and UDP bandwidth
 brew "iperf"
+# Simple terminal UI for git commands
+brew "lazygit"
 # Mac App Store command-line interface
 brew "mas"
 # Remote terminal application
@@ -40,7 +44,7 @@ brew "mosh"
 # Fast, highly customisable system info script
 brew "neofetch"
 # Ambitious Vim-fork focused on extensibility and agility
-brew "neovim", args: ["HEAD"]
+brew "neovim"
 # Platform built on V8 to build network applications
 brew "node"
 # Git repository summary on your terminal
@@ -61,12 +65,14 @@ brew "thefuck", link: false
 brew "tmux"
 # Command-line interface to the freedesktop.org trashcan
 brew "trash-cli"
-# Display directories as trees (with optional color/HTML output)
-brew "tree"
 # Internet file retriever
 brew "wget"
+# JavaScript package manager
+brew "yarn"
 # General-purpose lossless data-compression library
 brew "zlib"
+# Shell extension to navigate your filesystem faster
+brew "zoxide"
 # Simple command-line snippet manager
 brew "knqyf263/pet/pet"
 # Remote terminal with IP roaming
