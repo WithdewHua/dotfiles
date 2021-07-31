@@ -161,7 +161,10 @@ return packer.startup(
         }
         use {
             "vim-airline/vim-airline",
-            after = "gruvbox",
+            after = {"gruvbox"},
+            requires = {
+                { "tpope/vim-fugitive", cmd = "Git" }   
+            },
             config = function()
                 require("plugins.airline").config()
             end
@@ -187,12 +190,12 @@ return packer.startup(
             end
         }
 
-        use {
-            "tpope/vim-fugitive",
-            cmd = {
-                "Git"
-            }
-        }
+        -- use {
+        --     "tpope/vim-fugitive",
+        --     cmd = {
+        --         "Git"
+        --     }
+        -- }
 
         ------------------------------------------------\\
         -- Utils
