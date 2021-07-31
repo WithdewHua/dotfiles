@@ -7,11 +7,13 @@ M.config = function()
     vim.g.neoformat_enabled_python = {'black', 'isort'}
     vim.g.neoformat_python_black = {
         exe = 'black',
-        args = {'--line-length 128'}
+        args = {'--line-length 128'},
+        stdin = 1
     }
     vim.g.neoformat_python_isort = {
         exe = 'isort',
-        args = {'--profile black'}
+        args = {'--profile black'},
+        stdin = 1
     }
 end
 
