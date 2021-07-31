@@ -101,7 +101,7 @@ return packer.startup(
 
         -- formatting
         use {
-            "sbdchd/neoformat", 
+            "sbdchd/neoformat",
             cmd = "Neoformat",
             config = function()
                 require("plugins.neoformat").config()

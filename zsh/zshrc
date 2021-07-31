@@ -20,17 +20,22 @@ fi
 	
 source ~/.zinit/bin/zinit.zsh
 
-zinit ice lucid wait='1'
-zinit light agkozak/zsh-z
+# zinit ice lucid wait='1'
+# zinit light agkozak/zsh-z
 
-zinit ice lucid wait='0' atinit='zpcompinit'
+zinit ice lucid wait='1' atinit='zpcompinit'
 zinit light zdharma/fast-syntax-highlighting
 
-zinit ice lucid wait="0" atload='_zsh_autosuggest_start'
+zinit ice lucid wait="1" atload='_zsh_autosuggest_start'
 zinit light zsh-users/zsh-autosuggestions
 
-zinit ice lucid wait='0'
+zinit ice lucid wait='1'
 zinit light zsh-users/zsh-completions
+
+# real-time type-ahead completion
+zinit ice lucid wait='1'
+zinit light marlonrichert/zsh-autocomplete
+zstyle ':autocomplete:*' min-input 1
 
 zinit snippet OMZ::lib/completion.zsh
 zinit snippet OMZ::lib/history.zsh
@@ -39,7 +44,7 @@ zinit snippet OMZ::lib/theme-and-appearance.zsh
 zinit snippet OMZ::plugins/colored-man-pages/colored-man-pages.plugin.zsh
 zinit snippet OMZ::plugins/sudo/sudo.plugin.zsh
 
-zinit ice lucid wait='1'
+zinit ice lucid wait='2'
 zinit snippet OMZ::plugins/git/git.plugin.zsh
 
 zinit ice pick"async.zsh" src"pure.zsh"
@@ -82,6 +87,9 @@ type thefuck > /dev/null 2>&1 && eval $(thefuck --alias)
 
 # fzf
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+# zoxide
+type zoxide > /dev/null 2>&1 && eval "$(zoxide init zsh)"
 
 # alias
 source $ZSH/shell_config/alias.sh
