@@ -55,7 +55,7 @@ return packer.startup(
             "neovim/nvim-lspconfig",
             after = "nvim-lspinstall",
             config = function()
-                require "plugins.lspconfig"
+                require "plugins._lspconfig"
             end
         }
 
@@ -72,7 +72,7 @@ return packer.startup(
             "hrsh7th/nvim-compe",
             event = "InsertEnter",
             config = function()
-                require "plugins.compe"
+                require "plugins._compe"
             end,
             wants = {"LuaSnip"},
             requires = {
@@ -81,7 +81,7 @@ return packer.startup(
                     wants = "friendly-snippets",
                     event = "InsertCharPre",
                     config = function()
-                        require "plugins.luasnip"
+                        require "plugins._luasnip"
                     end
                 },
                 {
@@ -95,7 +95,7 @@ return packer.startup(
             "windwp/nvim-autopairs",
             after = "nvim-compe",
             config = function()
-                require "plugins.autopairs"
+                require "plugins._autopairs"
             end
         }
 
@@ -113,19 +113,28 @@ return packer.startup(
             "sbdchd/neoformat",
             cmd = "Neoformat",
             config = function()
-                require("plugins.neoformat").config()
+                require("plugins._neoformat").config()
             end
        }
+
+        use {
+            "folke/trouble.nvim",
+            event = "BufRead",
+            requires = "kyazdani42/nvim-web-devicons",
+            config = function()
+                require "plugins._trouble"
+            end
+        }
 
         ------------------------------------------------\\
         -- Telescope related stuff
         ------------------------------------------------\\
         use {
             "nvim-telescope/telescope.nvim",
-            wants = { "plenary.nvim", "popup.nvim" },
+            requires = { "plenary.nvim", "popup.nvim" },
             cmd = "Telescope",
             config = function()
-                require "plugins.telescope"
+                require "plugins._telescope"
             end
         }
 
@@ -144,7 +153,7 @@ return packer.startup(
             run = ':TSUpdate',
             event = "BufRead",
             config = function()
-                require("plugins.treesitter").config()
+                require("plugins._treesitter").config()
             end
         }
 
@@ -162,11 +171,8 @@ return packer.startup(
         use {
             "vim-airline/vim-airline",
             after = {"gruvbox"},
-            requires = {
-                { "tpope/vim-fugitive", cmd = "Git" }   
-            },
             config = function()
-                require("plugins.airline").config()
+                require("plugins._airline").config()
             end
         }
         
@@ -174,7 +180,7 @@ return packer.startup(
             'akinsho/nvim-bufferline.lua', 
             requires = 'kyazdani42/nvim-web-devicons',
             config = function()
-                require "plugins.bufferline"
+                require "plugins._bufferline"
             end
         }
 
@@ -186,16 +192,16 @@ return packer.startup(
             "lewis6991/gitsigns.nvim",
             event = "BufRead",
             config = function()
-                require "plugins.gitsigns"
+                require "plugins._gitsigns"
             end
         }
 
-        -- use {
-        --     "tpope/vim-fugitive",
-        --     cmd = {
-        --         "Git"
-        --     }
-        -- }
+        use {
+            "tpope/vim-fugitive",
+            cmd = {
+                "Git"
+            }
+        }
 
         ------------------------------------------------\\
         -- Utils
@@ -214,7 +220,7 @@ return packer.startup(
             "lukas-reineke/indent-blankline.nvim",
             event = "BufRead",
             setup = function()
-                require("plugins.misc-plugins").indentline()
+                require("plugins._misc").indentline()
             end
         }
 
@@ -222,12 +228,13 @@ return packer.startup(
         use {
             "rmagatti/auto-session",
             config = function()
-                require "plugins.autosession"
+                require "plugins._autosession"
             end
         }
         -- use {
         --     "rmagatti/session-lens", 
-        --     after = {'auto-session', 'telescope.nvim'},
+        --     after = { "auto-session" },
+        --     cmd = { "Telescope" },
         --     config = function()
         --         require('session-lens').setup{
         --             previewer = false,
@@ -241,7 +248,7 @@ return packer.startup(
             'p00f/nvim-ts-rainbow',
             after = 'nvim-treesitter',
             config = function()
-                require("plugins.treesitter").config_ts_rainbow()
+                require("plugins._treesitter").config_ts_rainbow()
             end
         }
 
@@ -250,7 +257,7 @@ return packer.startup(
             "jdhao/better-escape.vim",
             event = "InsertEnter",
             config = function ()
-                require "plugins.misc-plugins".escape()
+                require "plugins._misc".escape()
             end
         }
 
