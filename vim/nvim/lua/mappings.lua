@@ -139,3 +139,16 @@ map("n", "<leader>xl", "<cmd>Trouble loclist<cr>", opt)
 map("n", "<leader>xq", "<cmd>Trouble quickfix<cr>", opt)
 map("n", "<leader>xr", "<cmd>Trouble lsp_references<cr>", opt)
 
+-- bufferline
+map("n", "<leader>1", "<cmd>BufferLineGoToBuffer 1<cr>", opt)
+map("n", "<leader>2", "<cmd>BufferLineGoToBuffer 2<cr>", opt)
+map("n", "<leader>3", "<cmd>BufferLineGoToBuffer 3<cr>", opt)
+map("n", "<leader>4", "<cmd>BufferLineGoToBuffer 4<cr>", opt)
+map("n", "<leader>5", "<cmd>BufferLineGoToBuffer 5<cr>", opt)
+map("n", "<leader>6", "<cmd>BufferLineGoToBuffer 6<cr>", opt)
+map("n", "<leader>7", "<cmd>BufferLineGoToBuffer 7<cr>", opt)
+map("n", "<leader>8", "<cmd>BufferLineGoToBuffer 8<cr>", opt)
+map("n", "<leader>9", "<cmd>BufferLineGoToBuffer 9<cr>", opt)
+
+map("n", "<TAB>", "<cmd>BufferLineCycleNext<cr>", opt)
+map("n", "<S-Tab>", "<cmd>BufferLineCyclePrev<cr>", opt)

@@ -33,10 +33,10 @@ zinit ice lucid wait='1'
 zinit light zsh-users/zsh-completions
 
 # real-time type-ahead completion
-zinit ice lucid wait='1'
-zinit light marlonrichert/zsh-autocomplete
-zstyle ':autocomplete:*' min-input 1
-
+# zinit ice lucid wait='1'
+# zinit light marlonrichert/zsh-autocomplete
+# zstyle ':autocomplete:*' min-input 2
+# 
 zinit snippet OMZ::lib/completion.zsh
 zinit snippet OMZ::lib/history.zsh
 zinit snippet OMZ::lib/key-bindings.zsh

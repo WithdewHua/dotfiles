@@ -14,7 +14,6 @@ end
 bufferline.setup {
     options = {
         numbers = "both",
-        number_style = "superscript",
         offsets = {{filetype = "NvimTree", text = "", padding = 1}},
         buffer_close_icon = "",
         modified_icon = "",
@@ -29,7 +28,6 @@ bufferline.setup {
         view = "multiwindow",
         show_buffer_close_icons = true,
         separator_style = "thin",
-        mappings = true,
         always_show_bufferline = true
     }
 }
