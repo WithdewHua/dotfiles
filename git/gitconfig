@@ -7,5 +7,3 @@
 	excludesfile = ~/.gitignore_global
 [pull]
 	rebase = true
-[url "https://github.com.cnpmjs.org/"]
-	insteadOf = https://github.com/
