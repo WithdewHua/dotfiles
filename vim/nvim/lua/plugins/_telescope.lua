@@ -1,6 +1,6 @@
 local telescope
 
-if 
+if
     not pcall(
         function()
             telescope = require("telescope")
@@ -69,7 +69,7 @@ telescope.setup{
 }
 
 
-if 
+if
     not pcall(
         function()
             telescope.load_extension("fzf")
@@ -82,5 +82,5 @@ then
     -- Trigger packer compile on PackerComplete, so it properly waits for PackerSync
     vim.cmd 'autocmd User PackerComplete ++once lua require("packer").compile()'
     require "pack"
-    require("packer").sync("telescope-fzf-native.nvim", "telescope-media-files.nvim")   
+    require("packer").sync("telescope-fzf-native.nvim", "telescope-media-files.nvim")
 end

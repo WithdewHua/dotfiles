@@ -1,13 +1,13 @@
 local bufferline
 
-if 
+if
     not pcall(
         function()
             bufferline = require "bufferline"
         end
     )
 then
-    return 
+    return
 end
 
 
@@ -28,6 +28,7 @@ bufferline.setup {
         view = "multiwindow",
         show_buffer_close_icons = true,
         separator_style = "thin",
-        always_show_bufferline = true
+        always_show_bufferline = true,
+        diagnostics = "nvim_lsp"
     }
 }

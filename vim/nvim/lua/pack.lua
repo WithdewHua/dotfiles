@@ -65,35 +65,58 @@ return packer.startup(
             config = function()
                 require("lspkind").init()
             end
-        } 
+        }
 
         -- autocomplete
         use {
-            "hrsh7th/nvim-compe",
-            event = "InsertEnter",
-            config = function()
-                require "plugins._compe"
-            end,
-            wants = {"LuaSnip"},
-            requires = {
-                {
-                    "L3MON4D3/LuaSnip",
-                    wants = "friendly-snippets",
-                    event = "InsertCharPre",
-                    config = function()
-                        require "plugins._luasnip"
-                    end
-                },
-                {
-                    "rafamadriz/friendly-snippets",
-                    event = "InsertCharPre"
-                }
-            }
+            "rafamadriz/friendly-snippets",
+            event = "InsertCharPre"
         }
 
         use {
+            "hrsh7th/nvim-cmp",
+            event = "InsertEnter",
+            config = function()
+                require "plugins._cmp"
+            end,
+            after = "friendly-snippets"
+        }
+
+        use {
+            "L3MON4D3/LuaSnip",
+            wants = "friendly-snippets",
+            after = "nvim-cmp",
+            event = "InsertCharPre",
+            config = function()
+                require "plugins._luasnip"
+            end
+        }
+        -- cmp plugins
+        use {
+            "saadparwaiz1/cmp_luasnip",
+            after = "LuaSnip"
+        }
+        use {
+            "hrsh7th/cmp-nvim-lua",
+            after = "cmp_luasnip"
+        }
+        use {
+            "hrsh7th/cmp-nvim-lsp",
+            after = "cmp-nvim-lua"
+        }
+        use {
+            "hrsh7th/cmp-buffer",
+            after = "cmp-nvim-lsp"
+        }
+        use {
+            "hrsh7th/cmp-path",
+            after = "cmp-buffer"
+        }
+
+        -- autopairs
+        use {
             "windwp/nvim-autopairs",
-            after = "nvim-compe",
+            after = "nvim-cmp",
             config = function()
                 require "plugins._autopairs"
             end
@@ -146,7 +169,7 @@ return packer.startup(
         use {'nvim-telescope/telescope-fzf-native.nvim', run = 'make', cmd = "Telescope" }
 
         ------------------------------------------------\\
-        -- Treesitter 
+        -- Treesitter
         ------------------------------------------------\\
         use {
             "nvim-treesitter/nvim-treesitter",
@@ -162,11 +185,11 @@ return packer.startup(
         -- Bufferline, Statusline and theme related stuff
         ------------------------------------------------\\
         -- use {"npxbr/gruvbox.nvim", requires = {"rktjmp/lush.nvim"}}
-        use { 
-            "gruvbox-community/gruvbox", 
+        use {
+            "gruvbox-community/gruvbox",
             config = function()
                 require("theme")
-            end 
+            end
         }
         use {
             "vim-airline/vim-airline",
@@ -175,9 +198,9 @@ return packer.startup(
                 require("plugins._airline").config()
             end
         }
-        
+
         use {
-            'akinsho/nvim-bufferline.lua', 
+            'akinsho/nvim-bufferline.lua',
             requires = 'kyazdani42/nvim-web-devicons',
             config = function()
                 require "plugins._bufferline"
@@ -232,7 +255,7 @@ return packer.startup(
             end
         }
         -- use {
-        --     "rmagatti/session-lens", 
+        --     "rmagatti/session-lens",
         --     after = { "auto-session" },
         --     cmd = { "Telescope" },
         --     config = function()
@@ -252,7 +275,7 @@ return packer.startup(
             end
         }
 
-        -- escape insert mode 
+        -- escape insert mode
         use {
             "jdhao/better-escape.vim",
             event = "InsertEnter",
@@ -261,6 +284,6 @@ return packer.startup(
             end
         }
 
-    -- plugins end    
+    -- plugins end
     end
 )
