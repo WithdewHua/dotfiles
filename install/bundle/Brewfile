@@ -33,8 +33,8 @@ brew "glib"
 brew "htop"
 # Tools and libraries to manipulate images in many formats
 brew "imagemagick"
-# Tool to measure maximum TCP and UDP bandwidth
-brew "iperf"
+# Update of iperf: measures TCP, UDP, and SCTP bandwidth
+brew "iperf3"
 # Simple terminal UI for git commands
 brew "lazygit"
 # Mac App Store command-line interface
@@ -57,6 +57,8 @@ brew "ripgrep"
 brew "rustup-init"
 # SMART hard drive monitoring
 brew "smartmontools"
+# Command-line interface for https://speedtest.net bandwidth tests
+brew "speedtest-cli"
 # User interface to the TELNET protocol
 brew "telnet"
 # Programmatically correct mistyped console commands
@@ -79,6 +81,8 @@ brew "knqyf263/pet/pet"
 brew "mistertea/et/et"
 # Stand alone ad blocker
 cask "adguard"
+# GUI based on Clash
+cask "clash-for-windows"
 # Rule-based custom proxy with GUI based on clash
 cask "clashx-pro"
 # Web browser
@@ -94,14 +98,18 @@ cask "imazing"
 cask "microsoft-auto-update"
 # Web browser
 cask "microsoft-edge"
+# Knowledge base that works on top of a local folder of plain text Markdown files
+cask "obsidian"
 # Home media player
 cask "plex"
 # Snip or pin screenshots
 cask "snipaste"
 # Network toolbox
 cask "surge"
-# Terminal for a more modern age
-cask "terminus"
+# Terminal emulator, SSH and serial client
+cask "tabby"
+# SSH client
+cask "termius"
 # Configurable document editor that supports Markdown
 cask "typora"
 # Open-source code editor
@@ -110,8 +118,6 @@ cask "visual-studio-code"
 cask "visual-studio-code-insiders"
 # Remote desktop application focusing on security
 cask "vnc-viewer"
-# Note-taking application that knows programmers and Markdown better
-cask "vnote"
 # Free messaging and calling application
 cask "wechat"
 # Network protocol analyzer
