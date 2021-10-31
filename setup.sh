@@ -24,10 +24,6 @@ green='\033[0;32m'
 yellow='\033[0;33m'
 plain='\033[0m'
 
-OH_MY_ZSH=$HOME"/.oh-my-zsh"
-ZSH_CUSTOM=$OH_MY_ZSH"/custom"
-POETRY_PLUGIN=$ZSH_CUSTOM"/plugins/poetry"
-
 IS_PIP3=0
 IS_VIM=0
 IS_GIT=0
@@ -205,7 +201,7 @@ config_zsh() {
     #     create_symlinks "zsh/p10k_non_font.zsh" ".p10k.zsh"
     # fi
 
-    sh -c "$(curl -fsSL https://starship.rs/install.sh)" -- --y
+    sh -c "$(curl -fsSL https://starship.rs/install.sh)" -- -y
     create_symlinks "zsh/zshrc" ".zshrc"
     # create_symlinks "zsh/zshenv" ".zshenv"
     _config_shell
