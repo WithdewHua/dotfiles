@@ -3,7 +3,7 @@ if
     not pcall(
         function()
             autopairs = require "nvim-autopairs"
-            autopairs_completion = require "nvim-autopairs.completion.compe"
+            autopairs_completion = require "nvim-autopairs.completion.cmp"
         end
     )
  then
@@ -11,9 +11,6 @@ if
 end
 
 autopairs.setup()
-autopairs_completion.setup(
-    {
-        map_cr = true,
-        map_complete = true -- insert () func completion
-    }
-)
+
+local cmp = require "cmp"
+cmp.event:on("confirm_done", autopairs_completion.on_confirm_done())

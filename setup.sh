@@ -198,13 +198,14 @@ config_git() {
 
 # ZSH
 config_zsh() {
-    # install_oh_my_zsh
-    ask "Config p10k theme with fonts?"
-    if [ $? -eq 1 ]; then
-        create_symlinks "zsh/p10k_with_font.zsh" ".p10k.zsh"
-    elif [ $? -eq 0 ]; then
-        create_symlinks "zsh/p10k_non_font.zsh" ".p10k.zsh"
-    fi
+    # ask "Config p10k theme with fonts?"
+    # if [ $? -eq 1 ]; then
+    #     create_symlinks "zsh/p10k_with_font.zsh" ".p10k.zsh"
+    # elif [ $? -eq 0 ]; then
+    #     create_symlinks "zsh/p10k_non_font.zsh" ".p10k.zsh"
+    # fi
+
+    sh -c "$(curl -fsSL https://starship.rs/install.sh)" -- --y
     create_symlinks "zsh/zshrc" ".zshrc"
     # create_symlinks "zsh/zshenv" ".zshenv"
     _config_shell

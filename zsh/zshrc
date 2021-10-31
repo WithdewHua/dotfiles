@@ -11,46 +11,31 @@
 
 
 # ---------
-# zinit
+# znap
 # ---------
-if [[ ! -d ~/.zinit ]]; then
-	  mkdir ~/.zinit
-	  git clone https://github.com/zdharma/zinit.git ~/.zinit/bin
-fi
-	
-source ~/.zinit/bin/zinit.zsh
 
-# zinit ice lucid wait='1'
-# zinit light agkozak/zsh-z
+# Download znap, if it's not there yet.
+[[ -f ~/.znap/zsh-snap/znap.zsh ]] || {
+  mkdir ~/.znap
+  git clone --depth 1 -- https://github.com/marlonrichert/zsh-snap.git ~/.znap/zsh-snap
+}
 
-zinit ice lucid wait='1' atinit='zpcompinit'
-zinit light zdharma/fast-syntax-highlighting
+source ~/.znap/zsh-snap/znap.zsh
 
-zinit ice lucid wait="1" atload='_zsh_autosuggest_start'
-zinit light zsh-users/zsh-autosuggestions
+# znap prompt sindresorhus/pure
+eval "$(starship init zsh)"
+znap prompt
 
-zinit ice lucid wait='1'
-zinit light zsh-users/zsh-completions
+znap source zdharma-continuum/fast-syntax-highlighting
+znap source zsh-users/zsh-autosuggestions
+znap source zsh-users/zsh-completions
 
-# real-time type-ahead completion
-# zinit ice lucid wait='1'
-# zinit light marlonrichert/zsh-autocomplete
-# zstyle ':autocomplete:*' min-input 2
-# 
-zinit snippet OMZ::lib/completion.zsh
-zinit snippet OMZ::lib/history.zsh
-zinit snippet OMZ::lib/key-bindings.zsh
-zinit snippet OMZ::lib/theme-and-appearance.zsh
-zinit snippet OMZ::plugins/colored-man-pages/colored-man-pages.plugin.zsh
-zinit snippet OMZ::plugins/sudo/sudo.plugin.zsh
+znap source ohmyzsh/ohmyzsh lib/completion.zsh
+znap source ohmyzsh/ohmyzsh plugins/git
 
-zinit ice lucid wait='2'
-zinit snippet OMZ::plugins/git/git.plugin.zsh
-
-zinit ice pick"async.zsh" src"pure.zsh"
-zinit light sindresorhus/pure
-
-# zinit ice depth=1; zinit light romkatv/powerlevel10k
+znap source marlonrichert/zcolors
+znap eval   marlonrichert/zcolors "zcolors ${(q)LS_COLORS}"
+ 
 
 # --------
 # p10k
@@ -83,13 +68,13 @@ for tool in $ZSH/tools/*.zsh;do
 done
 
 # thefuck
-type thefuck > /dev/null 2>&1 && eval $(thefuck --alias)
+type thefuck > /dev/null 2>&1 && znap eval fuck 'thefuck --alias'
 
 # fzf
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
 # zoxide
-type zoxide > /dev/null 2>&1 && eval "$(zoxide init zsh)"
+type zoxide > /dev/null 2>&1 && znap eval zoxide 'zoxide init zsh'
 
 # alias
 source $ZSH/shell_config/alias.sh
