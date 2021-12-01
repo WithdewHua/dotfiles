@@ -31,16 +31,17 @@ znap source zsh-users/zsh-autosuggestions
 znap source zsh-users/zsh-completions
 
 znap source ohmyzsh/ohmyzsh lib/completion.zsh
+znap source ohmyzsh/ohmyzsh lib/history.zsh
 znap source ohmyzsh/ohmyzsh plugins/git
 
 # znap source marlonrichert/zcolors
 # znap eval   marlonrichert/zcolors "zcolors ${(q)LS_COLORS}"
  
-znap source marlonrichert/zsh-autocomplete
-zstyle ':autocomplete:*' min-input 2
-zstyle ':autocomplete:*' recent-dirs zoxide
-zstyle ':autocomplete:*' fzf-completion yes
-
+# znap source marlonrichert/zsh-autocomplete
+# zstyle ':autocomplete:*' min-input 2
+# zstyle ':autocomplete:*' recent-dirs zoxide
+# zstyle ':autocomplete:*' fzf-completion yes
+# 
 
 # --------
 # p10k
