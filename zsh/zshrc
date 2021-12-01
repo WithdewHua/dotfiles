@@ -34,6 +34,10 @@ znap source ohmyzsh/ohmyzsh lib/completion.zsh
 znap source ohmyzsh/ohmyzsh lib/history.zsh
 znap source ohmyzsh/ohmyzsh plugins/git
 
+# ssh-agent
+znap source ohmyzsh/ohmyzsh plugins/ssh-agent
+zstyle :omz:plugins:ssh-agent agent-forwarding yes
+
 # znap source marlonrichert/zcolors
 # znap eval   marlonrichert/zcolors "zcolors ${(q)LS_COLORS}"
  
