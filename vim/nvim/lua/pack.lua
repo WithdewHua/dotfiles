@@ -19,7 +19,7 @@ local use = packer.use
 return packer.startup(
     function()
         use { "wbthomason/packer.nvim", event = "VimEnter" }
-        use { "dstein64/vim-startuptime", cmd = "StartupTime" }
+        -- use { "dstein64/vim-startuptime", cmd = "StartupTime" }
 
         ------------------------------------------------\\
         -- Dependencies
@@ -149,24 +149,28 @@ return packer.startup(
             end
         }
 
+        -- use {
+        --     "github/copilot.vim"
+        -- }
+
         ------------------------------------------------\\
         -- Telescope related stuff
         ------------------------------------------------\\
-        use {
-            "nvim-telescope/telescope.nvim",
-            requires = { "plenary.nvim", "popup.nvim" },
-            cmd = "Telescope",
-            config = function()
-                require "plugins._telescope"
-            end
-        }
+        -- use {
+        --     "nvim-telescope/telescope.nvim",
+        --     requires = { "plenary.nvim", "popup.nvim" },
+        --     cmd = "Telescope",
+        --     config = function()
+        --         require "plugins._telescope"
+        --     end
+        -- }
 
-        use {
-            "nvim-telescope/telescope-media-files.nvim",
-            cmd = "Telescope"
-        }
+        -- use {
+        --     "nvim-telescope/telescope-media-files.nvim",
+        --     cmd = "Telescope"
+        -- }
 
-        use {'nvim-telescope/telescope-fzf-native.nvim', run = 'make', cmd = "Telescope" }
+        -- use {'nvim-telescope/telescope-fzf-native.nvim', run = 'make', cmd = "Telescope" }
 
         ------------------------------------------------\\
         -- Treesitter
@@ -229,6 +233,15 @@ return packer.startup(
         ------------------------------------------------\\
         -- Utils
         ------------------------------------------------\\
+        -- fzf 
+        use {
+            "junegunn/fzf.vim",
+            requires = "junegunn/fzf",
+            config = function()
+                require("plugins._fzf").config()
+            end
+        }
+
         -- smooth scroll
         use {
             "karb94/neoscroll.nvim",
