@@ -201,6 +201,7 @@ config_zsh() {
     #     create_symlinks "zsh/p10k_non_font.zsh" ".p10k.zsh"
     # fi
 
+    # install starship
     sh -c "$(curl -fsSL https://starship.rs/install.sh)" -- -y
     create_symlinks "zsh/zshrc" ".zshrc"
     # create_symlinks "zsh/zshenv" ".zshenv"

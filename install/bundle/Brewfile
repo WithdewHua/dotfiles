@@ -21,6 +21,8 @@ brew "bzip2"
 brew "exa"
 # GNU compiler collection
 brew "gcc"
+# Blazing fast terminal-ui for git written in rust
+brew "gitui"
 # Library for command-line editing
 brew "readline"
 # Command-line interface for SQLite
@@ -59,6 +61,8 @@ brew "rustup-init"
 brew "smartmontools"
 # Command-line interface for https://speedtest.net bandwidth tests
 brew "speedtest-cli"
+# High level, imperative, object-oriented programming language
+brew "squirrel"
 # User interface to the TELNET protocol
 brew "telnet"
 # Programmatically correct mistyped console commands
@@ -104,8 +108,8 @@ cask "microsoft-edge"
 cask "obsidian"
 # Home media player
 cask "plex"
-# Snip or pin screenshots
-cask "snipaste"
+# Control your tools with a few keystrokes
+cask "raycast"
 # Network toolbox
 cask "surge"
 # Terminal emulator, SSH and serial client
@@ -127,10 +131,12 @@ cask "wireshark"
 mas "AdGuard for Safari", id: 1440147259
 mas "Bitwarden", id: 1352778147
 mas "Hidden Bar", id: 1452453066
+mas "iShot", id: 1485844094
 mas "Keynote", id: 409183694
 mas "Microsoft Remote Desktop", id: 1295203466
 mas "Numbers", id: 409203825
 mas "Pages", id: 409201541
 mas "Spark", id: 1176895641
+mas "Twitter", id: 1482454543
 mas "WeChat", id: 836500024
 mas "WireGuard", id: 1451685025
