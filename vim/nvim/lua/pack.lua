@@ -149,9 +149,9 @@ return packer.startup(
             end
         }
 
-        -- use {
-        --     "github/copilot.vim"
-        -- }
+        use {
+            "github/copilot.vim"
+        }
 
         ------------------------------------------------\\
         -- Telescope related stuff
@@ -233,7 +233,7 @@ return packer.startup(
         ------------------------------------------------\\
         -- Utils
         ------------------------------------------------\\
-        -- fzf 
+        -- fzf
         use {
             "junegunn/fzf.vim",
             requires = "junegunn/fzf",
