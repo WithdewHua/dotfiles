@@ -19,7 +19,8 @@ local use = packer.use
 return packer.startup(
     function()
         use { "wbthomason/packer.nvim", event = "VimEnter" }
-        -- use { "dstein64/vim-startuptime", cmd = "StartupTime" }
+        use { "dstein64/vim-startuptime", cmd = "StartupTime" }
+        use { "nathom/filetype.nvim" }
 
         ------------------------------------------------\\
         -- Dependencies
@@ -35,7 +36,6 @@ return packer.startup(
 
         use {
             "nvim-lua/plenary.nvim",
-            event = "BufRead"
         }
         use {
             "nvim-lua/popup.nvim",
@@ -156,21 +156,19 @@ return packer.startup(
         ------------------------------------------------\\
         -- Telescope related stuff
         ------------------------------------------------\\
-        -- use {
-        --     "nvim-telescope/telescope.nvim",
-        --     requires = { "plenary.nvim", "popup.nvim" },
-        --     cmd = "Telescope",
-        --     config = function()
-        --         require "plugins._telescope"
-        --     end
-        -- }
+        use {
+            "nvim-telescope/telescope.nvim",
+            requires = { "plenary.nvim", "popup.nvim" },
+            config = function()
+                require "plugins._telescope"
+            end
+        }
 
-        -- use {
-        --     "nvim-telescope/telescope-media-files.nvim",
-        --     cmd = "Telescope"
-        -- }
+        use {
+            "nvim-telescope/telescope-media-files.nvim",
+        }
 
-        -- use {'nvim-telescope/telescope-fzf-native.nvim', run = 'make', cmd = "Telescope" }
+        use {'nvim-telescope/telescope-fzf-native.nvim', run = 'make'}
 
         ------------------------------------------------\\
         -- Treesitter
@@ -294,6 +292,14 @@ return packer.startup(
             event = "InsertEnter",
             config = function ()
                 require "plugins._misc".escape()
+            end
+        }
+
+        -- toggleterm
+        use {
+            "akinsho/toggleterm.nvim",
+            config = function()
+                require "plugins._toggleterm"
             end
         }
 

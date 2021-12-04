@@ -1,14 +1,20 @@
 local o = vim.o
 local g = vim.g
+local cmd = vim.cmd
+local fn = vim.fn
 
 o.compatible = false
 o.encoding = "UTF-8"
 o.updatetime = 300
 o.history = 8000
+o.hidden = true
+
+-- leader settings
+g.mapleader = ','
 
 -- read settings
 o.autoread = true
-vim.cmd('au CursorHold * checktime | call feedkeys("lh")')
+cmd('au CursorHold * checktime | call feedkeys("lh")')
 
 -- write settings
 o.autowriteall = true
@@ -33,7 +39,7 @@ o.linebreak = true
 o.showbreak = '->'
 
 -- search highlight settings
-vim.cmd("autocmd cursorhold * set nohlsearch")
+cmd("autocmd cursorhold * set nohlsearch")
 
 -- backup settings
 o.backup = false
@@ -47,12 +53,12 @@ o.shiftwidth = 4
 o.expandtab = true
 
 -- mouse settings
-if vim.fn.has("mouse") == 1 then
+if fn.has("mouse") == 1 then
     o.mouse = 'a'
 end
 
 -- grep
-if vim.fn.executable "rg" == 1 then
+if fn.executable "rg" == 1 then
     o.grepprg = "rg --vimgrep --no-heading --smart-case"
 end
 
@@ -60,10 +66,10 @@ end
 o.termguicolors = true
 
 -- python env
-if vim.fn.exists("$VIRTUAL_ENV") == 1 then
-    g.python3_host_prog = vim.fn.substitute(vim.fn.system("which -a python3 | head -n3 | tail -n1"), "\n", '', 'g')
+if fn.exists("$VIRTUAL_ENV") == 1 then
+    g.python3_host_prog = fn.substitute(fn.system("which -a python3 | head -n3 | tail -n1"), "\n", '', 'g')
 else
-    g.python3_host_prog = vim.fn.substitute(vim.fn.system("which -a python3 | head -n2 | tail -n1"), "\n", '', 'g')
+    g.python3_host_prog = fn.substitute(fn.system("which -a python3 | head -n2 | tail -n1"), "\n", '', 'g')
 end
 
 -- disable builtin vim plugins
@@ -89,18 +95,15 @@ local disabled_built_ins = {
 	}
 
 for _, plugin in pairs(disabled_built_ins) do
-    vim.g["loaded_" .. plugin] = 0
+    g["loaded_" .. plugin] = 0
 end
 
 -- clipboard settings
 o.clipboard = "unnamedplus"
 
 -- highlight
-vim.cmd("syntax on")
+cmd("syntax on")
 
 -- filetype settings
-vim.cmd("filetype plugin indent on")
-
--- leader settings
-vim.g.mapleader = ','
+cmd("filetype plugin indent on")
 

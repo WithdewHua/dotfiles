@@ -7,6 +7,7 @@ local function map(mode, lhs, rhs, opts)
     vim.api.nvim_set_keymap(mode, lhs, rhs, options)
 end
 
+
 local opt = {}
 
 -- set hlsearch
@@ -60,9 +61,6 @@ vim.cmd("silent! command PackerStatus lua require 'pack' require('packer').statu
 vim.cmd("silent! command PackerSync lua require 'pack' require('packer').sync()")
 vim.cmd("silent! command PackerUpdate lua require 'pack' require('packer').update()")
 
--- get out of terminal with jk
-map("t", "jk", "<C-\\><C-n>", opt)
-
 -- Allow moving the cursor through wrapped lines with j, k, <Up> and <Down>
 -- http://www.reddit.com/r/vim/comments/2k4cbr/problem_with_gj_and_gk/
 -- empty mode is same as using :map
@@ -95,4 +93,5 @@ map("n", "gb", "<cmd>BufferLinePick<cr>", opt)
 
 -- fzf
 map("n", "<space>ff", [[<Cmd> FZFFiles <CR>]], opt)
-map("n", "<space>bb", [[<Cmd> FZFBuffers <CR>]], opt)
+map("n", "<space>fb", [[<Cmd> FZFBuffers <CR>]], opt)
+
