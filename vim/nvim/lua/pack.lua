@@ -25,7 +25,7 @@ return packer.startup(
         ------------------------------------------------\\
         -- Dependencies
         ------------------------------------------------\\
-        use { "ryanoasis/vim-devicons" }
+        -- use { "ryanoasis/vim-devicons" }
         --use {
             --"kyazdani42/nvim-web-devicons",
             --module = "nvim-web-devicons",
@@ -193,19 +193,27 @@ return packer.startup(
                 require("theme")
             end
         }
-        use {
-            "vim-airline/vim-airline",
-            after = {"gruvbox"},
-            config = function()
-                require("plugins._airline").config()
-            end
-        }
+        -- use {
+        --     "vim-airline/vim-airline",
+        --     after = {"gruvbox"},
+        --     config = function()
+        --         require("plugins._airline").config()
+        --     end
+        -- }
 
         use {
             'akinsho/nvim-bufferline.lua',
             requires = 'kyazdani42/nvim-web-devicons',
             config = function()
                 require "plugins._bufferline"
+            end
+        }
+
+        use {
+            'nvim-lualine/lualine.nvim',
+            requires = {'kyazdani42/nvim-web-devicons'},
+            config = function()
+                require("plugins._lualine")
             end
         }
 
