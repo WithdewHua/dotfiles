@@ -193,13 +193,6 @@ return packer.startup(
                 require("theme")
             end
         }
-        -- use {
-        --     "vim-airline/vim-airline",
-        --     after = {"gruvbox"},
-        --     config = function()
-        --         require("plugins._airline").config()
-        --     end
-        -- }
 
         use {
             'akinsho/nvim-bufferline.lua',
