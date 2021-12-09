@@ -94,4 +94,5 @@ map("n", "gb", "<cmd>BufferLinePick<cr>", opt)
 -- fzf
 map("n", "<space>ff", [[<Cmd> FZFFiles <CR>]], opt)
 map("n", "<space>fb", [[<Cmd> FZFBuffers <CR>]], opt)
+map("n", "<space>rg", [[<Cmd> FZFRg <CR>]], opt)
 
