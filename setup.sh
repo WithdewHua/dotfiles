@@ -154,7 +154,7 @@ install_pyenv() {
 }
 
 install_poetry() {
-    install poetry export POETRY_HOME=$HOME/.poetry && curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/install-poetry.py | python3 - 
+    install poetry export POETRY_HOME=$HOME/.poetry && curl -sSL https://install.python-poetry.org | python3 - 
 }
 
 # ----------------
