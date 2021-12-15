@@ -23,7 +23,7 @@
 source ~/.znap/zsh-snap/znap.zsh
 
 # znap prompt sindresorhus/pure
-znap eval starship "$(which starship) init zsh --print-full-init"
+znap eval starship "starship init zsh --print-full-init"
 znap prompt
 
 znap source zdharma-continuum/fast-syntax-highlighting
