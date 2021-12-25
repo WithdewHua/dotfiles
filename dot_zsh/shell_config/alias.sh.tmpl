@@ -1,0 +1,19 @@
+alias l='ls -lahF'
+
+{{ if contains "exa" (output "command" "-v" "exa") }}
+alias ls='exa'
+alias tree='exa -T'
+{{ end }}
+
+
+# vim/nvim
+{{ if contains "nvim" .editor }}
+alias vim='nvim'
+{{ end }}
+
+# trash-cli
+{{ if contains "trash" (output "command" "-v" "trash") }}
+alias rm='trash'
+{{ else }}
+alias rm='rm -i'
+{{ end }}

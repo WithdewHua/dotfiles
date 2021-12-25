@@ -1,0 +1,49 @@
+{{/* git user.email */}}
+{{- $email := "" -}}
+{{- if (hasKey . "email") -}}
+{{-   $email = .email -}}
+{{- else -}}
+{{-   $email = promptString "email" -}}
+{{- end -}}
+
+{{/* git user.name */}}
+{{- $name := "" -}}
+{{- if (hasKey . "name") -}}
+{{-   $name = .name -}}
+{{- else -}}
+{{-   $name = promptString "name" -}}
+{{- end -}}
+
+{{/* editor */}}
+{{- $editor := "vi" }}
+{{- if contains "nvim" (output "command" "-v" "nvim") }}
+{{-   $editor = "nvim" }}
+{{- else if contains "vim" (output "command" "-v" "vim") }}
+{{-   $editor = "vim" }}
+{{- end }}
+
+{{/* boolean flag */}}
+{{- $alacritty := "false" }}
+{{- if (hasKey . "alacritty") }}
+{{-   $alacritty = .alacritty }}
+{{- else }}
+{{-   $alacritty = promptBool "alacritty" }}
+{{- end }}
+
+{{- $config_python_format_tools := "false" }}
+{{- if (hasKey . "config_python_format_tools") }}
+{{-   $config_python_format_tools = .config_python_format_tools }}
+{{- else }}
+{{-   $config_python_format_tools = promptBool "config_python_format_tools" }}
+{{- end }}
+
+
+data:
+  email: {{ $email | quote }}
+  name: {{ $name | quote }}
+  editor: {{ $editor }}
+  alacritty: {{ $alacritty }}
+  config_python_format_tools: {{ $config_python_format_tools }}
+diff:
+  exclude:
+    - scripts

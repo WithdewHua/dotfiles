@@ -72,19 +72,23 @@ fpath+=$ZSH/completions
 # path env functions
 source $ZSH/shell_config/exports.sh
 
-# useful tools: pyenv/poetry etc
+# useful tools: pyenv/poetry etc.
 for tool in $ZSH/tools/*.zsh;do
     source $tool
 done
 
+{{ if lookPath "thefuck" }}
 # thefuck
-type thefuck > /dev/null 2>&1 && znap eval fuck 'thefuck --alias'
+znap eval fuck 'thefuck --alias'
+{{ end }}
 
 # fzf
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
+{{ if lookPath "zoxide" }}
 # zoxide
-type zoxide > /dev/null 2>&1 && znap eval zoxide 'zoxide init zsh'
+znap eval zoxide 'zoxide init zsh'
+{{ end }}
 
 # alias
 source $ZSH/shell_config/alias.sh

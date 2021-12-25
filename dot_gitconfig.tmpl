@@ -1,0 +1,10 @@
+[user]
+    name = {{ .name | quote }}
+    email = {{ .email | quote }}
+
+[core]
+	editor = {{ .editor }}
+	excludesfile = ~/.gitignore_global
+[pull]
+	rebase = true
+

@@ -1,4 +1,4 @@
-## Dotfiles
+## WithdewHua's Dotfiles
 
 ## Intro
 
@@ -7,6 +7,14 @@
 
 ## How to use
 
+### Installation
+
 ```bash
 sh -c "$(curl -fsLS git.io/chezmoi)" -- init --apply --verbose WithdewHua
+```
+
+### Update
+
+```bash
+chezmoi update
 ```
