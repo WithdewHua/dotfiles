@@ -1,0 +1,94 @@
+# =============================================================================================== #
+#                                                                                                 #
+#  __      __.__  __  .__         .___              ___ ___              ___________              #
+# /  \    /  \__|/  |_|  |__    __| _/______  _  __/   |   \ __ _______  \_   _____/ _______  __  #
+# \   \/\/   /  \   __\  |  \  / __ |/ __ \ \/ \/ /    ~    \  |  \__  \  |    __)_ /    \  \/ /  #
+#  \        /|  ||  | |   Y  \/ /_/ \  ___/\     /\    Y    /  |  // __ \_|        \   |  \   /   #
+#   \__/\  / |__||__| |___|  /\____ |\___  >\/\_/  \___|_  /|____/(____  /_______  /___|  /\_/    #
+#        \/                \/      \/    \/              \/            \/        \/     \/        #
+#                                                                                                 #
+# =============================================================================================== #
+
+
+# ---------
+# znap
+# ---------
+
+# Download znap, if it's not there yet.
+[[ -f ~/.znap/zsh-snap/znap.zsh ]] || {
+  mkdir ~/.znap
+  git clone --depth 1 -- https://github.com/marlonrichert/zsh-snap.git ~/.znap/zsh-snap
+}
+
+source ~/.znap/zsh-snap/znap.zsh
+
+# znap prompt sindresorhus/pure
+znap eval starship "starship init zsh --print-full-init"
+znap prompt
+
+znap source zdharma-continuum/fast-syntax-highlighting
+znap source zsh-users/zsh-autosuggestions
+znap source zsh-users/zsh-completions
+
+znap source ohmyzsh/ohmyzsh lib/completion.zsh
+znap source ohmyzsh/ohmyzsh lib/history.zsh
+znap source ohmyzsh/ohmyzsh plugins/git
+
+# ssh-agent
+znap source ohmyzsh/ohmyzsh plugins/ssh-agent
+zstyle :omz:plugins:ssh-agent agent-forwarding yes
+
+# znap source marlonrichert/zcolors
+# znap eval   marlonrichert/zcolors "zcolors ${(q)LS_COLORS}"
+ 
+# znap source marlonrichert/zsh-autocomplete
+# zstyle ':autocomplete:*' min-input 2
+# zstyle ':autocomplete:*' recent-dirs zoxide
+# zstyle ':autocomplete:*' fzf-completion yes
+# 
+
+# --------
+# p10k
+# --------
+
+# # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
+# # Initialization code that may require console input (password prompts, [y/n]
+# # confirmations, etc.) must go above this block; everything else may go below.
+# if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+#   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+# fi
+# 
+# # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
+# [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+# 
+
+# --------
+# misc
+# --------
+
+ZSH=$HOME/.zsh
+fpath+=$ZSH/completions
+
+# path env functions
+source $ZSH/shell_config/exports.sh
+
+# useful tools: pyenv/poetry etc
+for tool in $ZSH/tools/*.zsh;do
+    source $tool
+done
+
+# thefuck
+type thefuck > /dev/null 2>&1 && znap eval fuck 'thefuck --alias'
+
+# fzf
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+# zoxide
+type zoxide > /dev/null 2>&1 && znap eval zoxide 'zoxide init zsh'
+
+# alias
+source $ZSH/shell_config/alias.sh
+
+# remove duplicate path
+normalize_path
+
