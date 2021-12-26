@@ -1,0 +1,8 @@
+{{ if (and (eq .chezmoi.os "darwin" "linux") (contains "nvim" .editor) (lookPath ".local/share/nvim/site/pack/packer/opt/packer.nvim")) }}
+#!/usr/bin/env bash
+
+set -eufo pipefail
+
+nvim -c PackerSync -c qa
+
+{{ end }}

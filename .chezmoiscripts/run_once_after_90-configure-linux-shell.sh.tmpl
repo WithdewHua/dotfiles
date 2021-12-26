@@ -1,0 +1,8 @@
+{{- if eq .chezmoi.os "linux" -}}
+#!/usr/bin/env bash
+
+set -eufo pipefail
+
+chsh -s $(command -v zsh)
+
+{{ end -}}
