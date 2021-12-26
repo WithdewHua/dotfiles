@@ -22,9 +22,12 @@
 
 source ~/.znap/zsh-snap/znap.zsh
 
-# znap prompt sindresorhus/pure
+{{ if eq .zsh_theme "pure" -}}
+znap prompt sindresorhus/pure
+{{- else if and (eq .zsh_theme "starship") (lookPath "starship") }}
 znap eval starship "starship init zsh --print-full-init"
 znap prompt
+{{- end }}
 
 znap source zdharma-continuum/fast-syntax-highlighting
 znap source zsh-users/zsh-autosuggestions
@@ -49,24 +52,24 @@ fpath+=$ZSH/completions
 # path env functions
 source $ZSH/shell_config/exports.sh
 
-{{- if contains "zsh" (output "ls" (joinPath .chezmoi.homeDir ".zsh/tools")) }}
+{{ if contains "zsh" (output "ls" (joinPath .chezmoi.homeDir ".zsh/tools")) }}
 # useful tools: pyenv/poetry etc.
 for tool in $ZSH/tools/*.zsh;do
     source $tool
 done
 {{- end }}
 
-{{- if lookPath "thefuck" }}
+{{ if lookPath "thefuck" }}
 # thefuck
 znap eval fuck 'thefuck --alias'
 {{- end }}
 
-{{- if stat (joinPath .chezmoi.homeDir ".fzf" )}}
+{{ if stat (joinPath .chezmoi.homeDir ".fzf" )}}
 # fzf
 source ~/.fzf.zsh
 {{- end }}
 
-{{- if lookPath "zoxide" }}
+{{ if lookPath "zoxide" }}
 # zoxide
 znap eval zoxide 'zoxide init zsh'
 {{- end }}

@@ -51,6 +51,13 @@
 {{-   $install_more_packages = promptBool "Install more packages" -}}
 {{- end -}}
 
+{{- $zsh_theme := "pure" -}}
+{{- if (hasKey . "zsh_theme") -}}
+{{-   $zsh_theme = .zsh_theme -}}
+{{- else -}}
+{{-   $zsh_theme = promptString "Zsh theme(pure/starship): " -}}
+{{- end -}}
+
 
 data:
   email: {{ $email | quote }}
@@ -60,6 +67,7 @@ data:
   personal_secrets: {{ $personal_secrets }}
   alacritty: {{ $alacritty }}
   install_more_packages: {{ $install_more_packages }}
+  zsh_theme: {{ $zsh_theme }}
   has_tmux: {{ if lookPath "tmux" }}true{{ else }}false{{ end }}
   has_neovim: {{ if eq $editor "nvim" }}true{{ else }}false{{ end }}
   has_pip: {{ if lookPath "pip3" }}true{{ else }}false{{ end }}

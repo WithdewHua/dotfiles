@@ -1,0 +1,9 @@
+{{- if and (ne .chezmoi.os "linux") (eq .zsh_theme "starship") -}}
+#!/usr/bin/env bash
+
+set -eufo pipefail
+
+{{ if not (lookPath "starship") }}
+sh -c "$(curl -fsSL https://starship.rs/install.sh)"
+{{ end }}
+{{ end -}}
