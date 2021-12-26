@@ -71,6 +71,11 @@ data:
   has_tmux: {{ if lookPath "tmux" }}true{{ else }}false{{ end }}
   has_neovim: {{ if eq $editor "nvim" }}true{{ else }}false{{ end }}
   has_pip: {{ if lookPath "pip3" }}true{{ else }}false{{ end }}
+  gpg:
+    personal_key:
+      id: 24B0943C95E559CB
+      comment: WithdewHua <i@10101.io>
+
 diff:
   exclude:
     - scripts
