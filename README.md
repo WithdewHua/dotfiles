@@ -10,7 +10,7 @@
 ### Installation
 
 ```bash
-sh -c "$(curl -fsLS git.io/chezmoi)" -- init --apply --verbose WithdewHua
+bash <(curl -fsLS git.io/chezmoi) -b /usr/local/bin -- init --apply --verbose WithdewHua
 ```
 
 ### Update
