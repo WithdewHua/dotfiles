@@ -22,10 +22,18 @@ README.md
 .zsh/tools/poetry.sh
 {{ end }}
 
-{{ if not (contains "nvim" .editor) }}
+{{ if not .has_neovim }}
 .config/nvim
 {{ end }}
 
 {{ if not .personal_secrets }}
 .ssh
+{{ end }}
+
+{{ if not .has_tmux }}
+.tmux.conf
+{{ end }}
+
+{{ if not .has_pip }}
+.pip
 {{ end }}

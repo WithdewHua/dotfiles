@@ -15,43 +15,54 @@
 {{- end -}}
 
 {{/* editor */}}
-{{- $editor := "vi" }}
-{{- if contains "nvim" (output "command" "-v" "nvim") }}
-{{-   $editor = "nvim" }}
-{{- else if contains "vim" (output "command" "-v" "vim") }}
-{{-   $editor = "vim" }}
-{{- end }}
+{{- $editor := "vi" -}}
+{{- if contains "nvim" (output "command" "-v" "nvim") -}}
+{{-   $editor = "nvim" -}}
+{{- else if contains "vim" (output "command" "-v" "vim") -}}
+{{-   $editor = "vim" -}}
+{{- end -}}
 
 {{/* boolean flag */}}
-{{- $alacritty := "false" }}
-{{- if (hasKey . "alacritty") }}
-{{-   $alacritty = .alacritty }}
-{{- else }}
-{{-   $alacritty = promptBool "Config alacritty" }}
-{{- end }}
+{{- $config_python_format_tools := "false" -}}
+{{- if (hasKey . "config_python_format_tools") -}}
+{{-   $config_python_format_tools = .config_python_format_tools -}}
+{{- else -}}
+{{-   $config_python_format_tools = promptBool "Config python formatting tools" -}}
+{{- end -}}
 
-{{- $config_python_format_tools := "false" }}
-{{- if (hasKey . "config_python_format_tools") }}
-{{-   $config_python_format_tools = .config_python_format_tools }}
-{{- else }}
-{{-   $config_python_format_tools = promptBool "Config python formatting tools" }}
-{{- end }}
+{{- $personal_secrets := "false" -}}
+{{- if (hasKey . "personal_secrets") -}}
+{{-   $personal_secrets = .personal_secrets -}}
+{{- else -}}
+{{-   $personal_secrets = promptBool "Decrypt encrypted data" -}}
+{{- end -}}
 
-{{- $personal_secrets := "false" }}
-{{- if (hasKey . "personal_secrets") }}
-{{-   $personal_secrets = .personal_secrets }}
-{{- else }}
-{{-   $personal_secrets = promptBool "Decrypt encrypted data" }}
-{{- end }}
+{{- $alacritty := "false" -}}
+{{- if (hasKey . "alacritty") -}}
+{{-   $alacritty = .alacritty -}}
+{{- else -}}
+{{-   $alacritty = promptBool "Config alacritty" -}}
+{{- end -}}
+
+{{- $install_more_packages := "false" -}}
+{{- if (hasKey . "install_more_packages") -}}
+{{-   $install_more_packages = .install_more_packages -}}
+{{- else -}}
+{{-   $install_more_packages = promptBool "Install more packages" -}}
+{{- end -}}
 
 
 data:
   email: {{ $email | quote }}
   name: {{ $name | quote }}
   editor: {{ $editor }}
-  alacritty: {{ $alacritty }}
   config_python_format_tools: {{ $config_python_format_tools }}
   personal_secrets: {{ $personal_secrets }}
+  alacritty: {{ $alacritty }}
+  install_more_packages: {{ $install_more_packages }}
+  has_tmux: {{ if contains "tmux" (output "command" "-v" "tmux") }}true{{ else }}false{{ end }}
+  has_neovim: {{ if eq $editor "nvim" }}true{{ else }}false{{ end }}
+  has_pip: {{ if contains "pip" (output "command" "-v" "pip") }}true{{ else }}false{{ end }}
 diff:
   exclude:
     - scripts
