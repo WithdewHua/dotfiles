@@ -1,0 +1,131 @@
+{{- if eq .chezmoi.os "darwin" -}}
+#!/usr/bin/env bash
+
+set -eufo pipefail
+
+brew bundle --no-lock --file=/dev/stdin <<EOF
+tap "homebrew/bundle"
+tap "homebrew/cask", "https://mirrors.tuna.tsinghua.edu.cn/git/homebrew/homebrew-cask.git"
+tap "homebrew/cask-fonts"
+tap "homebrew/cask-versions"
+tap "homebrew/core", "https://mirrors.tuna.tsinghua.edu.cn/git/homebrew/homebrew-core.git"
+tap "knqyf263/pet"
+tap "mistertea/et"
+# Strip or convert ANSI codes into HTML, (La)Tex, RTF, or BBCode
+brew "ansifilter"
+# Cryptography and SSL/TLS Toolkit
+brew "openssl@1.1"
+# Light UNIX download accelerator
+brew "axel"
+# Bourne-Again SHell, a UNIX command interpreter
+brew "bash"
+# Clone of cat(1) with syntax highlighting and Git integration
+brew "bat"
+# Freely available high-quality data compressor
+brew "bzip2"
+# Manage your dotfiles across multiple diverse machines, securely
+brew "chezmoi"
+# Modern replacement for 'ls'
+brew "exa"
+# GNU compiler collection
+brew "gcc"
+# Blazing fast terminal-ui for git written in rust
+brew "gitui"
+# Library for command-line editing
+brew "readline"
+# Command-line interface for SQLite
+brew "sqlite"
+# General-purpose data compression with high compression ratio
+brew "xz"
+# Core application library for C
+brew "glib"
+# GNU Pretty Good Privacy (PGP) package
+brew "gnupg"
+# Improved top (interactive process viewer)
+brew "htop"
+# Tools and libraries to manipulate images in many formats
+brew "imagemagick"
+# Update of iperf: measures TCP, UDP, and SCTP bandwidth
+brew "iperf3"
+# Lightweight and flexible command-line JSON processor
+brew "jq"
+# Simple terminal UI for git commands
+brew "mas"
+# Remote terminal application
+brew "mosh"
+# Fast, highly customisable system info script
+brew "neofetch"
+# Ambitious Vim-fork focused on extensibility and agility
+brew "neovim"
+# Platform built on V8 to build network applications
+brew "node"
+# Git repository summary on your terminal
+brew "onefetch"
+# Interpreted, interactive, object-oriented programming language
+brew "python@3.8"
+# Search tool like grep and The Silver Searcher
+brew "ripgrep"
+# Command-line interface for https://speedtest.net bandwidth tests
+brew "speedtest-cli"
+# High level, imperative, object-oriented programming language
+brew "squirrel"
+# Cross-shell prompt for astronauts
+brew "starship"
+# User interface to the TELNET protocol
+brew "telnet"
+# Terminal multiplexer
+brew "tmux"
+# Command-line interface to the freedesktop.org trashcan
+brew "trash-cli"
+# Internet file retriever
+brew "wget"
+# JavaScript package manager
+brew "zlib"
+# Shell extension to navigate your filesystem faster
+brew "zoxide"
+# UNIX shell (command interpreter)
+brew "zsh"
+# Simple command-line snippet manager
+brew "knqyf263/pet/pet"
+# Remote terminal with IP roaming
+brew "mistertea/et/et"
+# Stand alone ad blocker
+cask "adguard"
+# GUI based on Clash
+cask "clash-for-windows"
+# Rule-based custom proxy with GUI based on clash
+cask "clashx-pro"
+# Web browser
+cask "firefox"
+cask "font-caskaydia-cove-nerd-font"
+# Web browser
+cask "google-chrome"
+# Free and open-source media player
+cask "iina"
+# iPhone management application
+cask "imazing"
+# GPU-based terminal emulator
+cask "kitty"
+# Knowledge base that works on top of a local folder of plain text Markdown files
+cask "obsidian"
+# Home media player
+cask "plex"
+# Control your tools with a few keystrokes
+cask "raycast"
+# Network toolbox
+cask "surge"
+# Cleanup and system status tool
+cask "tencent-lemon"
+# Configurable document editor that supports Markdown
+cask "typora"
+# Open-source code editor
+cask "visual-studio-code"
+# Code editor
+cask "visual-studio-code-insiders"
+# Remote desktop application focusing on security
+cask "wechat"
+# Network protocol analyzer
+cask "wireshark"
+
+EOF
+{{ end -}}
