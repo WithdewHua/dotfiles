@@ -60,20 +60,24 @@ get_package_manager() {
 
 get_current_user() {
     if [ `whoami` == "root" ]; then
-        return 1
+        USER="root"
     else
-        return 0
+        USER=`whoami`
     fi
 }
 
 get_package_manager
 get_current_user
-[ $? -eq 1 ] && {
+[ $USER == "root" ] && {
     $PKG $INSTALL_PARAM ${packages[@]}
 } || {
     sudo $PKG $INSTALL_PARAM ${packages[@]}
 }
 
-pip3 install $(pip_packages[@])
+{{ if lookPath "pip3" }}
+if (( ${#pip_packages[@]} > 0 )); then
+    pip3 install ${pip_packages[@]}
+fi
+{{ end }}
 
 {{ end -}}
