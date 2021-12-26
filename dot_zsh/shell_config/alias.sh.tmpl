@@ -1,6 +1,6 @@
 alias l='ls -lahF'
 
-{{ if contains "exa" (output "command" "-v" "exa") }}
+{{ if lookPath "exa" }}
 alias ls='exa'
 alias tree='exa -T'
 {{ end }}
@@ -12,7 +12,7 @@ alias vim='nvim'
 {{ end }}
 
 # trash-cli
-{{ if contains "trash" (output "command" "-v" "trash") }}
+{{ if lookPath "trash" }}
 alias rm='trash'
 {{ else }}
 alias rm='rm -i'
