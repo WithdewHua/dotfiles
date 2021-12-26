@@ -16,9 +16,9 @@
 
 {{/* editor */}}
 {{- $editor := "vi" -}}
-{{- if contains "nvim" (output "command" "-v" "nvim") -}}
+{{- if lookPath "nvim" -}}
 {{-   $editor = "nvim" -}}
-{{- else if contains "vim" (output "command" "-v" "vim") -}}
+{{- else if lookPath vim -}}
 {{-   $editor = "vim" -}}
 {{- end -}}
 
@@ -60,9 +60,9 @@ data:
   personal_secrets: {{ $personal_secrets }}
   alacritty: {{ $alacritty }}
   install_more_packages: {{ $install_more_packages }}
-  has_tmux: {{ if contains "tmux" (output "command" "-v" "tmux") }}true{{ else }}false{{ end }}
+  has_tmux: {{ if lookPath "tmux" }}true{{ else }}false{{ end }}
   has_neovim: {{ if eq $editor "nvim" }}true{{ else }}false{{ end }}
-  has_pip: {{ if contains "pip" (output "command" "-v" "pip") }}true{{ else }}false{{ end }}
+  has_pip: {{ if lookPath "pip3" }}true{{ else }}false{{ end }}
 diff:
   exclude:
     - scripts
