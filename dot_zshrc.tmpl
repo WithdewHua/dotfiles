@@ -54,20 +54,20 @@ for tool in $ZSH/tools/*.zsh;do
     source $tool
 done
 
-{{ if lookPath "thefuck" }}
+{{- if lookPath "thefuck" }}
 # thefuck
 znap eval fuck 'thefuck --alias'
-{{ end }}
+{{- end }}
 
-{{ if stat (joinPath .chezmoi.homeDir ".fzf" )}}
+{{- if stat (joinPath .chezmoi.homeDir ".fzf" )}}
 # fzf
 source ~/.fzf.zsh
-{{ end }}
+{{- end }}
 
-{{ if lookPath "zoxide" }}
+{{- if lookPath "zoxide" }}
 # zoxide
 znap eval zoxide 'zoxide init zsh'
-{{ end }}
+{{- end }}
 
 # alias
 source $ZSH/shell_config/alias.sh
