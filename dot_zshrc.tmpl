@@ -49,7 +49,7 @@ fpath+=$ZSH/completions
 # path env functions
 source $ZSH/shell_config/exports.sh
 
-{{- if stat (joinPath "~/.zsh/tools") }}
+{{- if contains "zsh" (output "ls" (joinPath .chezmoi.homeDir ".zsh/tools")) }}
 # useful tools: pyenv/poetry etc.
 for tool in $ZSH/tools/*.zsh;do
     source $tool
