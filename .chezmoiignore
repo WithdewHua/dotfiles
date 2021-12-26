@@ -25,3 +25,7 @@ README.md
 {{ if not (contains "nvim" .editor) }}
 .config/nvim
 {{ end }}
+
+{{ if not .personal_secrets }}
+.ssh
+{{ end }}
