@@ -1,0 +1,10 @@
+{{- if .install_more_packages -}}
+#!/usr/bin/env bash
+
+set -eufo pipefail
+
+[ -d "$HOME/.fzf" ] || {
+    git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf && ~/.fzf/install --key-bindings --completion --no-update-rc
+}
+
+{{ end -}}

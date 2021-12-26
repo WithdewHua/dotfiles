@@ -69,8 +69,5 @@ export FZF_DEFAULT_COMMAND='rg --files --no-ignore --hidden --follow -g "!{.git}
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 {{ end }}
 
-# poetry installation directory
-export POETRY_HOME={{- joinPath .chezmoi.homeDir ".poetry" }}
-
 # for bin in .local
 pathappend $HOME/.local/bin

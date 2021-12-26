@@ -1,0 +1,10 @@
+{{- if .install_more_packages -}}
+#!/usr/bin/env bash
+
+set -eufo pipefail
+
+[ -d "$HOME/.poetry/bin" ] || {
+    export POETRY_HOME=$HOME/.poetry && curl -sSL https://install.python-poetry.org | python3 -
+}
+
+{{ end -}}

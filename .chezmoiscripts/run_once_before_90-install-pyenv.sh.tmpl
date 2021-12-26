@@ -1,0 +1,8 @@
+{{- if .install_more_packages -}}
+#!/usr/bin/env bash
+
+set -eufo pipefail
+
+[ -d "$HOME/.pyenv" ] || git clone https://github.com/pyenv/pyenv.git ~/.pyenv
+
+{{ end -}}
