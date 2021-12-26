@@ -61,7 +61,7 @@ export EDITOR={{- .editor | quote }}
 export LANG='en_US.UTF-8'
 export LC_CTYPE='en_US.UTF-8'
 
-{{ if contains "rg" (output "command" "-v" "rg" )}}
+{{ if lookPath "rg" }}
 # rg & fzf
 # Setting rg as the default source for fzf
 export FZF_DEFAULT_COMMAND='rg --files --no-ignore --hidden --follow -g "!{.git}/*" 2> /dev/null'
