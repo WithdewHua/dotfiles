@@ -10,16 +10,16 @@ README.md
 .isort.cfg
 {{ end }}
 
-{{ if ne .chezmoi.os "Darwin" }}
-.zsh/tools/brew.sh
+{{ if ne .chezmoi.os "darwin" }}
+.zsh/tools/brew.zsh
 {{ end }}
 
 {{ if not (stat (joinPath .chezmoi.homeDir ".pyenv")) }}
-.zsh/tools/pyenv.sh
+.zsh/tools/pyenv.zsh
 {{ end }}
 
 {{ if not (stat (joinPath .chezmoi.homeDir ".poetry/bin")) }}
-.zsh/tools/poetry.sh
+.zsh/tools/poetry.zsh
 {{ end }}
 
 {{ if not .has_neovim }}

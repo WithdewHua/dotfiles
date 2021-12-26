@@ -49,10 +49,12 @@ fpath+=$ZSH/completions
 # path env functions
 source $ZSH/shell_config/exports.sh
 
+{{- if stat (joinPath "~/.zsh/tools") }}
 # useful tools: pyenv/poetry etc.
 for tool in $ZSH/tools/*.zsh;do
     source $tool
 done
+{{- end }}
 
 {{- if lookPath "thefuck" }}
 # thefuck
