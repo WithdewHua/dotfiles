@@ -20,7 +20,11 @@ return packer.startup(
     function()
         use { "wbthomason/packer.nvim", event = "VimEnter" }
         use { "dstein64/vim-startuptime", cmd = "StartupTime" }
-        use { "nathom/filetype.nvim" }
+        use { "alker0/chezmoi.vim" }
+        use {
+            "nathom/filetype.nvim",
+            after = "chezmoi.vim"
+        }
 
         ------------------------------------------------\\
         -- Dependencies
