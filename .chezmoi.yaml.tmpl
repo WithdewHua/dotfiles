@@ -38,17 +38,17 @@
 {{- end -}}
 
 {{- $personal_secrets := "false" -}}
-{{- $gpg_key_id := "" -}}
+{{- $gpg_encrypt_key_id := "" -}}
 {{- if (hasKey . "personal_secrets") -}}
 {{-   $personal_secrets = .personal_secrets -}}
 {{- else -}}
 {{-   $personal_secrets = promptBool "Decrypt encrypted data" -}}
 {{- end -}}
 {{- if $personal_secrets -}}
-{{-   if (hasKey . "gpg_key_id") -}}
-{{-     $gpg_key_id = .gpg_key_id -}}
+{{-   if (hasKey . "gpg_encrypt_key_id") -}}
+{{-     $gpg_encrypt_key_id = .gpg_encrypt_key_id -}}
 {{-   else -}}
-{{-     $gpg_key_id = promptString "GPG Key ID: " -}}
+{{-     $gpg_encrypt_key_id = promptString "GPG Key ID for encryption: " -}}
 {{-   end -}}
 {{- end -}}
 
@@ -84,11 +84,11 @@ data:
   install_more_packages: {{ $install_more_packages }}
   zsh_theme: {{ $zsh_theme }}
   work_machine: {{ $work_machine }}
-  gpg_key_id: {{ $gpg_key_id }}
+  gpg_encrypt_key_id: {{ $gpg_encrypt_key_id }}
 
 diff:
   exclude:
     - scripts
 encryption: "gpg"
 gpg:
-  recipient: {{ $gpg_key_id }}
+  recipient: {{ $gpg_encrypt_key_id }}
