@@ -1,9 +1,7 @@
 [user]
     name = {{ .name | quote }}
     email = {{ .email | quote }}
-{{- if .personal_secrets }}
-    signingkey = {{ .gpg_key_id }}
-{{- end }}
+    signingkey = {{ if .work_machine }} {{ .gpg.work_git_key_id }} {{ else }}{{ .gpg_key_id }}{{ end }}
 
 [core]
     editor = {{ .editor }}
