@@ -1,4 +1,4 @@
-{{- if .has_tmux -}}
+{{- if lookPath "tmux" -}}
 #!/usr/bin/env bash
 
 set -eufo pipefail

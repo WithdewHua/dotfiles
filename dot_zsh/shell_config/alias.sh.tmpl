@@ -1,13 +1,25 @@
 alias l='ls -lahF'
 
+# git
+alias g=git
+alias ga="git add"
+alias gcmsg="git commit -m"
+alias gcs="git commit -S"
+alias gcsm="git commit -S -m"
+alias gl="git pull"
+alias gm="git merge"
+alias gp="git push"
+alias gst="git status"
+
+
 {{ if lookPath "exa" }}
 alias ls='exa'
 alias tree='exa -T'
 {{ end }}
 
 
-# vim/nvim
 {{ if contains "nvim" .editor }}
+# vim/nvim
 alias vim='nvim'
 {{ end }}
 

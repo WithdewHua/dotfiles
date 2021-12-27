@@ -2,7 +2,7 @@
     name = {{ .name | quote }}
     email = {{ .email | quote }}
 {{- if .personal_secrets }}
-    signingkey = {{ .gpg.personal_key.id }}
+    signingkey = {{ .gpg_key_id }}
 {{- end }}
 
 [core]

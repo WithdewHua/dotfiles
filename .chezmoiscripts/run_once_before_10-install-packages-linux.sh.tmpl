@@ -10,6 +10,19 @@ packages=(
 )
 pip_packages=()
 
+{{ if .personal_secrets }}
+packages+=(gnupg)
+{{ end }}
+
+{{ if .config_python_format_tools }}
+packages+=(python-pip)
+pip_packages+=(
+    black
+    flake8
+    isort
+)
+{{ end }}
+
 {{ if .install_more_packages }}
 packages+=(
     axel
@@ -19,8 +32,6 @@ packages+=(
     iproute2
     neofetch
     neovim
-    pet
-    python3-pip
     ripgrep
     tmux
     trash-cli
@@ -30,22 +41,11 @@ packages+=(
     zoxide
 )
 
-{{ if .personal_secrets }}
-packages+=(gnupg)
-{{ end }}
-
 pip_packages+=(
     thefuck
     tldr
-    pynvim # for neovim
+    pynvim 
 )
-{{ if .config_python_format_tools }}
-pip_packages+=(
-    black
-    flake8
-    isort
-)
-{{ end }}
 {{ end }}
 
 get_package_manager() {

@@ -22,7 +22,7 @@ README.md
 .zsh/tools/poetry.zsh
 {{ end }}
 
-{{ if not .has_neovim }}
+{{ if not (lookPath "nvim") }}
 .config/nvim
 {{ end }}
 
@@ -30,10 +30,10 @@ README.md
 .ssh
 {{ end }}
 
-{{ if not .has_tmux }}
+{{ if not (lookPath "tmux") }}
 .tmux.conf
 {{ end }}
 
-{{ if not .has_pip }}
+{{ if not (lookPath "pip3") }}
 .pip
 {{ end }}

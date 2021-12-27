@@ -23,6 +23,13 @@
 {{- end -}}
 
 {{/* boolean flag */}}
+{{- $work_machine := "false" -}}
+{{- if (hasKey . "work_machine") -}}
+{{-   $work_machine = .work_machine -}}
+{{- else -}}
+{{-   $work_machine = promptBool "Company's computer" -}}
+{{- end -}}
+
 {{- $config_python_format_tools := "false" -}}
 {{- if (hasKey . "config_python_format_tools") -}}
 {{-   $config_python_format_tools = .config_python_format_tools -}}
@@ -31,10 +38,18 @@
 {{- end -}}
 
 {{- $personal_secrets := "false" -}}
+{{- $gpg_key_id := "" -}}
 {{- if (hasKey . "personal_secrets") -}}
 {{-   $personal_secrets = .personal_secrets -}}
 {{- else -}}
 {{-   $personal_secrets = promptBool "Decrypt encrypted data" -}}
+{{- end -}}
+{{- if $personal_secrets -}}
+{{-   if (hasKey . "gpg_key_id") -}}
+{{-     $gpg_key_id = .gpg_key_id -}}
+{{-   else -}}
+{{-     $gpg_key_id = promptString "GPG Key ID: " -}}
+{{-   end -}}
 {{- end -}}
 
 {{- $alacritty := "false" -}}
@@ -68,17 +83,12 @@ data:
   alacritty: {{ $alacritty }}
   install_more_packages: {{ $install_more_packages }}
   zsh_theme: {{ $zsh_theme }}
-  has_tmux: {{ if lookPath "tmux" }}true{{ else }}false{{ end }}
-  has_neovim: {{ if eq $editor "nvim" }}true{{ else }}false{{ end }}
-  has_pip: {{ if lookPath "pip3" }}true{{ else }}false{{ end }}
-  gpg:
-    personal_key:
-      id: 24B0943C95E559CB
-      comment: WithdewHua <i@10101.io>
+  work_machine: {{ $work_machine }}
+  gpg_key_id: {{ $gpg_key_id }}
 
 diff:
   exclude:
     - scripts
 encryption: "gpg"
 gpg:
-  recipient: {{ .gpg.personal_key.id }}
+  recipient: {{ $gpg_key_id }}
