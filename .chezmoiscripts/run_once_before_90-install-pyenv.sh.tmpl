@@ -3,6 +3,11 @@
 
 set -eufo pipefail
 
-[ -d "$HOME/.pyenv" ] || git clone https://github.com/pyenv/pyenv.git ~/.pyenv
+[ -d "$HOME/.pyenv" ] || {
+    # pyenv 
+    git clone https://github.com/pyenv/pyenv.git ~/.pyenv
+    # pyenv virtualenv
+    git clone https://github.com/pyenv/pyenv-virtualenv.git $HOME/.pyenv/plugins/pyenv-virtualenv
+}
 
 {{ end -}}
