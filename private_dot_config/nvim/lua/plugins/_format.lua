@@ -8,10 +8,10 @@ formatter.setup({
     filetype = {
         python = {
             function()
-                retrun {
+                return {
                     exe = "black",
                     args = {
-                        "--line-length 120",
+                        "--line-length 128",
                         "-",
                         stdin = true,
                     }
