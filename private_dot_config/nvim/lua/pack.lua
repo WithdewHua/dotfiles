@@ -137,13 +137,14 @@ return packer.startup(
 
         -- formatting
         use {
-            "sbdchd/neoformat",
-            cmd = "Neoformat",
+            "mhartington/formatter.nvim",
+            cmd = "Format",
             config = function()
-                require("plugins._neoformat").config()
+                require("plugins._format").setup()
             end
        }
 
+       -- quickfix / location list
         use {
             "folke/trouble.nvim",
             event = "BufRead",
@@ -153,8 +154,20 @@ return packer.startup(
             end
         }
 
+        -- github copilot
         use {
-            "github/copilot.vim"
+            "github/copilot.vim",
+            event = "BufRead"
+        }
+
+        -- todo comments
+        use {
+            "folke/todo-comments.nvim",
+            requires = "nvim-lua/plenary.nvim",
+            config = function()
+                require "plugins._todo"
+            end
+
         }
 
         ------------------------------------------------\\

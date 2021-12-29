@@ -52,7 +52,7 @@ map("v", "<leader>/", ":CommentToggle<CR>", opt)
 -- map("n", "<space>ss", [[<Cmd>SaveSession<CR><CR>]], opt)
 
 -- format code
-map("n", "<leader>fm", ":Neoformat<CR>", opt)
+map("n", "<leader>fm", ":Format<CR>", opt)
 
 -- Packer commands till because we are not loading it at startup
 vim.cmd("silent! command PackerCompile lua require 'pack' require('packer').compile()")
