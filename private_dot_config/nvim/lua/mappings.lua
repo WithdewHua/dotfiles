@@ -96,3 +96,5 @@ map("n", "<space>ff", [[<Cmd> FZFFiles <CR>]], opt)
 map("n", "<space>fb", [[<Cmd> FZFBuffers <CR>]], opt)
 map("n", "<space>rg", [[<Cmd> FZFRg <CR>]], opt)
 
+-- nvim-tree
+map("n", "<C-n>", [[<Cmd> NvimTreeToggle <CR>]], opt)
