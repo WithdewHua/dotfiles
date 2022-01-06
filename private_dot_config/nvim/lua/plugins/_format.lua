@@ -13,8 +13,8 @@ formatter.setup({
                     args = {
                         "--line-length 128",
                         "-",
-                        stdin = true,
-                    }
+                    },
+                    stdin = true,
                 }
             end
         }
