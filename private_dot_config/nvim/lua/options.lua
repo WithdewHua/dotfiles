@@ -107,3 +107,5 @@ cmd("syntax on")
 -- filetype settings
 cmd("filetype plugin indent on")
 
+-- fold settings
+o.foldmethod = "indent"

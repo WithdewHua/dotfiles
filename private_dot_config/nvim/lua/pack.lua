@@ -331,6 +331,16 @@ return packer.startup(
             end
         }
 
+        -- fold
+        use{
+            'anuvyklack/pretty-fold.nvim',
+            event = "BufRead",
+            config = function()
+              require 'plugins._pretty_fold'
+              require('pretty-fold.preview').setup_keybinding('h')
+            end
+        }
+
     -- plugins end
     end
 )
