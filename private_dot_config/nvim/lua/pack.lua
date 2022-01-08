@@ -203,9 +203,8 @@ return packer.startup(
         ------------------------------------------------\\
         -- Bufferline, Statusline and theme related stuff
         ------------------------------------------------\\
-        -- use {"npxbr/gruvbox.nvim", requires = {"rktjmp/lush.nvim"}}
         use {
-            "gruvbox-community/gruvbox",
+            "sainnhe/gruvbox-material",
             config = function()
                 require("theme")
             end
