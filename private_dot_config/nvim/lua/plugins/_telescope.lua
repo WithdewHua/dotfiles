@@ -79,6 +79,7 @@ if
         function()
             telescope.load_extension("fzf")
             telescope.load_extension("media_files")
+            telescope.load_extension("session-lens")
         end
     )
 then

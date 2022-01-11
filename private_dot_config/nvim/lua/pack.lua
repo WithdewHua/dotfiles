@@ -282,17 +282,15 @@ return packer.startup(
                 require "plugins._autosession"
             end
         }
-        -- use {
-        --     "rmagatti/session-lens",
-        --     after = { "auto-session" },
-        --     cmd = { "Telescope" },
-        --     config = function()
-        --         require('session-lens').setup{
-        --             previewer = false,
-        --             shorten_path = false
-        --         }
-        --     end
-        -- }
+        use {
+            "rmagatti/session-lens",
+            requires = { "auto-session", "telescope.nvim" },
+            config = function()
+                require('session-lens').setup{
+                    previewer = true,
+                }
+            end
+        }
 
         -- rainbow parentheses
         use {
@@ -320,6 +318,7 @@ return packer.startup(
             end
         }
 
+        -- filemanager
         use {
             'kyazdani42/nvim-tree.lua',
             requires = {
@@ -338,6 +337,12 @@ return packer.startup(
               require 'plugins._pretty_fold'
               require('pretty-fold.preview').setup_keybinding('h')
             end
+        }
+
+        -- highlight enhanced
+        use {
+            'kevinhwang91/nvim-hlslens',
+            event = "BufRead",
         }
 
     -- plugins end
