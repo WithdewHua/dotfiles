@@ -19,7 +19,7 @@ local use = packer.use
 return packer.startup(
     function()
         use { "wbthomason/packer.nvim", event = "VimEnter" }
-        use { "dstein64/vim-startuptime", cmd = "StartupTime" }
+        -- use { "dstein64/vim-startuptime", cmd = "StartupTime" }
         use { "alker0/chezmoi.vim" }
         use {
             "nathom/filetype.nvim",
