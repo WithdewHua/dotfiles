@@ -59,6 +59,13 @@
 {{-   $alacritty = promptBool "Config alacritty" -}}
 {{- end -}}
 
+{{- $wezterm := "false" -}}
+{{- if (hasKey . "wezterm") -}}
+{{-   $wezterm = .wezterm -}}
+{{- else -}}
+{{-   $wezterm = promptBool "Config wezterm" -}}
+{{- end -}}
+
 {{- $install_more_packages := "false" -}}
 {{- if (hasKey . "install_more_packages") -}}
 {{-   $install_more_packages = .install_more_packages -}}
@@ -81,6 +88,7 @@ data:
   config_python_format_tools: {{ $config_python_format_tools }}
   personal_secrets: {{ $personal_secrets }}
   alacritty: {{ $alacritty }}
+  wezterm: {{ $wezterm }}
   install_more_packages: {{ $install_more_packages }}
   zsh_theme: {{ $zsh_theme }}
   work_machine: {{ $work_machine }}
