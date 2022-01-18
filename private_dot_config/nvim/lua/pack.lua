@@ -183,9 +183,14 @@ return packer.startup(
 
         use {
             "nvim-telescope/telescope-media-files.nvim",
+            after = "telescope.nvim",
         }
 
-        use {'nvim-telescope/telescope-fzf-native.nvim', run = 'make'}
+        use {
+            'nvim-telescope/telescope-fzf-native.nvim',
+            run = 'make',
+            after = "telescope.nvim"
+        }
 
         ------------------------------------------------\\
         -- Treesitter
