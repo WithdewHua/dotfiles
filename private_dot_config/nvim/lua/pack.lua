@@ -183,13 +183,11 @@ return packer.startup(
 
         use {
             "nvim-telescope/telescope-media-files.nvim",
-            after = "telescope.nvim",
         }
 
         use {
             'nvim-telescope/telescope-fzf-native.nvim',
             run = 'make',
-            after = "telescope.nvim"
         }
 
         ------------------------------------------------\\
@@ -289,7 +287,7 @@ return packer.startup(
         }
         use {
             "rmagatti/session-lens",
-            requires = { "auto-session", "telescope.nvim" },
+            requires = { "auto-session",},
             config = function()
                 require('session-lens').setup{
                     previewer = true,
