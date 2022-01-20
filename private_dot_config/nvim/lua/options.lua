@@ -101,6 +101,9 @@ end
 -- clipboard settings
 o.clipboard = "unnamedplus"
 
+-- session options
+o.sessionoptions="blank,buffers,curdir,folds,help,tabpages,winsize,winpos,terminal"
+
 -- highlight
 cmd("syntax on")
 

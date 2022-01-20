@@ -27,7 +27,7 @@ lualine.setup {
             sources={'nvim_diagnostic', 'coc'}
         }
     },
-    lualine_c = {'filename'},
+    lualine_c = {require('auto-session-library').current_session_name, 'filename'},
     lualine_x = {'encoding', 'fileformat', 'filetype'},
     lualine_y = {'progress'},
     lualine_z = {'location'}
