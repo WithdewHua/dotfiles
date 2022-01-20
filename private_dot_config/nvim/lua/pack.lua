@@ -287,7 +287,7 @@ return packer.startup(
         }
         use {
             "rmagatti/session-lens",
-            requires = { "auto-session",},
+            requires = { "auto-session", "telescope.nvim" },
             config = function()
                 require('session-lens').setup{
                     previewer = true,
