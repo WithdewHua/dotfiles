@@ -39,7 +39,7 @@ o.linebreak = true
 o.showbreak = '->'
 
 -- search highlight settings
-cmd("autocmd cursorhold * set nohlsearch")
+-- cmd("autocmd cursorhold * set nohlsearch")
 
 -- backup settings
 o.backup = false

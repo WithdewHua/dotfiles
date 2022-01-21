@@ -11,11 +11,22 @@ end
 local opt = {}
 
 -- set hlsearch
-map('n', 'n', ':set hlsearch<cr>n', opt)
-map('n', 'N', ':set hlsearch<cr>N', opt)
-map('n', '/', ':set hlsearch<cr>/', opt)
-map('n', '?', ':set hlsearch<cr>?', opt)
-map('n', '* *', ':set hlsearch<cr>', opt)
+-- map('n', 'n', ':set hlsearch<cr>n', opt)
+-- map('n', 'N', ':set hlsearch<cr>N', opt)
+-- map('n', '/', ':set hlsearch<cr>/', opt)
+-- map('n', '?', ':set hlsearch<cr>?', opt)
+-- map('n', '* *', ':set hlsearch<cr>', opt)
+
+-- set hlsearch with hlslens
+map('n', 'n', [[<Cmd>execute('normal! '. v:count1 . 'n')<CR><Cmd>lua require('hlslens').start()<CR>]], opt)
+map('n', 'N', [[<Cmd>execute('normal! '. v:count1 . 'N')<CR><Cmd>lua require('hlslens').start()<CR>]], opt)
+map('n', '*', [[*<Cmd>lua require('hlslens').start()<CR>]], opt)
+map('n', '#', [[#<Cmd>lua require('hlslens').start()<CR>]], opt)
+map('n', 'g*', [[g*<Cmd>lua require('hlslens').start()<CR>]], opt)
+map('n', 'g#', [[g#<Cmd>lua require('hlslens').start()<CR>]], opt)
+
+map('n', '<leader>l', ":nohlsearch<CR>", opt)
+
 
 -- copy whole file content
 map("n", "<leader>ca", [[ <Cmd> %y+<CR>]], opt)
