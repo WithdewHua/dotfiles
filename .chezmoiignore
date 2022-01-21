@@ -4,6 +4,10 @@ README.md
 .config/alacritty/alacritty.yml
 {{ end }}
 
+{{ if not .wezterm }}
+.config/wezterm/wezterm.lua
+{{ end }}
+
 {{ if not .config_python_format_tools }}
 .config/black
 .config/flake8
