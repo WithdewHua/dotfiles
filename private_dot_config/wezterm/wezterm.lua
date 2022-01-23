@@ -9,4 +9,5 @@ return {
     -- scrollback
     scrollback_lines = 10000,
     enable_scroll_bar = true,
+    native_macos_fullscreen_mode = true,
 }
