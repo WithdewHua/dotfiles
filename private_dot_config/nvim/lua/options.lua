@@ -14,7 +14,6 @@ g.mapleader = ','
 
 -- read settings
 o.autoread = true
-cmd('au CursorHold * checktime | call feedkeys("lh")')
 
 -- write settings
 o.autowriteall = true
