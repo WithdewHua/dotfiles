@@ -24,6 +24,7 @@ source ~/.znap/zsh-snap/znap.zsh
 
 {{ if eq .zsh_theme "pure" -}}
 znap prompt sindresorhus/pure
+zstyle :prompt:pure:git:stash show yes
 {{- else if and (eq .zsh_theme "starship") (lookPath "starship") }}
 znap eval starship "starship init zsh --print-full-init"
 znap prompt
