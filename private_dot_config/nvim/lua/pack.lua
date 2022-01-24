@@ -304,15 +304,6 @@ return packer.startup(
             end
         }
 
-        -- escape insert mode
-        use {
-            "jdhao/better-escape.vim",
-            event = "InsertEnter",
-            config = function ()
-                require "plugins._misc".escape()
-            end
-        }
-
         -- toggleterm
         use {
             "akinsho/toggleterm.nvim",
