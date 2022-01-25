@@ -2,4 +2,6 @@
 {{- if eq .chezmoi.arch "arm64" }}
 pinentry-program /opt/homebrew/bin/pinentry-mac
 {{- end }}
+{{- else if and (eq .chezmoi.os "linux") (lookPath "pinentry-gnome3") }}
+pinentry-mac /bin/pinentry-gnome3
 {{- end }}
