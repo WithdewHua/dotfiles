@@ -1,14 +1,14 @@
 README.md
 
-{{ if not .alacritty }}
+{{ if not .gui.alacritty }}
 .config/alacritty/alacritty.yml
 {{ end }}
 
-{{ if not .wezterm }}
+{{ if not .gui.wezterm }}
 .config/wezterm/wezterm.lua
 {{ end }}
 
-{{ if not .config_python_format_tools }}
+{{ if not .packages.config_python_format_tools }}
 .config/black
 .config/flake8
 .isort.cfg

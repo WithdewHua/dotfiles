@@ -14,7 +14,7 @@ pip_packages=()
 packages+=(gnupg)
 {{ end }}
 
-{{ if .config_python_format_tools }}
+{{ if .packages.config_python_format_tools }}
 packages+=(python-pip)
 pip_packages+=(
     black
@@ -23,7 +23,7 @@ pip_packages+=(
 )
 {{ end }}
 
-{{ if .install_more_packages }}
+{{ if .packages.install_more_packages }}
 packages+=(
     axel
     bat
