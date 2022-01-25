@@ -98,8 +98,8 @@ data:
   install_more_packages: {{ $install_more_packages }}
   zsh_theme: {{ $zsh_theme }}
   work_machine: {{ $work_machine }}
-  gpg_encrypt_key_id: {{ $gpg_encrypt_key_id }}
-  gpg_sign_key_id: {{ $gpg_sign_key_id }}
+  gpg_encrypt_key_id: {{ $gpg_encrypt_key_id | quote }}
+  gpg_sign_key_id: {{ $gpg_sign_key_id | quote }}
 
 diff:
   exclude:
