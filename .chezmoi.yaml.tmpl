@@ -39,6 +39,7 @@
 
 {{- $personal_secrets := "false" -}}
 {{- $gpg_encrypt_key_id := "" -}}
+{{- $gpg_sign_key_id := "" -}}
 {{- if (hasKey . "personal_secrets") -}}
 {{-   $personal_secrets = .personal_secrets -}}
 {{- else -}}
@@ -49,6 +50,11 @@
 {{-     $gpg_encrypt_key_id = .gpg_encrypt_key_id -}}
 {{-   else -}}
 {{-     $gpg_encrypt_key_id = promptString "GPG Key ID for encryption: " -}}
+{{-   end -}}
+{{-   if (hasKey . "gpg_sign_key_id") -}}
+{{-     $gpg_sign_key_id = .gpg_sign_key_id -}}
+{{-   else -}}
+{{-     $gpg_sign_key_id = promptString "GPG Key ID for signing: " -}}
 {{-   end -}}
 {{- end -}}
 
@@ -93,6 +99,7 @@ data:
   zsh_theme: {{ $zsh_theme }}
   work_machine: {{ $work_machine }}
   gpg_encrypt_key_id: {{ $gpg_encrypt_key_id }}
+  gpg_sign_key_id: {{ $gpg_sign_key_id }}
 
 diff:
   exclude:
