@@ -1,11 +1,11 @@
 README.md
 
 {{ if not .gui.alacritty }}
-.config/alacritty/alacritty.yml
+.config/alacritty
 {{ end }}
 
 {{ if not .gui.wezterm }}
-.config/wezterm/wezterm.lua
+.config/wezterm
 {{ end }}
 
 {{ if not .packages.config_python_format_tools }}
@@ -32,6 +32,7 @@ README.md
 
 {{ if not .personal_secrets }}
 .ssh
+.gnupg
 {{ end }}
 
 {{ if not (lookPath "tmux") }}
