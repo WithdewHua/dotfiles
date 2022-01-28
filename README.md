@@ -5,7 +5,7 @@
 - Personal dotfiles for macOS/Linux;
 - Managed by [chezmoi](https://github.com/twpayne/chezmoi)
 
-## How to use
+## Usage
 
 ### Installation
 
@@ -18,3 +18,31 @@ bash <(curl -fsLS chezmoi.io/get) -b /usr/local/bin -- init --apply --verbose Wi
 ```bash
 chezmoi update
 ```
+
+## Managed
+
+### ZSH
+
+### Git
+
+### Vim/Neovim
+
+### Tmux
+
+### Terminal emulators
+
+- `Alacritty`
+- `WezTerm`
+
+### Python related
+
+- `pip`
+- `black`
+- `isort`
+- `flake8`
+
+### SSH
+
+### GnuPG
+
+
