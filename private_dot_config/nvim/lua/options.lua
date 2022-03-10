@@ -9,6 +9,9 @@ o.updatetime = 300
 o.history = 8000
 o.hidden = true
 
+-- syntax highlighting
+cmd("syntax on")
+
 -- leader settings
 g.mapleader = ','
 
@@ -102,9 +105,6 @@ o.clipboard = "unnamedplus"
 
 -- session options
 o.sessionoptions="blank,buffers,curdir,folds,help,tabpages,winsize,winpos,terminal"
-
--- highlight
-cmd("syntax on")
 
 -- filetype settings
 cmd("filetype plugin indent on")
