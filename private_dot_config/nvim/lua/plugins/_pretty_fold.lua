@@ -27,6 +27,9 @@ pretty_fold.setup {
     -- false    : Do nothing with comment signs.
     process_comment_signs = 'spaces',
 
+    -- Comment signs additional to the value of `&commentstring` option.
+    comment_signs = {},
+
     -- List of patterns that will be removed from content foldtext section.
     stop_words = {
       '@brief%s*', -- (for cpp) Remove '@brief' and all spaces after.
@@ -41,4 +44,6 @@ pretty_fold.setup {
       { 'do%s', 'end' },
       { 'for%s', 'end' },
     },
+
+    ft_ignore = { 'neorg' },
 }
