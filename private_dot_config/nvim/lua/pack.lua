@@ -260,6 +260,15 @@ return packer.startup(
             end
         }
 
+        -- which-key
+        use {
+          "folke/which-key.nvim",
+          event = "BufRead",
+          config = function()
+            require("which-key").setup{}
+          end
+        }
+
         -- smooth scroll
         use {
             "karb94/neoscroll.nvim",
