@@ -1,5 +1,5 @@
 # arm mac
-[ -d "/opt/homebrew" ] && pathprepend_f "/opt/homebrew/bin"
+[ -d "/opt/homebrew" ] && pathprepend_f "/opt/homebrew/sbin" && pathprepend_f "/opt/homebrew/bin"
 
 if type brew &> /dev/null; then
     FPATH=$(brew --prefix)/share/zsh/site-functions:$FPATH
