@@ -116,6 +116,20 @@ return packer.startup(
             "hrsh7th/cmp-path",
             after = "cmp-buffer"
         }
+        use {
+            "hrsh7th/cmp-cmdline",
+            after = "cmp-path"
+        }
+        use {
+            "hrsh7th/cmp-nvim-lsp-signature-help",
+            after = "cmp-cmdline"
+        }
+
+        use {
+            "hrsh7th/cmp-nvim-lsp-document-symbol",
+            after = "cmp-nvim-lsp-signature-help"
+        }
+
 
         -- autopairs
         use {

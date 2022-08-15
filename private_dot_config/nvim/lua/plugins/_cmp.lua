@@ -71,5 +71,20 @@ cmp.setup {
       { name = "buffer" },
       { name = "nvim_lua" },
       { name = "path" },
+      { name = "nvim_lsp_signature_help" },
    },
 }
+
+cmp.setup.cmdline('/', {
+  sources = cmp.config.sources({
+    { name = 'nvim_lsp_document_symbol' }
+  }, {
+    { name = 'buffer' }
+  })
+})
+
+cmp.setup.cmdline(':', {
+  sources = {
+    { name = 'cmdline' }
+  }
+})
