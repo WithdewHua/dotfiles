@@ -7,7 +7,7 @@ return {
     -- keyboard
     use_dead_keys = false,
     -- color scheme
-    color_scheme = "Gruvbox Dark",
+    color_scheme = "Gruvbox dark, medium (base16)",
     -- scrollback
     scrollback_lines = 10000,
     enable_scroll_bar = true,
