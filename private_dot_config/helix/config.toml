@@ -1,0 +1,10 @@
+theme = "gruvbox"
+
+[editor]
+line-number = "relative"
+
+[editor.file-picker]
+hidden = false
+
+[editor.indent-guides]
+render = true
