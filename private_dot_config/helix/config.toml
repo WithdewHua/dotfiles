@@ -2,6 +2,8 @@ theme = "gruvbox"
 
 [editor]
 line-number = "relative"
+auto-format = false
+color-modes = true
 
 [editor.file-picker]
 hidden = false

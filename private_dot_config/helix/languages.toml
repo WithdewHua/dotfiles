@@ -1,0 +1,7 @@
+[[language]]
+name = "python"
+
+[language.config.pylsp]
+configurationSources = ["flake8"]
+plugins = { pycodestyle = { enabled = false }, flake8 = { enabled = true }, black = { enabled = true } }
+
