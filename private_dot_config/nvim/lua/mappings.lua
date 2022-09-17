@@ -81,12 +81,12 @@ map("", "<Down>", 'v:count ? "j" : "gj"', {expr = true})
 map("", "<Up>", 'v:count ? "k" : "gk"', {expr = true})
 
 -- trouble
-map("n", "<leader>xx", "<cmd>Trouble<cr>", opt)
-map("n", "<leader>xw", "<cmd>Trouble workspace_diagnostics<cr>", opt)
-map("n", "<leader>xd", "<cmd>Trouble document_diagnostics<cr>", opt)
-map("n", "<leader>xl", "<cmd>Trouble loclist<cr>", opt)
-map("n", "<leader>xq", "<cmd>Trouble quickfix<cr>", opt)
-map("n", "<leader>xr", "<cmd>Trouble lsp_references<cr>", opt)
+map("n", "<leader>xx", "<cmd>TroubleToggle<cr>", opt)
+map("n", "<leader>xw", "<cmd>TroubleToggle workspace_diagnostics<cr>", opt)
+map("n", "<leader>xd", "<cmd>TroubleToggle document_diagnostics<cr>", opt)
+map("n", "<leader>xl", "<cmd>TroubleToggle loclist<cr>", opt)
+map("n", "<leader>xq", "<cmd>TroubleToggle quickfix<cr>", opt)
+map("n", "<leader>xr", "<cmd>TroubleToggle lsp_references<cr>", opt)
 
 -- bufferline
 map("n", "<leader>1", "<cmd>BufferLineGoToBuffer 1<cr>", opt)

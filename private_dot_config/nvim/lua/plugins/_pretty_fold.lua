@@ -40,9 +40,6 @@ pretty_fold.setup {
       { '{', '}' },
       { '%(', ')' }, -- % to escape lua pattern char
       { '%[', ']' }, -- % to escape lua pattern char
-      { 'if%s', 'end' },
-      { 'do%s', 'end' },
-      { 'for%s', 'end' },
     },
 
     ft_ignore = { 'neorg' },
