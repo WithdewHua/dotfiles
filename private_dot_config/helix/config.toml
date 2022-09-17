@@ -5,6 +5,9 @@ line-number = "relative"
 auto-format = false
 color-modes = true
 
+[editor.lsp]
+display-messages = false
+
 [editor.file-picker]
 hidden = false
 
