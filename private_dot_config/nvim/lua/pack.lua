@@ -349,6 +349,7 @@ return packer.startup(
         -- fold
         use{
             'anuvyklack/pretty-fold.nvim',
+            require = "anuvyklack/nvim-keymap-amend",
             event = "BufRead",
             config = function()
               require 'plugins._pretty_fold'
