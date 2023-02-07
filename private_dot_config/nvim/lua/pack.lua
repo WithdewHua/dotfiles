@@ -347,19 +347,7 @@ return packer.startup(
         }
 
         -- fold
-        use{
-            'anuvyklack/pretty-fold.nvim',
-            require = "anuvyklack/nvim-keymap-amend",
-            event = "BufRead",
-            config = function()
-              require 'plugins._pretty_fold'
-            end
-        }
-        use {
-            "anuvyklack/fold-preview.nvim",
-            require = "anuvyklack/keymap-amend.nvim",
-            after = "anuvyklack/pretty_fold.nvim"
-        }
+        use {'kevinhwang91/nvim-ufo', requires = 'kevinhwang91/promise-async'}
 
         -- highlight enhanced
         use {
