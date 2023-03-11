@@ -169,10 +169,10 @@ return packer.startup(
         }
 
         -- github copilot
-        use {
-            "github/copilot.vim",
-            event = "BufRead"
-        }
+        -- use {
+        --     "github/copilot.vim",
+        --     event = "BufRead"
+        -- }
 
         -- todo comments
         use {
