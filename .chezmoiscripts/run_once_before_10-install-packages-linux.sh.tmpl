@@ -18,6 +18,7 @@ packages+=(gnupg)
 packages+=(python-pip)
 pip_packages+=(
     black
+    ruff
     flake8
     isort
     pipx
@@ -49,6 +50,7 @@ pip_packages+=(
 )
 {{ end }}
 
+# apt/pacman
 get_package_manager() {
     if grep -Eqi "debian|raspbian" /proc/version; then
         PKG="apt"
