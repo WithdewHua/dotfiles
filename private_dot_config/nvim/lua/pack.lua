@@ -25,7 +25,13 @@ return packer.startup(
             "nathom/filetype.nvim",
             after = "chezmoi.vim"
         }
-
+        -- portable package manager
+        use {
+            "williamboman/mason.nvim",
+            config = function ()
+                require "plugins._mason"
+            end
+        }
         ------------------------------------------------\\
         -- Dependencies
         ------------------------------------------------\\
@@ -49,15 +55,14 @@ return packer.startup(
         ------------------------------------------------\\
         -- LSP, Autocomplete code related stuff
         ------------------------------------------------\\
+        use {
+            "williamboman/mason-lspconfig.nvim",
+            after = "mason.nvim"
+        }
         -- lsp stuff
         use {
-            "williamboman/nvim-lsp-installer",
-            event = "BufRead"
-        }
-
-        use {
             "neovim/nvim-lspconfig",
-            after = "nvim-lsp-installer",
+            after = "mason-lspconfig.nvim",
             config = function()
                 require "plugins._lspconfig"
             end
@@ -154,7 +159,7 @@ return packer.startup(
             "mhartington/formatter.nvim",
             cmd = "Format",
             config = function()
-                require("plugins._format").setup()
+                require "plugins._format"
             end
        }
 
@@ -353,6 +358,9 @@ return packer.startup(
         use {
             'kevinhwang91/nvim-hlslens',
             event = "BufRead",
+            config = function()
+                require("hlslens").setup()
+            end
         }
 
     -- plugins end

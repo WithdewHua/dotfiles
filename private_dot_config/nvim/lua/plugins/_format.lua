@@ -5,6 +5,10 @@ if not present then
 end
 
 formatter.setup({
+    -- Enable or disable logging
+    logging = true,
+    -- Set the log level
+    log_level = vim.log.levels.WARN,
     filetype = {
         python = {
             function()
@@ -17,6 +21,13 @@ formatter.setup({
                     stdin = true,
                 }
             end
+        },
+        -- Use the special "*" filetype for defining formatter configurations on
+        -- any filetype
+        ["*"] = {
+          -- "formatter.filetypes.any" defines default configurations for any
+          -- filetype
+          require("formatter.filetypes.any").remove_trailing_whitespace
         }
     }
 })
