@@ -14,7 +14,7 @@ config.font_size = 12
 -- keyboard
 config.use_dead_keys = false
 -- color scheme
-config.color_scheme = "Gruvbox dark medium (base16)"
+config.color_scheme = "Gruvbox dark, medium (base16)"
 -- scrollback
 config.scrollback_lines = 10000
 config.enable_scroll_bar = true
