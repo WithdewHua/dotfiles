@@ -1,16 +1,12 @@
-local autopairs, autopairs_completion
-if
-    not pcall(
-        function()
-            autopairs = require "nvim-autopairs"
-            autopairs_completion = require "nvim-autopairs.completion.cmp"
+return {
+    {
+        "windwp/nvim-autopairs",
+        dependencies = "hrsh7th/nvim-cmp",
+        event = "InsertEnter",
+        config = function()
+            local autopairs, autopairs_completion = require("nvim-autopairs"), require("nvim-autopairs.completion.cmp")
+            autopairs.setup()
+            require("cmp").event:on("confirm_done", autopairs_completion.on_confirm_done())
         end
-    )
- then
-    return
-end
-
-autopairs.setup()
-
-local cmp = require "cmp"
-cmp.event:on("confirm_done", autopairs_completion.on_confirm_done())
+    },
+}

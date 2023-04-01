@@ -1,37 +1,48 @@
-local M = {}
+------------------------------------------------\\
+-- Treesitter
+------------------------------------------------\\
 
-M.config = function()
-    local ts_config = require("nvim-treesitter.configs")
-
-    ts_config.setup {
-        ensure_installed = {
-            "javascript",
-            "html",
-            "css",
-            "bash",
-            "lua",
-            "json",
-            "yaml",
-            "python"
+return {
+    {
+        "nvim-treesitter/nvim-treesitter",
+        version = false,
+        build = ":TSUpdate",
+        event = { "BufReadPost", "BufNewFile" },
+        opts = {
+            ensure_installed = {
+                "javascript",
+                "html",
+                "css",
+                "bash",
+                "lua",
+                "json",
+                "yaml",
+                "python",
+                "markdown",
+                "markdown_inline",
+                "regex",
+                "vim",
+            },
+            highlight = {
+                enable = true,
+                use_languagetree = true
+            },
         },
-        highlight = {
-            enable = true,
-            use_languagetree = true
+        config = function(_, opts)
+            require("nvim-treesitter.configs").setup(opts)
+        end,
+    },
+    -- rainbow parentheses
+    {
+        'p00f/nvim-ts-rainbow',
+        dependencies = "nvim-treesitter/nvim-treesitter",
+        opts = {
+            rainbow = {
+                enable = true
+            }
         },
-    }
-
-    -- vim.o.foldmethod = "expr"
-    -- vim.cmd("set foldexpr=nvim_treesitter#foldexpr()")
-end
-
-M.config_ts_rainbow = function()
-    local ts_config = require("nvim-treesitter.configs")
-
-    ts_config.setup{
-        rainbow = {
-            enable = true
-        }
-    }
-end
-
-return M
+        config = function(_, opts)
+            require("nvim-treesitter.configs").setup(opts)
+        end,
+    },
+}

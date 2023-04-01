@@ -1,10 +1,4 @@
-local present, nvimtree = pcall(require, 'nvim-tree')
-
-if not present then
-  return
-end
-
-nvimtree.setup {
+local setup = {
   auto_reload_on_write = true,
   create_in_closed_folder = false,
   disable_netrw = true,
@@ -167,4 +161,15 @@ nvimtree.setup {
   },
 }
 
-
+return {
+    -- filemanager
+    {
+        'kyazdani42/nvim-tree.lua',
+        dependencies = {
+          'kyazdani42/nvim-web-devicons', -- optional, for file icon
+        },
+        config = function()
+            require("nvim-tree").setup(setup)
+        end
+    },
+}

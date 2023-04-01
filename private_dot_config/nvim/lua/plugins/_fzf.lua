@@ -1,7 +1,10 @@
-local M = {}
+return {
+    {
+        "ibhagwan/fzf-lua",
+        dependencies = {
+            "kyazdani42/nvim-web-devicons",
+            { "junegunn/fzf", build = "./install --bin", }
+        },
+    },
 
-M.config = function()
-    vim.cmd("let g:fzf_command_prefix = 'FZF'")  -- add command prefix
-end
-
-return M
+}

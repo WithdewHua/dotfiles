@@ -1,11 +1,13 @@
-local mason
-
-if
-    not pcall(function()
-        mason = require('mason')
-    end)
-then
-    return
-end
-
-mason.setup()
+return {
+    -- portable package manager
+    {
+        "williamboman/mason.nvim",
+        dependencies = {
+            "williamboman/mason-lspconfig.nvim",
+            "neovim/nvim-lspconfig",
+        },
+        config = function ()
+            require("mason").setup()
+        end
+    }
+}
