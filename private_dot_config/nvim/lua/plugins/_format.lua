@@ -2,6 +2,7 @@ return {
     {
         "mhartington/formatter.nvim",
         cmd = "Format",
+        event = "BufRead",
         config = function()
             require("formatter").setup({
                 -- Enable or disable logging

@@ -166,7 +166,10 @@ return {
     {
         'kyazdani42/nvim-tree.lua',
         dependencies = {
-          'kyazdani42/nvim-web-devicons', -- optional, for file icon
+          'nvim-tree/nvim-web-devicons', -- optional, for file icon
+        },
+        keys = {
+            { "<C-n>", "[[<Cmd> NvimTreeToggle <CR>]]", desc = "NvimTree" }
         },
         config = function()
             require("nvim-tree").setup(setup)

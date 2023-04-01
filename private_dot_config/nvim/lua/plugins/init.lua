@@ -1,15 +1,6 @@
 -- plugin list
 return {
-    { "alker0/chezmoi.vim", dependencies={"nathom/filetype.nvim"} },
-
-    ------------------------------------------------\\
-    -- Dependencies
-    ------------------------------------------------\\
-
-    {
-        "nvim-lua/plenary.nvim",
-        dependencies = "nvim-lua/popup.nvim"
-    },
+    { "nathom/filetype.nvim" },
 
     ------------------------------------------------\\
     -- LSP, Autocomplete code related stuff
@@ -18,6 +9,7 @@ return {
     {
         "terrortylor/nvim-comment",
         cmd = "CommentToggle",
+        event = "BufRead",
         config = function()
             require("nvim_comment").setup()
         end

@@ -1,8 +1,9 @@
 return {
     {
         "ibhagwan/fzf-lua",
+        event = "VimEnter",
         dependencies = {
-            "kyazdani42/nvim-web-devicons",
+            "nvim-tree/nvim-web-devicons",
             { "junegunn/fzf", build = "./install --bin", }
         },
     },

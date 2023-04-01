@@ -2,13 +2,16 @@ return {
     {
         "nvim-telescope/telescope.nvim",
         dependencies = {
-            "plenary.nvim",
-            "popup.nvim",
+            "nvim-lua/plenary.nvim",
+            "nvim-lua/popup.nvim",
             -- telescope plugin
             "nvim-telescope/telescope-media-files.nvim",
-            'nvim-telescope/telescope-fzf-native.nvim',
-            "session-lens",
+            {
+                'nvim-telescope/telescope-fzf-native.nvim', build = "cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build"
+            },
+            -- "session-lens",
         },
+        event = "VimEnter",
         config = function()
             require("telescope").setup {
                 defaults = {
@@ -68,9 +71,15 @@ return {
                     media_files = {
                         filetypes = {"png", "webp", "jpg", "jpeg"},
                         find_cmd = "rg"
-                    }
+                    },
                 }
             }
-        end
+
+            -- load extensions
+            local exts = { "fzf", "media_files", "persisted" }
+            for i=1, #exts, 1 do
+                require("telescope").load_extension(exts[i])
+            end
+        end,
     }
 }

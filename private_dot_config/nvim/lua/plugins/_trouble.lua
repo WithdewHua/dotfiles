@@ -2,7 +2,7 @@ return {
     {
         "folke/trouble.nvim",
         event = "BufRead",
-        dependencies = "kyazdani42/nvim-web-devicons",
+        dependencies = "nvim-tree/nvim-web-devicons",
         config = function()
             require("trouble").setup{
                 position = "bottom", -- position of the list can be: bottom, top, left, right
