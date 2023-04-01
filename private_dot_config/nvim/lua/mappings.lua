@@ -103,9 +103,9 @@ map("n", "<S-Tab>", "<cmd>BufferLineCyclePrev<cr>", opt)
 map("n", "gb", "<cmd>BufferLinePick<cr>", opt)
 
 -- fzf
-map("n", "<space>ff", [[<Cmd> FZFFiles <CR>]], opt)
-map("n", "<space>fb", [[<Cmd> FZFBuffers <CR>]], opt)
-map("n", "<space>rg", [[<Cmd> FZFRg <CR>]], opt)
+map("n", "<space>ff", [[<Cmd> FzfLua files <CR>]], opt)
+map("n", "<space>fb", [[<Cmd> FzfLua buffers <CR>]], opt)
+map("n", "<space>rg", [[<Cmd> FzfLua grep_project <CR>]], opt)
 
 -- nvim-tree
 map("n", "<C-n>", [[<Cmd> NvimTreeToggle <CR>]], opt)
