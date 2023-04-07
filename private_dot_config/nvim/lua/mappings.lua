@@ -65,13 +65,6 @@ map("v", "<leader>/", ":CommentToggle<CR>", opt)
 -- format code
 map("n", "<leader>fm", ":Format<CR>", opt)
 
--- Packer commands till because we are not loading it at startup
-vim.cmd("silent! command PackerCompile lua require 'pack' require('packer').compile()")
-vim.cmd("silent! command PackerInstall lua require 'pack' require('packer').install()")
-vim.cmd("silent! command PackerStatus lua require 'pack' require('packer').status()")
-vim.cmd("silent! command PackerSync lua require 'pack' require('packer').sync()")
-vim.cmd("silent! command PackerUpdate lua require 'pack' require('packer').update()")
-
 -- Allow moving the cursor through wrapped lines with j, k, <Up> and <Down>
 -- http://www.reddit.com/r/vim/comments/2k4cbr/problem_with_gj_and_gk/
 -- empty mode is same as using :map

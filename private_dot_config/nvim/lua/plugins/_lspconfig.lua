@@ -73,6 +73,7 @@ return {
                     "jsonls",
                     -- "sumneko_lua",
                     "bashls",
+                    "lua_ls",
                 }
             }
 
