@@ -16,7 +16,10 @@ return {
                     lualine_a = {'mode'},
                     lualine_b = {
                         'branch',
-                        'diff',
+                        {
+                            'diff',
+                            sources="b:gitsigns_status_dict",
+                        },
                         {
                             'diagnostics',
                             sources={'nvim_diagnostic', 'coc'}
