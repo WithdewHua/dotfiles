@@ -1,3 +1,11 @@
+local function session_status()
+    if vim.g.persisting then
+        return "﫠"
+    else
+        return ""
+    end
+end
+
 return {
     {
         'nvim-lualine/lualine.nvim',
@@ -25,7 +33,10 @@ return {
                             sources={'nvim_diagnostic', 'coc'}
                         }
                     },
-                    lualine_c = {"g:persisting", 'filename'},
+                    lualine_c = {
+                        { session_status },
+                        { 'filename', newfile_status=true, path=1 },
+                    },
                     lualine_x = {'encoding', 'fileformat', 'filetype'},
                     lualine_y = {'progress'},
                     lualine_z = {'location'}
