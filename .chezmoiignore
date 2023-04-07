@@ -42,3 +42,7 @@ README.md
 {{ if not (lookPath "pip3") }}
 .pip
 {{ end }}
+
+{{ if not (lookPath "helix") }}
+.config/helix
+{{ end }}
