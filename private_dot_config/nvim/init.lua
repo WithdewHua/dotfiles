@@ -1,3 +1,8 @@
+-- lua-loader
+if vim.fn.has("nvim-0.9") then
+    vim.loader.enable()
+end
+
 local modules = {
     "options",
     "mappings",
