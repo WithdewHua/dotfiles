@@ -10,13 +10,6 @@ end
 
 local opt = {}
 
--- set hlsearch
--- map('n', 'n', ':set hlsearch<cr>n', opt)
--- map('n', 'N', ':set hlsearch<cr>N', opt)
--- map('n', '/', ':set hlsearch<cr>/', opt)
--- map('n', '?', ':set hlsearch<cr>?', opt)
--- map('n', '* *', ':set hlsearch<cr>', opt)
-
 -- set hlsearch with hlslens
 map('n', 'n', [[<Cmd>execute('normal! '. v:count1 . 'n')<CR><Cmd>lua require('hlslens').start()<CR>]], opt)
 map('n', 'N', [[<Cmd>execute('normal! '. v:count1 . 'N')<CR><Cmd>lua require('hlslens').start()<CR>]], opt)
@@ -99,6 +92,7 @@ map("n", "gb", "<cmd>BufferLinePick<cr>", opt)
 map("n", "<space>ff", [[<Cmd> FzfLua files <CR>]], opt)
 map("n", "<space>fb", [[<Cmd> FzfLua buffers <CR>]], opt)
 map("n", "<space>rg", [[<Cmd> FzfLua grep_project <CR>]], opt)
+map("n", "<space>sd", [[<Cmd> FzfLua lsp_document_symbols <CR>]], opt)
 
 -- nvim-tree
 map("n", "<C-n>", [[<Cmd> NvimTreeToggle <CR>]], opt)
