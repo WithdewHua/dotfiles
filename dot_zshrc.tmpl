@@ -75,6 +75,11 @@ source ~/.fzf.zsh
 znap eval zoxide 'zoxide init zsh'
 {{- end }}
 
+{{ if lookPath "rye" }}
+# rye
+pathprepend "~/.rye/shims"
+{{- end }}
+
 # alias
 source $ZSH/shell_config/alias.sh
 
