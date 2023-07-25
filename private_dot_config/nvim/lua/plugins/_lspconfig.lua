@@ -2,6 +2,10 @@ return {
     {
         "neovim/nvim-lspconfig",
         event = "BufRead",
+        dependencies = {
+            "mason.nvim",
+            "williamboman/mason-lspconfig.nvim",
+        },
         config = function()
             local lspconfig, lsp_installer = require("lspconfig"), require("mason-lspconfig")
 

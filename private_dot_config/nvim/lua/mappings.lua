@@ -94,5 +94,5 @@ map("n", "<space>fb", [[<Cmd> FzfLua buffers <CR>]], opt)
 map("n", "<space>rg", [[<Cmd> FzfLua grep_project <CR>]], opt)
 map("n", "<space>sd", [[<Cmd> FzfLua lsp_document_symbols <CR>]], opt)
 
--- nvim-tree
-map("n", "<C-n>", [[<Cmd> NvimTreeToggle <CR>]], opt)
+-- neo-tree
+map("n", "<C-n>", [[<Cmd> Neotree toggle <CR>]], opt)
