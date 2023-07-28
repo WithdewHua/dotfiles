@@ -129,6 +129,15 @@ return {
                             }
                         }
                     }
+                end,
+                ["ruff_lsp"] = function (opts)
+                    opts.init_options = {
+                        settings = {
+                            args = {
+                                "--config=" .. vim.loop.os_homedir() .. "/.ruff.toml"
+                            }
+                        }
+                    }
                 end
 
             }
@@ -137,6 +146,8 @@ return {
                     -- Specify the default options which we'll use to setup all servers
                     local opts = {
                         on_attach = on_attach,
+                        capabilities = capabilities,
+                        autostart = true,
                     }
 
                     if enhance_server_opts[server_name] then
