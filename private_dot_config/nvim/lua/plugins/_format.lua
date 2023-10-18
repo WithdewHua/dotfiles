@@ -15,7 +15,7 @@ return {
                             return {
                                 exe = "black",
                                 args = {
-                                    "--line-length 128",
+                                    "--line-length 88",
                                     "-",
                                 },
                                 stdin = true,
