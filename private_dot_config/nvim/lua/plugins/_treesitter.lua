@@ -7,6 +7,7 @@ return {
     version = false, -- last release is way too old and doesn't work on Windows
     build = ":TSUpdate",
     -- event = { "LazyFile", "VeryLazy" },
+    event = { "BufRead" },
     dependencies = {
       {
         "nvim-treesitter/nvim-treesitter-textobjects",

@@ -72,7 +72,8 @@ return {
             -- Include the servers you want to have installed by default below
             lsp_installer.setup {
                 ensure_installed = {
-                    "pyright", "ruff_lsp",
+                    "pyright",
+                    "ruff_lsp",
                     "yamlls",
                     "jsonls",
                     -- "sumneko_lua",
