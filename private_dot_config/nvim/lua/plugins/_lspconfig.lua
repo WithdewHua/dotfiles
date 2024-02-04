@@ -25,6 +25,10 @@ return {
                   "additionalTextEdits",
                },
             }
+            capabilities.textDocument.foldingRange = {
+                dynamicRegistration = false,
+                lineFoldingOnly = true
+            }
 
             -- replace the default lsp diagnostic symbols
             local function lspSymbol(name, icon)
