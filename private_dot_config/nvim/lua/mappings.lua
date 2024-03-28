@@ -96,3 +96,9 @@ map("n", "<space>sd", [[<Cmd> FzfLua lsp_document_symbols <CR>]], opt)
 
 -- neo-tree
 map("n", "<C-n>", [[<Cmd> Neotree toggle <CR>]], opt)
+
+-- lsp-config
+map("n", "<space>li", [[<cmd> LspInfo <cr>]], opt)
+map("n", "<space>lr", [[<cmd> LspRestart <cr>]], opt)
+map("n", "<space>ls", [[<cmd> LspStart <cr>]], opt)
+map("n", "<space>lS", [[<cmd> LspStop <cr>]], opt)
