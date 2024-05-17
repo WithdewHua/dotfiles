@@ -1,18 +1,8 @@
 {{/* git user.email */}}
-{{- $email := "" -}}
-{{- if (hasKey .git "email") -}}
-{{-   $email = .git.email -}}
-{{- else -}}
-{{-   $email = promptString "Email: " -}}
-{{- end -}}
+{{- $email := promptString "Email: " -}}
 
 {{/* git user.name */}}
-{{- $name := "" -}}
-{{- if (hasKey .git "name") -}}
-{{-   $name = .git.name -}}
-{{- else -}}
-{{-   $name = promptString "Name: " -}}
-{{- end -}}
+{{- $name := promptString "Name: " -}}
 
 {{/* editor */}}
 {{- $editor := "vi" -}}
@@ -23,68 +13,26 @@
 {{- end -}}
 
 {{/* boolean flag */}}
-{{- $work_machine := "false" -}}
-{{- if (hasKey . "work_machine") -}}
-{{-   $work_machine = .work_machine -}}
-{{- else -}}
-{{-   $work_machine = promptBool "Company's computer" -}}
-{{- end -}}
+{{- $work_machine := promptBool "Company's computer" -}}
 
-{{- $config_python_format_tools := "false" -}}
-{{- if (hasKey .packages "config_python_format_tools") -}}
-{{-   $config_python_format_tools = .packages.config_python_format_tools -}}
-{{- else -}}
-{{-   $config_python_format_tools = promptBool "Config python formatting tools" -}}
-{{- end -}}
+{{- $config_python_format_tools := promptBool "Config python formatting tools" -}}
 
-{{- $install_more_packages := "false" -}}
-{{- if (hasKey .packages "install_more_packages") -}}
-{{-   $install_more_packages = .packages.install_more_packages -}}
-{{- else -}}
-{{-   $install_more_packages = promptBool "Install more packages" -}}
-{{- end -}}
+{{- $install_more_packages := promptBool "Install more packages" -}}
 
 {{- $personal_secrets := "false" -}}
 {{- $gpg_encrypt_key_id := "" -}}
 {{- $gpg_sign_key_id := "" -}}
-{{- if (hasKey . "personal_secrets") -}}
-{{-   $personal_secrets = .personal_secrets -}}
-{{- else -}}
-{{-   $personal_secrets = promptBool "Decrypt encrypted data" -}}
-{{- end -}}
+{{- $personal_secrets := promptBool "Decrypt encrypted data" -}}
 {{- if $personal_secrets -}}
-{{-   if (hasKey .gpg "gpg_encrypt_key_id") -}}
-{{-     $gpg_encrypt_key_id = .gpg.gpg_encrypt_key_id -}}
-{{-   else -}}
-{{-     $gpg_encrypt_key_id = promptString "GPG Key ID for encryption: " -}}
-{{-   end -}}
-{{-   if (hasKey .gpg "gpg_sign_key_id") -}}
-{{-     $gpg_sign_key_id = .gpg.gpg_sign_key_id -}}
-{{-   else -}}
-{{-     $gpg_sign_key_id = promptString "GPG Key ID for signing: " -}}
-{{-   end -}}
+{{-     $gpg_encrypt_key_id := promptString "GPG Key ID for encryption: " -}}
+{{-     $gpg_sign_key_id := promptString "GPG Key ID for signing: " -}}
 {{- end -}}
 
-{{- $alacritty := "false" -}}
-{{- if (hasKey .gui "alacritty") -}}
-{{-   $alacritty = .gui.alacritty -}}
-{{- else -}}
-{{-   $alacritty = promptBool "Config alacritty" -}}
-{{- end -}}
+{{- $alacritty := promptBool "Config alacritty" -}}
 
-{{- $wezterm := "false" -}}
-{{- if (hasKey .gui "wezterm") -}}
-{{-   $wezterm = .gui.wezterm -}}
-{{- else -}}
-{{-   $wezterm = promptBool "Config wezterm" -}}
-{{- end -}}
+{{- $wezterm := promptBool "Config wezterm" -}}
 
-{{- $zsh_theme := "pure" -}}
-{{- if (hasKey . "zsh_theme") -}}
-{{-   $zsh_theme = .zsh_theme -}}
-{{- else -}}
-{{-   $zsh_theme = promptString "Zsh theme(pure/starship): " -}}
-{{- end -}}
+{{- $zsh_theme := promptString "Zsh theme(pure/starship): " -}}
 
 
 data:
