@@ -1,0 +1,10 @@
+{{- if .packages.install_more_packages -}}
+#!/usr/bin/env bash
+
+set -eufo pipefail
+
+[ -d "$HOME/.atuin" ] || {
+    curl --proto '=https' --tlsv1.2 -LsSf https://github.com/atuinsh/atuin/releases/latest/download/atuin-installer.sh | sh
+}
+
+{{ end -}}

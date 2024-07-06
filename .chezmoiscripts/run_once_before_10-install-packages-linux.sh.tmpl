@@ -14,17 +14,6 @@ pip_packages=()
 packages+=(gnupg)
 {{ end }}
 
-{{ if .packages.config_python_format_tools }}
-packages+=(python-pip)
-pip_packages+=(
-    black
-    ruff
-    flake8
-    isort
-    pipx
-)
-{{ end }}
-
 {{ if .packages.install_more_packages }}
 packages+=(
     axel

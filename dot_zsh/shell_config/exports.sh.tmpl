@@ -61,6 +61,20 @@ export EDITOR={{- .editor | quote }}
 export LANG='en_US.UTF-8'
 export LC_CTYPE='en_US.UTF-8'
 
+{{ if eq .chezmoi.os "darwin" }}
+# arm mac
+[ -d "/opt/homebrew" ] && pathprepend_f "/opt/homebrew/sbin" && pathprepend_f "/opt/homebrew/bin"
+
+if type brew &> /dev/null; then
+    FPATH=$(brew --prefix)/share/zsh/site-functions:$FPATH
+    # > python-build
+    BREW_PREFIX=$(brew --prefix)
+    export HOMEBREW_NO_AUTO_UPDATE=true
+    export CFLAGS="-I${BREW_PREFIX}/opt/zlib/include -I${BREW_PREFIX}/opt/sqlite/include -I${BREW_PREFIX}/opt/bzip2/include -I${BREW_PREFIX}/opt/openssl/include -I${BREW_PREFIX}/opt/readline/include -I$(xcrun --show-sdk-path)/usr/include"
+    export LDFLAGS="-L${BREW_PREFIX}/opt/openssl/lib -L${BREW_PREFIX}/opt/readline/lib -L${BREW_PREFIX}/opt/bzip2/lib -L${BREW_PREFIX}/opt/zlib/lib -L${BREW_PREFIX}/opt/sqlite/lib"
+fi
+{{ end }}
+
 {{ if lookPath "rg" }}
 # rg & fzf
 # Setting rg as the default source for fzf

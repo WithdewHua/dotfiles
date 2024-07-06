@@ -3,11 +3,15 @@
 
 set -eufo pipefail
 
-[ -d "$HOME/.pyenv" ] || {
-    # pyenv 
-    git clone https://github.com/pyenv/pyenv.git ~/.pyenv
-    # pyenv virtualenv
-    git clone https://github.com/pyenv/pyenv-virtualenv.git $HOME/.pyenv/plugins/pyenv-virtualenv
+# [ -d "$HOME/.pyenv" ] || {
+#     # pyenv 
+#     git clone https://github.com/pyenv/pyenv.git ~/.pyenv
+#     # pyenv virtualenv
+#     git clone https://github.com/pyenv/pyenv-virtualenv.git $HOME/.pyenv/plugins/pyenv-virtualenv
+# }
+
+[ -d "$HOME/.rye" ] || {
+    curl -sSf https://rye.astral.sh/get | bash
 }
 
 {{ end -}}
