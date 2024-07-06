@@ -88,11 +88,5 @@ export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 export GPG_TTY=$(tty)
 {{ end }}
 
-{{ if stat (joinPath .chezmoi.homeDir ".rye" )}}
-# rye
-pathprepend $HOME/.rye/shims
-eval "$(rye self completion -s zsh)"
-{{- end }}
-
 # for bin in .local
 pathappend $HOME/.local/bin
