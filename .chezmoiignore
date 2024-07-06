@@ -18,7 +18,7 @@ README.md
 .config/nvim
 {{ end }}
 
-{{ if stat (joinPath .chezmoi.homeDir ".config" "atuin") }}
+{{ if not (stat (joinPath .chezmoi.homeDir ".atuin" "bin")) }}
 .config/atuin
 {{ end }}
 
