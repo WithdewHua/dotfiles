@@ -18,6 +18,10 @@ README.md
 .config/nvim
 {{ end }}
 
+{{ if stat (joinPath .chezmoi.homeDir ".config" "atuin") }}
+.config/atuin
+{{ end }}
+
 {{ if not .personal_secrets }}
 .ssh
 .gnupg

@@ -71,14 +71,14 @@ znap eval zoxide 'zoxide init zsh'
 {{ if stat (joinPath .chezmoi.homeDir ".rye" )}}
 # rye
 pathprepend $HOME/.rye/shims
-znap eval rye "$(rye self completion -s zsh)"
+znap fpath _rye 'rye self completion -s zsh'
 {{- end }}
 
 {{ if stat (joinPath .chezmoi.homeDir ".atuin") }}
 # atuin
-. "$HOME/.atuin/bin/env"
-znap eval atuin "$(atuin init zsh)"
-znap eval atuin-completion "$(atuin gen-completions --shell zsh)"
+source "$HOME/.atuin/bin/env"
+znap eval atuin "atuin init zsh"
+znap fpath _atuin 'atuin gen-completions --shell zsh'
 {{ end }}
 
 # alias
