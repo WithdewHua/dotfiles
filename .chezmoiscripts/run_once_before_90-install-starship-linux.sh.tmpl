@@ -1,4 +1,4 @@
-{{- if and (ne .chezmoi.os "linux") (eq .zsh_theme "starship") -}}
+{{- if and (eq .chezmoi.os "linux") (eq .zsh_theme "starship") -}}
 #!/usr/bin/env bash
 
 set -eufo pipefail

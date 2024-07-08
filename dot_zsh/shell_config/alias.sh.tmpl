@@ -23,9 +23,14 @@ alias tree='eza -T'
 alias vim='nvim'
 {{ end }}
 
-# trash-cli
 {{ if lookPath "trash" }}
+# trash-cli
 alias rm='trash'
 {{ else }}
 alias rm='rm -i'
+{{ end }}
+
+{{ if lookPath "rye" }}
+# rye
+alias rr="rye run"
 {{ end }}

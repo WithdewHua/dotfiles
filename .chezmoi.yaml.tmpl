@@ -1,8 +1,8 @@
 {{/* git user.email */}}
-{{- $email := promptString "Email: " -}}
+{{- $email := promptStringOnce .git "email" "Email: " -}}
 
 {{/* git user.name */}}
-{{- $name := promptString "Name: " -}}
+{{- $name := promptStringOnce .git "name" "Name: " -}}
 
 {{/* editor */}}
 {{- $editor := "vi" -}}
@@ -13,26 +13,25 @@
 {{- end -}}
 
 {{/* boolean flag */}}
-{{- $work_machine := promptBool "Company's computer" -}}
+{{- $work_machine := promptBoolOnce . "work_machine" "Company's computer" -}}
 
-{{- $config_python_format_tools := promptBool "Config python formatting tools" -}}
+{{- $config_python_format_tools := promptBoolOnce .packages "config_python_format_tools" "Config python formatting tools" -}}
 
-{{- $install_more_packages := promptBool "Install more packages" -}}
+{{- $install_more_packages := promptBoolOnce .packages "install_more_packages" "Install more packages" -}}
 
-{{- $personal_secrets := "false" -}}
 {{- $gpg_encrypt_key_id := "" -}}
 {{- $gpg_sign_key_id := "" -}}
-{{- $personal_secrets := promptBool "Decrypt encrypted data" -}}
+{{- $personal_secrets := promptBoolOnce . "personal_secrets" "Decrypt encrypted data" -}}
 {{- if $personal_secrets -}}
-{{-     $gpg_encrypt_key_id := promptString "GPG Key ID for encryption: " -}}
-{{-     $gpg_sign_key_id := promptString "GPG Key ID for signing: " -}}
+{{-     $gpg_encrypt_key_id = promptStringOnce .gpg "gpg_encrypt_key_id" "GPG Key ID for encryption: " -}}
+{{-     $gpg_sign_key_id = promptStringOnce .gpg "gpg_sign_key_id" "GPG Key ID for signing: " -}}
 {{- end -}}
 
-{{- $alacritty := promptBool "Config alacritty" -}}
+{{- $alacritty := promptBoolOnce .gui "alacritty" "Config alacritty" -}}
 
-{{- $wezterm := promptBool "Config wezterm" -}}
+{{- $wezterm := promptBoolOnce .gui "wezterm" "Config wezterm" -}}
 
-{{- $zsh_theme := promptString "Zsh theme(pure/starship): " -}}
+{{- $zsh_theme := promptStringOnce . "zsh_theme" "Zsh theme(pure/starship): " -}}
 
 
 data:

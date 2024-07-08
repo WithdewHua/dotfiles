@@ -19,7 +19,7 @@ packages+=(
     axel
     bat
     exa
-    fd
+    fd-find
     htop
     iproute2
     neofetch
@@ -38,7 +38,6 @@ packages+=(
 pip_packages+=(
     thefuck
     tldr
-    pynvim 
 )
 {{ end }}
 
@@ -69,10 +68,13 @@ get_current_user
     sudo $PKG $INSTALL_PARAM ${packages[@]}
 }
 
-{{ if lookPath "pip3" }}
 if (( ${#pip_packages[@]} > 0 )); then
-    pip3 install ${pip_packages[@]}
+    [ -d "$HOME/.rye" ] && {
+        for package in ${pip_packages[@]}
+        do
+            "${HOME}/.rye/shims/rye" install -f $package
+        done
+    }
 fi
-{{ end }}
 
-{{ end -}}
+{{- end -}}

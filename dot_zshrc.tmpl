@@ -60,7 +60,7 @@ znap eval fuck 'thefuck --alias'
 
 {{ if stat (joinPath .chezmoi.homeDir ".fzf" )}}
 # fzf
-source ~/.fzf.zsh
+source <(fzf --zsh)
 {{- end }}
 
 {{ if lookPath "zoxide" }}

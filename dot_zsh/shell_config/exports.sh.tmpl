@@ -75,13 +75,17 @@ if type brew &> /dev/null; then
 fi
 {{ end }}
 
+{{ if stat (joinPath .chezmoi.homeDir ".fzf" )}}
+# fzf
+pathappend $HOME/.fzf/bin
+{{- end }}
 {{ if lookPath "rg" }}
 # rg & fzf
 # Setting rg as the default source for fzf
 export FZF_DEFAULT_COMMAND='rg --files --no-ignore --hidden --follow -g "!{.git}/*" 2> /dev/null'
 # To apply the command to CTRL-T as well
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
-{{ end }}
+{{- end }}
 
 {{ if .personal_secrets }}
 # GPG
@@ -90,3 +94,4 @@ export GPG_TTY=$(tty)
 
 # for bin in .local
 pathappend $HOME/.local/bin
+

@@ -67,18 +67,19 @@ end
 
 -- grep
 if fn.executable "rg" == 1 then
-    o.grepprg = "rg --vimgrep --no-heading --smart-case"
+    o.grepprg = "rg --vimgrep --hidden --no-heading --smart-case"
 end
 
 -- truecolor
 o.termguicolors = true
 
 -- python env
-if fn.exists("$VIRTUAL_ENV") == 1 then
-    g.python3_host_prog = fn.substitute(fn.system("which -a python3 | head -n3 | tail -n1"), "\n", '', 'g')
-else
-    g.python3_host_prog = fn.substitute(fn.system("which -a python3 | head -n2 | tail -n1"), "\n", '', 'g')
-end
+-- if fn.exists("$VIRTUAL_ENV") == 1 then
+--     g.python3_host_prog = fn.substitute(fn.system("which -a python3 | head -n3 | tail -n1"), "\n", '', 'g')
+-- else
+--     g.python3_host_prog = fn.substitute(fn.system("which -a python3 | head -n2 | tail -n1"), "\n", '', 'g')
+-- end
+g.python3_host_prog = "/usr/bin/python3"
 
 -- disable builtin vim plugins
 local disabled_built_ins = {
