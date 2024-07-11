@@ -19,12 +19,14 @@ return {
     ------------------------------------------------\\
     -- Bufferline, Statusline and theme related stuff
     ------------------------------------------------\\
-    {
-        "sainnhe/gruvbox-material",
-        config = function()
-            require("theme")
-        end
-    },
+    -- {
+    --     "sainnhe/gruvbox-material",
+    --     config = function()
+    --         vim.o.background = "dark" -- or "light" for light mode
+    --         vim.g.gruvbox_material_background = "medium"
+    --         vim.cmd([[colorscheme gruvbox-material]])
+    --     end
+    -- },
 
     ------------------------------------------------\\
     -- Git related stuff

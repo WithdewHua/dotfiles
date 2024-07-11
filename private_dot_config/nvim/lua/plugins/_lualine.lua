@@ -1,8 +1,8 @@
 local function session_status()
     if vim.g.persisting then
-        return "﫠"
+        return " "
     else
-        return ""
+        return " "
     end
 end
 
@@ -14,7 +14,8 @@ return {
             require("lualine").setup {
                 options = {
                     icons_enabled = true,
-                    theme = 'gruvbox-material',
+                    -- theme = 'gruvbox-material',
+                    theme = 'catppuccin',
                     component_separators = { left = '', right = ''},
                     section_separators = { left = '', right = ''},
                     disabled_filetypes = {},

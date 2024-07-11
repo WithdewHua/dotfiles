@@ -1,7 +1,7 @@
 return {
     {
         'akinsho/nvim-bufferline.lua',
-        dependencies = 'nvim-tree/nvim-web-devicons',
+        dependencies = {"catppuccin", 'nvim-tree/nvim-web-devicons'},
         config = function()
             require("bufferline").setup {
                 options = {
@@ -22,7 +22,8 @@ return {
                     separator_style = "thin",
                     always_show_bufferline = true,
                     diagnostics = "nvim_lsp"
-                }
+                },
+                highlights = require("catppuccin.groups.integrations.bufferline").get()
             }
         end
     },
