@@ -14,7 +14,7 @@ pip_packages=()
 packages+=(gnupg)
 {{ end }}
 
-{{ if .packages.install_more_packages }}
+{{ if .install_more_packages }}
 packages+=(
     axel
     bat

@@ -1,7 +1,7 @@
 [user]
-    name = {{ .git.name | quote }}
-    email = {{ .git.email | quote }}
-    signingkey = {{ .gpg.gpg_sign_key_id }}
+    name = {{ .name | quote }}
+    email = {{ .email | quote }}
+    signingkey = {{ .gpg_sign_key_id }}
 
 [core]
     editor = {{ .editor }}

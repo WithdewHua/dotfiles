@@ -1,8 +1,8 @@
 {{/* git user.email */}}
-{{- $email := promptStringOnce .git "email" "Email: " -}}
+{{- $email := promptStringOnce . "email" "Email: " -}}
 
 {{/* git user.name */}}
-{{- $name := promptStringOnce .git "name" "Name: " -}}
+{{- $name := promptStringOnce . "name" "Name: " -}}
 
 {{/* editor */}}
 {{- $editor := "vi" -}}
@@ -15,42 +15,38 @@
 {{/* boolean flag */}}
 {{- $work_machine := promptBoolOnce . "work_machine" "Company's computer" -}}
 
-{{- $config_python_format_tools := promptBoolOnce .packages "config_python_format_tools" "Config python formatting tools" -}}
+{{- $config_python_format_tools := promptBoolOnce . "config_python_format_tools" "Config python formatting tools" -}}
 
-{{- $install_more_packages := promptBoolOnce .packages "install_more_packages" "Install more packages" -}}
+{{- $install_more_packages := promptBoolOnce . "install_more_packages" "Install more packages" -}}
 
 {{- $gpg_encrypt_key_id := "" -}}
 {{- $gpg_sign_key_id := "" -}}
 {{- $personal_secrets := promptBoolOnce . "personal_secrets" "Decrypt encrypted data" -}}
 {{- if $personal_secrets -}}
-{{-     $gpg_encrypt_key_id = promptStringOnce .gpg "gpg_encrypt_key_id" "GPG Key ID for encryption: " -}}
-{{-     $gpg_sign_key_id = promptStringOnce .gpg "gpg_sign_key_id" "GPG Key ID for signing: " -}}
+{{-     $gpg_encrypt_key_id = promptStringOnce . "gpg_encrypt_key_id" "GPG Key ID for encryption: " -}}
+{{-     $gpg_sign_key_id = promptStringOnce . "gpg_sign_key_id" "GPG Key ID for signing: " -}}
 {{- end -}}
 
-{{- $alacritty := promptBoolOnce .gui "alacritty" "Config alacritty" -}}
+{{- $alacritty := promptBoolOnce . "alacritty" "Config alacritty" -}}
 
-{{- $wezterm := promptBoolOnce .gui "wezterm" "Config wezterm" -}}
+{{- $wezterm := promptBoolOnce . "wezterm" "Config wezterm" -}}
 
 {{- $zsh_theme := promptStringOnce . "zsh_theme" "Zsh theme(pure/starship): " -}}
 
 
 data:
-  git:
-    email: {{ $email | quote }}
-    name: {{ $name | quote }}
+  email: {{ $email | quote }}
+  name: {{ $name | quote }}
   editor: {{ $editor }}
-  packages:
-    config_python_format_tools: {{ $config_python_format_tools }}
-    install_more_packages: {{ $install_more_packages }}
-  gui:
-    alacritty: {{ $alacritty }}
-    wezterm: {{ $wezterm }}
+  config_python_format_tools: {{ $config_python_format_tools }}
+  install_more_packages: {{ $install_more_packages }}
+  alacritty: {{ $alacritty }}
+  wezterm: {{ $wezterm }}
   personal_secrets: {{ $personal_secrets }}
   zsh_theme: {{ $zsh_theme }}
   work_machine: {{ $work_machine }}
-  gpg:
-    gpg_encrypt_key_id: {{ $gpg_encrypt_key_id | quote }}
-    gpg_sign_key_id: {{ $gpg_sign_key_id | quote }}
+  gpg_encrypt_key_id: {{ $gpg_encrypt_key_id | quote }}
+  gpg_sign_key_id: {{ $gpg_sign_key_id | quote }}
 
 diff:
   exclude:
