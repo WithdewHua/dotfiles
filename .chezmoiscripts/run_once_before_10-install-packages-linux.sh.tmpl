@@ -49,6 +49,9 @@ get_package_manager() {
     elif grep -Eqi "archlinux" /proc/version; then
         PKG="pacman"
         INSTALL_PARAM="-Sy --noconfirm"
+    elif grep -Eqi "debian|raspbian" /etc/os-release; then
+        PKG="apt"
+        INSTALL_PARAM='install -y'
     fi
 }
 
