@@ -37,13 +37,9 @@ pathprepend_f() {
 normalize_path() {
   # remove duplicate items in $PATH
   # shell will auto add some path to $PATH, which cause duplicate paths
-  paths=""
-  declare -a _paths=( $(echo $PATH | tr ':' ' ') )
-  for _path in "${_paths[@]}"; do
-    if [[ ":$paths:" != *":$_path:"* ]]; then
-      paths="${paths:+"$paths:"}$_path"
-    fi
-  done
+  # don't know how to change string to list which elements contains whitespaces in shell
+  # python 3.7+
+  paths=$(/usr/bin/python3 -c "import os;path=':'.join(list(dict.fromkeys(os.environ['PATH'].split(':'))));print(path)")
   unset PATH
   PATH=$paths
 }
