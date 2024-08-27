@@ -14,4 +14,8 @@ set -eufo pipefail
     curl -sSf https://rye.astral.sh/get | bash
 }
 
+[ -f "$HOME/.cargo/bin/uv" ] || {
+    curl -LsSf https://astral.sh/uv/install.sh | sh
+}
+
 {{ end -}}

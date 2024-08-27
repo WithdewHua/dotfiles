@@ -91,3 +91,6 @@ export GPG_TTY=$(tty)
 # for bin in .local
 pathappend $HOME/.local/bin
 
+# for bin in .cargo
+pathprepend_f $HOME/.cargo/bin
+
