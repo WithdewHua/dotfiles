@@ -74,6 +74,11 @@ pathprepend $HOME/.rye/shims
 znap fpath _rye 'rye self completion -s zsh'
 {{- end }}
 
+{{ if stat (joinPath .chezmoi.homeDir ".cargo" "bin" "uv" )}}
+# uv
+znap fpath _uv 'uv generate-shell-completion zsh'
+{{- end }}
+
 {{ if stat (joinPath .chezmoi.homeDir ".atuin") }}
 # atuin
 source "$HOME/.atuin/bin/env"
