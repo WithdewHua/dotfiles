@@ -10,9 +10,9 @@ set -eufo pipefail
 #     git clone https://github.com/pyenv/pyenv-virtualenv.git $HOME/.pyenv/plugins/pyenv-virtualenv
 # }
 
-[ -d "$HOME/.rye" ] || {
-    curl -sSf https://rye.astral.sh/get | bash
-}
+# [ -d "$HOME/.rye" ] || {
+#     curl -sSf https://rye.astral.sh/get | bash
+# }
 
 [ -f "$HOME/.cargo/bin/uv" ] || {
     curl -LsSf https://astral.sh/uv/install.sh | sh
