@@ -77,7 +77,8 @@ return {
             lsp_installer.setup {
                 ensure_installed = {
                     "pyright",
-                    "ruff_lsp",
+                    "ruff",
+                    -- "ruff_lsp",
                     "yamlls",
                     "jsonls",
                     -- "sumneko_lua",
@@ -135,7 +136,7 @@ return {
                         }
                     }
                 end,
-                ["ruff_lsp"] = function (opts)
+                ["ruff"] = function (opts)
                     opts.init_options = {
                         settings = {
                             args = {
