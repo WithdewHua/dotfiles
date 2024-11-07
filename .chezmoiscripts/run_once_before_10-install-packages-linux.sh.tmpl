@@ -72,10 +72,10 @@ get_current_user
 }
 
 if (( ${#pip_packages[@]} > 0 )); then
-    [ -d "$HOME/.rye" ] && {
+    [ -f "$HOME/.cargo/bin/uv" ] && {
         for package in ${pip_packages[@]}
         do
-            "${HOME}/.rye/shims/rye" install -f $package
+            "${HOME}/.cargo/bin/uv" tool install $package
         done
     }
 fi

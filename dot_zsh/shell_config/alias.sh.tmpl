@@ -11,6 +11,9 @@ alias gm="git merge"
 alias gp="git push"
 alias gst="git status"
 
+{{ if lookPath "tssh" }}
+alias t="tssh"
+{{ end }}
 
 {{ if lookPath "eza" }}
 alias ls='eza'
