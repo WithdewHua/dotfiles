@@ -27,9 +27,7 @@
 {{-     $gpg_sign_key_id = promptStringOnce . "gpg_sign_key_id" "GPG Key ID for signing: " -}}
 {{- end -}}
 
-{{- $alacritty := promptBoolOnce . "alacritty" "Config alacritty" -}}
-
-{{- $wezterm := promptBoolOnce . "wezterm" "Config wezterm" -}}
+{{- $is_desktop := promptBoolOnce . "is_desktop" "Desktop?" -}}
 
 {{- $zsh_theme := promptStringOnce . "zsh_theme" "Zsh theme(pure/starship): " -}}
 
@@ -40,8 +38,7 @@ data:
   editor: {{ $editor }}
   config_python_format_tools: {{ $config_python_format_tools }}
   install_more_packages: {{ $install_more_packages }}
-  alacritty: {{ $alacritty }}
-  wezterm: {{ $wezterm }}
+  is_desktop: {{ $is_desktop }}
   personal_secrets: {{ $personal_secrets }}
   zsh_theme: {{ $zsh_theme }}
   work_machine: {{ $work_machine }}

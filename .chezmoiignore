@@ -1,11 +1,9 @@
 README.md
 
-{{ if not .alacritty }}
+{{ if not .is_desktop }}
 .config/alacritty
-{{ end }}
-
-{{ if not .wezterm }}
 .config/wezterm
+.config/ghostty
 {{ end }}
 
 {{ if not .config_python_format_tools }}
