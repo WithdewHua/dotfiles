@@ -28,33 +28,6 @@ map("n", "<leader>ca", [[ <Cmd> %y+<CR>]], opt)
 map("n", "<leader>/", ":CommentToggle<CR>", opt)
 map("v", "<leader>/", ":CommentToggle<CR>", opt)
 
-
--- -- Telescope
--- -- git pickers
--- map("n", "<space>gs", [[<Cmd> Telescope git_status <CR>]], opt)
--- map("n", "<space>gc", [[<Cmd> Telescope git_commits <CR>]], opt)
--- -- file pickers
--- map("n", "<space>ff", [[<Cmd> Telescope find_files <CR>]], opt)
--- -- vim pickers
--- map("n", "<space>bb", [[<Cmd>Telescope buffers<CR>]], opt)
--- map("n", "<space>ht", [[<Cmd>Telescope help_tags<CR>]], opt)
--- map("n", "<space>fo", [[<Cmd>Telescope oldfiles<CR>]], opt)
--- map("n", "<space>cm", [[<Cmd>Telescope commands<CR>]], opt)
--- map("n", "<space>qf", [[<Cmd>Telescope quickfix<CR>]], opt)
--- map("n", "<space>mm", [[<Cmd>Telescope marks<CR>]], opt)
--- map("n", "<space>mp", [[<Cmd>Telescope keymaps<CR>]], opt)
--- -- native lsp pickers
--- map("n", "<space>lr", [[<Cmd>Telescope lsp_references<CR>]], opt)
--- map("n", "<space>ld", [[<Cmd>Telescope lsp_definitions<CR>]], opt)
--- map("n", "<space>li", [[<Cmd>Telescope lsp_implementations<CR>]], opt)
--- map("n", "<space>lsd", [[<Cmd>Telescope lsp_documents_symbols<CR>]], opt)
--- map("n", "<space>lsw", [[<Cmd>Telescope lsp_workspace_symbols<CR>]], opt)
--- map("n", "<space>lad", [[<Cmd>Telescope lsp_document_diagnostics<CR>]], opt)
--- map("n", "<space>law", [[<Cmd>Telescope lsp_workspace_diagnostics<CR>]], opt)
--- -- extensions
--- map("n", "<space>fp", [[<Cmd>lua require('telescope').extensions.media_files.media_files()<CR>]], opt)
--- map("n", "<space>ss", [[<Cmd>SaveSession<CR><CR>]], opt)
-
 -- format code
 map("n", "<leader>fm", ":Format<CR>", opt)
 
