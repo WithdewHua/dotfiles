@@ -98,3 +98,10 @@ pathappend $HOME/.local/bin
 pathprepend_f $HOME/.cargo/bin
 {{ end }}
 
+{{ if stat (joinPath .chezmoi.homeDir "Library/Containers/com.bitwarden.desktop/Data/.bitwarden-ssh-agent.sock")}}
+# bitwarden ssh-agent
+export SSH_AUTH_SOCK={{joinPath .chezmoi.homeDir "Library/Containers/com.bitwarden.desktop/Data/.bitwarden-ssh-agent.sock"}}
+{{else if stat (joinPath .chezmoi.homeDir ".bitwarden-ssh-agent.sock")}}
+# bitwarden ssh-agent
+export SSH_AUTH_SOCK={{joinPath .chezmoi.homeDir ".bitwarden-ssh-agent.sock"}}
+{{ end }}
