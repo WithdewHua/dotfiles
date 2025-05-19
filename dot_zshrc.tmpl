@@ -54,6 +54,11 @@ source $ZSH/shell_config/exports.sh
 znap eval fuck 'thefuck --alias'
 {{- end }}
 
+{{ if lookPath "tailscale" }}
+# tailscale cli
+znap fpath _tailscale 'tailscale completion zsh'
+{{- end }}
+
 {{ if stat (joinPath .chezmoi.homeDir ".fzf" )}}
 # fzf
 source <(fzf --zsh)
