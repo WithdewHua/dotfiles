@@ -69,12 +69,6 @@ source <(fzf --zsh)
 znap eval zoxide 'zoxide init zsh'
 {{- end }}
 
-{{ if stat (joinPath .chezmoi.homeDir ".rye" )}}
-# rye
-pathprepend $HOME/.rye/shims
-znap fpath _rye 'rye self completion -s zsh'
-{{- end }}
-
 {{ if stat (joinPath .chezmoi.homeDir ".cargo" "bin" "uv" )}}
 # uv
 znap fpath _uv 'uv generate-shell-completion zsh'

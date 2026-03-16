@@ -105,3 +105,9 @@ export SSH_AUTH_SOCK={{joinPath .chezmoi.homeDir "Library/Containers/com.bitward
 # bitwarden ssh-agent
 export SSH_AUTH_SOCK={{joinPath .chezmoi.homeDir ".bitwarden-ssh-agent.sock"}}
 {{ end }}
+
+{{ if stat (joinPath .chezmoi.homeDir ".opencode/bin" )}}
+# opencode
+pathappend $HOME/.opencode/bin
+{{ end }}
+
