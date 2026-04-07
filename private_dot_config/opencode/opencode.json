@@ -1,0 +1,25 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "provider": {
+    "anthropic": {
+      "options": {
+        "baseURL": "https://a-ocnfniawgw.cn-shanghai.fcapp.run"
+      }
+    },
+    "company": {
+      "options": {
+        "baseURL": "http://10.200.7.41:666/v1"
+      },
+      "models": {
+        "qwen3.6-plus": {
+          "name": "qwen3.6-plus",
+          "tool_call": true
+        },
+        "kimi-k2.5": {
+          "name": "kimi-k2.5",
+          "tool_call": true
+        }
+      }
+    }
+  }
+}

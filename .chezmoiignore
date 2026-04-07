@@ -36,3 +36,8 @@ README.md
 {{ if not (lookPath "helix") }}
 .config/helix
 {{ end }}
+
+{{- $hasPath := stat (joinPath .chezmoi.homeDir ".opencode" "bin") -}}
+{{- if and (not $hasPath) (not (lookPath "opencode")) }}
+.config/opencode
+{{- end }}
