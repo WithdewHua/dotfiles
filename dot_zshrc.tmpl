@@ -81,6 +81,11 @@ znap eval atuin "atuin init zsh"
 znap fpath _atuin 'atuin gen-completions --shell zsh'
 {{ end }}
 
+{{- if stat (joinPath .chezmoi.homeDir ".config" "opencode") }}
+# opencode
+znap fpath _opencode 'opencode completion'
+{{- end }}
+
 # alias
 source $ZSH/shell_config/alias.sh
 
