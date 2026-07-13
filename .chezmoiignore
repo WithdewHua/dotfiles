@@ -23,6 +23,7 @@ README.md
 {{ if not .personal_secrets }}
 .ssh
 .gnupg
+.claude
 {{ end }}
 
 {{ if not (lookPath "tmux") }}
