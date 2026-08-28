@@ -60,4 +60,5 @@ README.md
 .pi/agent/model-specs-cache.json
 .pi/agent/custom-providers.json
 .pi/agent/pi-debug.log
+.pi/agent/web-search-cache
 .config/pi

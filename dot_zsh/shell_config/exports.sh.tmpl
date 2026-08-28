@@ -111,3 +111,6 @@ export SSH_AUTH_SOCK={{joinPath .chezmoi.homeDir ".bitwarden-ssh-agent.sock"}}
 pathappend $HOME/.opencode/bin
 {{ end }}
 
+# Pi coding agent: keep settings, models, and pi-web-access config together
+export PI_CODING_AGENT_DIR="$HOME/.pi/agent"
+
