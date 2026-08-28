@@ -1,0 +1,10 @@
+{
+  "enabled": true,
+  "showPruneStatusLine": true,
+  "showStartupNotice": true,
+  "summarizerModel": "kekulv/gpt-5.6-luna",
+  "summarizerThinking": "low",
+  "pruneOn": "agent-message",
+  "remindUnprunedCount": true,
+  "batchingMode": "turn"
+}

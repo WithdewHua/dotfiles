@@ -42,3 +42,22 @@ README.md
 {{- if and (not $hasPath) (not (lookPath "opencode")) }}
 .config/opencode
 {{- end }}
+
+{{- $hasPiBin := stat (joinPath .chezmoi.homeDir ".local" "bin" "pi") -}}
+{{- if and (not $hasPiBin) (not (lookPath "pi")) }}
+.pi
+{{- end }}
+
+{{- if not .personal_secrets }}
+.pi/agent/models.json
+{{- end }}
+
+.pi/agent/sessions
+.pi/agent/npm
+.pi/agent/auth.json
+.pi/agent/trust.json
+.pi/agent/models-store.json
+.pi/agent/model-specs-cache.json
+.pi/agent/custom-providers.json
+.pi/agent/pi-debug.log
+.config/pi
