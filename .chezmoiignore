@@ -43,7 +43,7 @@ README.md
 .config/opencode
 {{- end }}
 
-{{- $hasPiBin := stat (joinPath .chezmoi.homeDir ".local" "bin" "pi") -}}
+{{- $hasPiBin := or (stat (joinPath .chezmoi.homeDir ".local" "bin" "pi")) (stat "/usr/local/bin/pi") (stat "/opt/homebrew/bin/pi") -}}
 {{- if and (not $hasPiBin) (not (lookPath "pi")) }}
 .pi
 {{- end }}

@@ -1,0 +1,34 @@
+{{- $hasPiBin := or (stat (joinPath .chezmoi.homeDir ".local" "bin" "pi")) (stat "/usr/local/bin/pi") (stat "/opt/homebrew/bin/pi") -}}
+{{- if or $hasPiBin (lookPath "pi") -}}
+#!/usr/bin/env bash
+
+set -eufo pipefail
+
+# Re-run when the configured package list changes.
+# packages: {{ (fromJson (include "dot_pi/agent/settings.json")).packages | toJson }}
+
+export PATH="${HOME}/.local/bin:/opt/homebrew/bin:/usr/local/bin:${PATH}"
+
+if ! command -v pi >/dev/null 2>&1; then
+    echo "pi not found; skip package install" >&2
+    exit 0
+fi
+
+packages=(
+{{- range $pkg := (fromJson (include "dot_pi/agent/settings.json")).packages }}
+{{-   $source := $pkg }}
+{{-   if not (kindIs "string" $pkg) }}
+{{-     $source = $pkg.source }}
+{{-   end }}
+    {{ $source | quote }}
+{{- end }}
+)
+
+if (( ${#packages[@]} == 0 )); then
+    exit 0
+fi
+
+for source in "${packages[@]}"; do
+    pi install --no-approve "${source}"
+done
+{{- end -}}
