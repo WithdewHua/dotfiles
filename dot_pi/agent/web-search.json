@@ -1,3 +1,6 @@
 {
-  "summaryModel": "kekulv/gpt-5.6-luna"
+  "summaryModel": "kekulv/gpt-5.6-luna",
+  "ssrf": {
+    "allowRanges": ["198.18.0.0/15"]
+  }
 }
