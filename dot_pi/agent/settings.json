@@ -7,7 +7,8 @@
     "npm:pi-context-prune",
     "npm:pi-mcp-adapter",
     "npm:pi-web-access",
-    "npm:@tintinweb/pi-subagents"
+    "npm:@tintinweb/pi-subagents",
+    "npm:@juicesharp/rpiv-ask-user-question"
   ],
   "hideThinkingBlock": true,
   "modelThinkingLevels": {
