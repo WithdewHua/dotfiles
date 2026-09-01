@@ -9,7 +9,8 @@
     "npm:pi-web-access",
     "npm:@tintinweb/pi-subagents",
     "npm:@juicesharp/rpiv-ask-user-question",
-    "npm:@juicesharp/rpiv-todo"
+    "npm:@juicesharp/rpiv-todo",
+    "npm:pi-zentui"
   ],
   "hideThinkingBlock": true,
   "modelThinkingLevels": {
