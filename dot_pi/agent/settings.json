@@ -1,5 +1,7 @@
 {
-  "lastChangelogVersion": "0.84.3",
+  "defaultProvider": "kekulv",
+  "defaultModel": "glm-5.3",
+  "lastChangelogVersion": "0.84.4",
   "theme": "dark",
   "packages": [
     "npm:pi-context-prune",
@@ -16,5 +18,10 @@
     "kekulv/claude-opus-5": "xhigh",
     "kekulv/glm-5.3": "high"
   },
-  "tuiMode": "regular"
+  "tuiMode": "regular",
+  "terminal": {
+    "showTerminalProgress": true
+  },
+  "showHardwareCursor": true,
+  "showCacheMissNotices": true
 }
