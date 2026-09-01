@@ -8,7 +8,8 @@
     "npm:pi-mcp-adapter",
     "npm:pi-web-access",
     "npm:@tintinweb/pi-subagents",
-    "npm:@juicesharp/rpiv-ask-user-question"
+    "npm:@juicesharp/rpiv-ask-user-question",
+    "npm:@juicesharp/rpiv-todo"
   ],
   "hideThinkingBlock": true,
   "modelThinkingLevels": {
