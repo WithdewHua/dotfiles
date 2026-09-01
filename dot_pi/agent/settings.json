@@ -10,7 +10,8 @@
     "npm:@tintinweb/pi-subagents",
     "npm:@juicesharp/rpiv-ask-user-question",
     "npm:@juicesharp/rpiv-todo",
-    "npm:pi-zentui"
+    "npm:pi-zentui",
+    "npm:@czottmann/pi-automode"
   ],
   "hideThinkingBlock": true,
   "modelThinkingLevels": {
