@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+
+set -eufo pipefail
+
+# If rtk is installed, initialize it for every agent CLI present on this machine.
+# Runs on every apply; rtk init is idempotent, so re-running is harmless.
+
+if ! command -v rtk >/dev/null 2>&1; then
+    echo "rtk not found; skip agent init" >&2
+    exit 0
+fi
+
+has_bin() {
+    command -v "$1" >/dev/null 2>&1 || [ -x "$HOME/.local/bin/$1" ]
+}
+
+if has_bin claude; then
+    rtk init -g --auto-patch
+fi
+
+if has_bin pi; then
+    rtk init -g --agent pi
+fi
+
+if has_bin codex; then
+    rtk init -g --codex
+fi
+
+if has_bin opencode || [ -d "$HOME/.config/opencode" ]; then
+    rtk init -g --opencode
+fi
+
+if has_bin cursor-agent; then
+    rtk init -g --agent cursor
+fi
+
+if has_bin gemini; then
+    rtk init -g --gemini
+fi

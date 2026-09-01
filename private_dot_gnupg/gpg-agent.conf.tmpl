@@ -3,3 +3,7 @@
 pinentry-program /opt/homebrew/bin/pinentry-mac
 {{- end }}
 {{- end }}
+# Cache passphrase for 7 days, but always require it for signing
+default-cache-ttl 604800
+max-cache-ttl 604800
+ignore-cache-for-signing
