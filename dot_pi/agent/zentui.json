@@ -95,7 +95,7 @@
       "modelLabel": "id",
       "styles": {
         "starship": {
-          "format": "$cwd( in $session_name)( on $git_branch$git_status)( $git_metrics) $runtime $fill $context( $auto_compaction) | $tokens | $cost $fill",
+          "format": "$cwd( in $session_name)( on $git_branch$git_status)( $git_metrics) $runtime $fill $context( $auto_compaction) | $tokens( $cache_read)( $cache_write) | $cost $fill",
           "responsive": true,
           "compactFormat": "$cwd$wrap(in $session_name)$wrap(on $git_branch) $git_status$wrap$context$wrap_sep$tokens",
           "compactMaxLines": 3,
