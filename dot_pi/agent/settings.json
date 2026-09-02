@@ -21,7 +21,7 @@
     "kekulv/grok-4.6": "high",
     "kekulv/deepseek-v4-flash": "high",
     "kekulv/claude-opus-5": "xhigh",
-    "kekulv/glm-5.3": "max"
+    "kekulv/glm-5.3": "high"
   },
   "tuiMode": "regular",
   "terminal": {
