@@ -107,7 +107,7 @@
           },
           "pathDisplay": {
             "mode": "full",
-            "depth": 0
+            "depth": 2
           },
           "segments": {
             "cwd": true,
