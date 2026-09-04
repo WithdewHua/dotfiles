@@ -1,5 +1,5 @@
 {
   "autoMode": {
-    "classifierModel": "kekulv/gpt-5.6-luna"
+    "classifierModel": "kekulv/deepseek-v4-flash"
   }
 }
