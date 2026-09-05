@@ -6,5 +6,6 @@
   "summarizerThinking": "low",
   "pruneOn": "agent-message",
   "remindUnprunedCount": true,
+  "notifySkipped": false,
   "batchingMode": "turn"
 }
