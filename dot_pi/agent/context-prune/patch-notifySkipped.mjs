@@ -8,7 +8,9 @@ import { readFileSync, writeFileSync } from "node:fs";
 import { homedir } from "node:os";
 import { join } from "node:path";
 
-const indexPath = join(homedir(), ".pi/agent/npm/node_modules/pi-context-prune/dist/index.js");
+const indexPath =
+  process.env.PI_CONTEXT_PRUNE_DIST ||
+  join(homedir(), ".pi/agent/npm/node_modules/pi-context-prune/dist/index.js");
 
 const OLD = [
   '        const batchSummaryLen = results[batches.indexOf(batch)]?.summaryText.length ?? 0;',
