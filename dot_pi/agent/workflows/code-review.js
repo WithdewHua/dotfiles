@@ -89,6 +89,12 @@ const CONF = {
 }
 const conf = CONF[effort]
 
+// optional model override — applied to every spawned agent (finders, verifier,
+// gap sweep). Omit → agents inherit the session model. Accepts a provider/modelId
+// like "kekulv/gpt-5.6-luna" or a fuzzy name like "luna".
+const model = (args && args.model) ? String(args.model).trim() : ''
+const optsModel = model ? { model } : {}
+
 // ---- finder prompts (CC: pass through half-believed candidates) ------------
 function suffix(cap, extra) {
   return `
@@ -160,7 +166,7 @@ Return up to 6 candidates through the findings tool with the same field rules (f
 // ---- stages ----------------------------------------------------------------
 const rank = { critical: 0, major: 1, minor: 2 }
 
-log(`code-review workflow — effort=${effort} target: ${targetText}${compact ? ' (compact output)' : ''}`)
+log(`code-review workflow — effort=${effort}${model ? ` model=${model}` : ''} target: ${targetText}${compact ? ' (compact output)' : ''}`)
 
 function runFinder(key, cap) {
   const extra = key === 'lowpass'
@@ -171,6 +177,7 @@ function runFinder(key, cap) {
     phase: 'Scan',
     agentType: 'code-review',
     schema: findingsSchema(cap),
+    ...optsModel,
   }).then((r) => ({
     angle: key,
     candidates: (r && r.findings ? r.findings : []).map((f) => ({ ...f, angle: key })),
@@ -212,6 +219,7 @@ if (conf.verify && candidates.length) {
         phase: 'Verify',
         agentType: 'code-review',
         schema: verdictsSchema(chunk.length),
+        ...optsModel,
       }).then((r) => (r && r.verdicts) || [])
     )
   )
@@ -238,14 +246,14 @@ if (conf.sweep) {
   const gapFiles = [...dirtyFiles].filter((f) => !confirmedFiles.has(f))
   if (gapFiles.length) {
     log(`gap sweep: re-hunting ${gapFiles.length} files with no confirmed finding`)
-    const gap = await agent(gapSweepPrompt(gapFiles), { label: 'scan:gap-sweep', phase: 'Scan', agentType: 'code-review', schema: findingsSchema(6) })
+    const gap = await agent(gapSweepPrompt(gapFiles), { label: 'scan:gap-sweep', phase: 'Scan', agentType: 'code-review', schema: findingsSchema(6), ...optsModel })
     const gapCands = ((gap && gap.findings) || []).map((f) => ({ ...f, angle: 'gap' }))
     const fresh = gapCands.filter((f) => !seen.has(`${f.file}:${f.line}:${f.angle}`))
     if (fresh.length) {
       fresh.sort((a, b) => rank[a.severity] - rank[b.severity])
       const idx0 = verified.length
       fresh.forEach((c, i) => { c.idx = idx0 + i })
-      const vr = await agent(verifierPrompt(fresh), { label: 'verify:gap-sweep', phase: 'Verify', agentType: 'code-review', schema: verdictsSchema(fresh.length) })
+      const vr = await agent(verifierPrompt(fresh), { label: 'verify:gap-sweep', phase: 'Verify', agentType: 'code-review', schema: verdictsSchema(fresh.length), ...optsModel })
       const byIdx2 = new Map(((vr && vr.verdicts) || []).map((v) => [v.idx, v]))
       const gapVerified = fresh.map((c) => {
         const v = byIdx2.get(c.idx) || { state: 'refuted', evidence: '', note: 'no verdict returned' }
@@ -282,6 +290,7 @@ const pick = (f) =>
 return {
   target: targetText,
   effort,
+  model: model || 'inherit',
   angles: finderKeys.length,
   candidates: candidates.length,
   stats,
