@@ -1,6 +1,6 @@
 {
   "defaultProvider": "kekulv",
-  "defaultModel": "glm-5.3",
+  "defaultModel": "deepseek-v4-flash",
   "lastChangelogVersion": "0.85.1",
   "theme": "dark",
   "packages": [
