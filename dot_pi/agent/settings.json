@@ -1,7 +1,7 @@
 {
   "defaultProvider": "kekulv",
   "defaultModel": "glm-5.3",
-  "lastChangelogVersion": "0.84.4",
+  "lastChangelogVersion": "0.85.1",
   "theme": "dark",
   "packages": [
     "npm:pi-context-prune",
@@ -21,12 +21,17 @@
     "kekulv/grok-4.6": "high",
     "kekulv/deepseek-v4-flash": "high",
     "kekulv/claude-opus-5": "xhigh",
-    "kekulv/glm-5.3": "high"
+    "kekulv/glm-5.3": "max"
   },
   "tuiMode": "regular",
   "terminal": {
     "showTerminalProgress": true
   },
   "showHardwareCursor": true,
-  "showCacheMissNotices": true
+  "showCacheMissNotices": true,
+  "followUpMode": "one-at-a-time",
+  "markdown": {
+    "mermaid": "streaming"
+  },
+  "treeFilterMode": "default"
 }
