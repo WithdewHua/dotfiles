@@ -95,6 +95,13 @@ const conf = CONF[effort]
 const model = (args && args.model) ? String(args.model).trim() : ''
 const optsModel = model ? { model } : {}
 
+// Guard: warn when effort/model words were left inside the target (the classic
+// `/code-review 用 sol 评审…` trap — the whole phrase becomes the target and
+// the option is never parsed out).
+if (String(rawTarget).match(/\b(low|medium|high|max|sol|terra|luna|grok|deepseek|flash|glm|opus|claude)\b/i)) {
+  log(`⚠ args.target 疑似混入档位/模型词（target="${rawTarget}"，effort=${effort}${model ? ` model=${model}` : ' model=未指定'})——请确认这些词已被拆进 args.effort/args.model 而不是留在 target 里`)
+}
+
 // ---- finder prompts (CC: pass through half-believed candidates) ------------
 function suffix(cap, extra) {
   return `
