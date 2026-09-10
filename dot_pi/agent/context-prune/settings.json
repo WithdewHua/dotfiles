@@ -2,7 +2,7 @@
   "enabled": true,
   "showPruneStatusLine": true,
   "showStartupNotice": true,
-  "summarizerModel": "kekulv/deepseek-v4-flash",
+  "summarizerModel": "kekulv/gpt-5.6-luna",
   "summarizerThinking": "low",
   "pruneOn": "agent-message",
   "remindUnprunedCount": true,
