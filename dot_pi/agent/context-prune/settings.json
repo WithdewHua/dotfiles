@@ -2,9 +2,9 @@
   "enabled": true,
   "showPruneStatusLine": true,
   "showStartupNotice": true,
-  "summarizerModel": "kekulv/deepseek-v4-flash",
+  "summarizerModel": "kekulv/gemini-3.8-flash-high",
   "summarizerThinking": "low",
-  "pruneOn": "agent-message",
+  "pruneOn": "on-demand",
   "remindUnprunedCount": true,
   "notifySkipped": false,
   "batchingMode": "turn"
