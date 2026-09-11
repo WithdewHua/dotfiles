@@ -4,6 +4,7 @@ display_name: Code Review Worker
 description: "Internal worker for the code-review workflow (finder / verifier / scope passes). Not for direct use — call the `code-review` agent instead."
 color: orange
 tools: read, grep, find, ls, bash
+exclude_extensions: pi-context-prune
 prompt_mode: replace
 persist_session: false
 ---

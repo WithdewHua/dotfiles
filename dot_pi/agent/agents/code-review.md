@@ -4,6 +4,7 @@ display_name: Code Review
 description: "High-signal bug review of the current diff (Claude Code /code-review style): concrete failure scenarios only, no nitpicks"
 color: orange
 tools: read, grep, find, ls, bash
+exclude_extensions: pi-context-prune
 prompt_mode: replace
 persist_session: false
 ---
