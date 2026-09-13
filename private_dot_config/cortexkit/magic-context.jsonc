@@ -22,19 +22,20 @@
   "embedding": {
     "provider": "local"
   },
-  // cache_ttl = MC 假设「提供方缓存还热」的时长。它只影响 MC 何时愿意改写前缀,
-  // 不改提供方缓存行为、也不决定计费是否命中。取值依据:74 个历史会话实测
-  // 「空闲 >N 分钟后,前缀仍能复用 ≥50%」的回合占比:
-  //   deepseek-v4-flash  >5m 77%  >10m 82%  >30m 60%  >2h 33%   → 30m
-  //   grok-4.6           >5m 41%  >10m 31%  >30m  0%            → 10m
-  //   gpt-5.6-sol        >5m 29%(官方文档保证 ≥30m,取中间值)     → 15m
-  //   glm-5.3            >5m 15%  >10m  0%                      → 5m(= default)
-  //   gemini-3.8-flash   >5m 17%  >10m  0%                      → 5m(= default)
-  //   claude / qwen      官方 5m                                 → 5m(= default)
+  // cache_ttl = MC 假设「提供方缓存还热」的时长(只影响 MC 何时愿意改写前缀,不改提供方行为):
+  //   【有官方文档】claude   5m  — Anthropic 默认档;已核实:你的写入溢价 1.25× 正好是 5m 档,
+  //                                且所有历史会话都没有 1h 写入(cacheWrite1h),说明没在用 1h 扩展
+  //                gpt     30m  — GPT-5.6+ 的 prompt_cache_options.ttl 唯一支持值=默认值,
+  //                                "缓存前缀在最近一次写入或复用后 30 分钟内可复用"
+  //                qwen     5m  — 显式缓存有效期 5 分钟
+  //   【无文档,按实测】grok  10m  — 实测 >5m 41%、>10m 31%、>30m 0%
+  //                    gemini 5m  — 隐式缓存无 TTL 承诺;实测 >5m 17%、>10m 0%
+  //                    glm    5m  — 实测 >5m 15%、>10m 0%
+  //   【动态/尽力而为】deepseek 2h — 官方只说"不再使用后通常在几小时~几天内被清理",无固定 TTL
   "cache_ttl": {
     "default": "5m",
-    "kekulv/deepseek": "30m",
-    "kekulv/gpt": "15m",
+    "kekulv/gpt": "30m",
+    "kekulv/deepseek": "2h",
     "kekulv/grok": "10m"
   },
   "pi": {
