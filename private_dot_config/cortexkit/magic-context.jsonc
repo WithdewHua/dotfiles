@@ -2,6 +2,9 @@
   "$schema": "https://raw.githubusercontent.com/cortexkit/magic-context/master/assets/magic-context.schema.json",
   "enabled": true,
   "allow_home_project": true,
+  "execute_threshold_tokens": {
+    "default": 150000
+  },
   "historian": {
     "pi": {
       "model": "kekulv/gemini-3.8-flash-high",
