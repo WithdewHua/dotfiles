@@ -13,7 +13,8 @@
     "npm:pi-zentui",
     "npm:@czottmann/pi-automode",
     "npm:pi-context",
-    "git:github.com/NVlabs/SoL-Pi"
+    "git:github.com/NVlabs/SoL-Pi",
+    "npm:@ff-labs/pi-fff"
   ],
   "hideThinkingBlock": true,
   "modelThinkingLevels": {
