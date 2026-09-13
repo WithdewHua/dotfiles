@@ -3,7 +3,19 @@
   "enabled": true,
   "allow_home_project": true,
   "execute_threshold_tokens": {
-    "default": 150000
+    "default": 150000,
+    // 272k 窗口模型 (gpt-5.6-sol / terra / luna): 约 64% 处触发, 留足 97k 缓冲区
+    "kekulv/gpt-5.6": 175000,
+    // 1.05M 窗口模型 (gpt-6-astra): >272k 阶梯翻倍加价, 设为 250k 避免触发加价
+    "kekulv/gpt-6": 250000,
+    // 500k 窗口模型 (grok-4.6): >200k 阶梯翻倍加价, 设为 180k 避免触发加价
+    "kekulv/grok": 180000,
+    // 1M/1.05M 窗口且无阶梯加价模型:
+    "kekulv/gemini": 250000,
+    "kekulv/deepseek": 280000,
+    "kekulv/claude": 250000,
+    "kekulv/glm": 250000,
+    "kekulv/qwen": 250000
   },
   "historian": {
     "pi": {
