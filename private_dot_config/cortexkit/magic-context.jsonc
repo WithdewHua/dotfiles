@@ -22,6 +22,16 @@
   "embedding": {
     "provider": "local"
   },
+  "cache_ttl": {
+    "default": "5m",
+    "kekulv/claude": "5m",
+    "kekulv/gpt": "30m",
+    "kekulv/gemini": "10m",
+    "kekulv/deepseek": "24h",
+    "kekulv/glm": "12h",
+    "kekulv/grok": "1h",
+    "kekulv/qwen": "5m"
+  },
   "pi": {
     "subagent_extensions": []
   }
