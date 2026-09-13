@@ -12,7 +12,8 @@
     "npm:@juicesharp/rpiv-todo",
     "npm:pi-zentui",
     "npm:@czottmann/pi-automode",
-    "npm:pi-context"
+    "npm:pi-context",
+    "git:github.com/NVlabs/SoL-Pi"
   ],
   "hideThinkingBlock": true,
   "modelThinkingLevels": {

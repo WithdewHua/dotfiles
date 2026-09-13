@@ -1,0 +1,9 @@
+{
+  "version": 1,
+  "actionFusion": true,
+  "observationPack": true,
+  "evidencePreservingReducer": true,
+  "evidencePreservingReducerProvider": "kekulv",
+  "evidencePreservingReducerModel": "gemini-3.8-flash-high",
+  "onlineContextCompact": false
+}
