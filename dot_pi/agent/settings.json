@@ -13,7 +13,8 @@
     "npm:@czottmann/pi-automode",
     "git:github.com/NVlabs/SoL-Pi",
     "npm:@ff-labs/pi-fff",
-    "npm:@cortexkit/pi-magic-context"
+    "npm:@cortexkit/pi-magic-context",
+    "npm:pi-context-view"
   ],
   "hideThinkingBlock": true,
   "modelThinkingLevels": {
