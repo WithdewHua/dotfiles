@@ -22,15 +22,20 @@
   "embedding": {
     "provider": "local"
   },
+  // cache_ttl = MC 假设「提供方缓存还热」的时长。它只影响 MC 何时愿意改写前缀,
+  // 不改提供方缓存行为、也不决定计费是否命中。取值依据:74 个历史会话实测
+  // 「空闲 >N 分钟后,前缀仍能复用 ≥50%」的回合占比:
+  //   deepseek-v4-flash  >5m 77%  >10m 82%  >30m 60%  >2h 33%   → 30m
+  //   grok-4.6           >5m 41%  >10m 31%  >30m  0%            → 10m
+  //   gpt-5.6-sol        >5m 29%(官方文档保证 ≥30m,取中间值)     → 15m
+  //   glm-5.3            >5m 15%  >10m  0%                      → 5m(= default)
+  //   gemini-3.8-flash   >5m 17%  >10m  0%                      → 5m(= default)
+  //   claude / qwen      官方 5m                                 → 5m(= default)
   "cache_ttl": {
     "default": "5m",
-    "kekulv/claude": "5m",
-    "kekulv/gpt": "30m",
-    "kekulv/gemini": "10m",
-    "kekulv/deepseek": "24h",
-    "kekulv/glm": "12h",
-    "kekulv/grok": "1h",
-    "kekulv/qwen": "5m"
+    "kekulv/deepseek": "30m",
+    "kekulv/gpt": "15m",
+    "kekulv/grok": "10m"
   },
   "pi": {
     "subagent_extensions": []
