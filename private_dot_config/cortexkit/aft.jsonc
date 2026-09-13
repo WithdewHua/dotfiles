@@ -7,5 +7,7 @@
   // 启用代码健康度与问题检查
   "inspect": {
     "enabled": true
-  }
+  },
+  // 允许抓取解析为私网/保留地址的 URL（解决 Clash/Mihomo 等 Fake-IP 198.18.x.x 导致的 SSRF 拦截）
+  "url_fetch_allow_private": true
 }
