@@ -4,7 +4,6 @@
   "lastChangelogVersion": "0.85.1",
   "theme": "dark",
   "packages": [
-    "npm:pi-context-prune",
     "npm:pi-mcp-adapter",
     "npm:pi-web-access",
     "npm:@tintinweb/pi-subagents",
@@ -12,9 +11,9 @@
     "npm:@juicesharp/rpiv-todo",
     "npm:pi-zentui",
     "npm:@czottmann/pi-automode",
-    "npm:pi-context",
     "git:github.com/NVlabs/SoL-Pi",
-    "npm:@ff-labs/pi-fff"
+    "npm:@ff-labs/pi-fff",
+    "npm:@cortexkit/pi-magic-context"
   ],
   "hideThinkingBlock": true,
   "modelThinkingLevels": {
