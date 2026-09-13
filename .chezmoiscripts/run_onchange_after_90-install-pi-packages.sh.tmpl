@@ -14,6 +14,85 @@ if ! command -v pi >/dev/null 2>&1; then
     exit 0
 fi
 
+# 1. Prune unneeded npm & git packages no longer listed in settings.json
+node --input-type=module -e '
+import { readFileSync, existsSync, rmSync, readdirSync, statSync } from "node:fs";
+import { join } from "node:path";
+import { homedir } from "node:os";
+import { execSync } from "node:child_process";
+
+const agentDir = join(homedir(), ".pi", "agent");
+const settingsPath = join(agentDir, "settings.json");
+if (!existsSync(settingsPath)) process.exit(0);
+
+const settings = JSON.parse(readFileSync(settingsPath, "utf8"));
+const configuredPackages = settings.packages || [];
+
+// Prune unneeded npm packages
+const npmDir = join(agentDir, "npm");
+const npmPackageJsonPath = join(npmDir, "package.json");
+if (existsSync(npmPackageJsonPath)) {
+  const npmPkg = JSON.parse(readFileSync(npmPackageJsonPath, "utf8"));
+  const installedDeps = Object.keys(npmPkg.dependencies || {});
+  const configuredNpm = new Set();
+  for (const p of configuredPackages) {
+    const s = typeof p === "string" ? p : p.source;
+    if (s.startsWith("npm:")) {
+      let spec = s.slice(4);
+      if (spec.startsWith("@")) {
+        configuredNpm.add("@" + spec.slice(1).split("@")[0]);
+      } else {
+        configuredNpm.add(spec.split("@")[0]);
+      }
+    }
+  }
+  const toRemove = installedDeps.filter(d => !configuredNpm.has(d));
+  for (const pkg of toRemove) {
+    console.log(`[pi-packages] Pruning unneeded npm package: ${pkg}`);
+    try {
+      execSync(`npm rm ${pkg}`, { cwd: npmDir, stdio: "inherit" });
+    } catch (e) {
+      console.error(`[pi-packages] Failed to remove ${pkg}:`, e.message);
+    }
+  }
+}
+
+// Prune unneeded git packages
+const gitDir = join(agentDir, "git");
+if (existsSync(gitDir)) {
+  const configuredGitPaths = new Set();
+  for (const p of configuredPackages) {
+    const s = typeof p === "string" ? p : p.source;
+    if (s.startsWith("git:")) {
+      let cleaned = s.slice(4).replace(/^https?:\/\//, "").replace(/\.git$/, "").split("@")[0];
+      configuredGitPaths.add(cleaned.toLowerCase());
+    }
+  }
+  try {
+    for (const host of readdirSync(gitDir)) {
+      const hostDir = join(gitDir, host);
+      if (!statSync(hostDir).isDirectory()) continue;
+      for (const owner of readdirSync(hostDir)) {
+        const ownerDir = join(hostDir, owner);
+        if (!statSync(ownerDir).isDirectory()) continue;
+        for (const repo of readdirSync(ownerDir)) {
+          const repoDir = join(ownerDir, repo);
+          if (!statSync(repoDir).isDirectory()) continue;
+          const repoPath = `${host}/${owner}/${repo}`.toLowerCase();
+          if (!configuredGitPaths.has(repoPath)) {
+            console.log(`[pi-packages] Pruning unneeded git package: ${host}/${owner}/${repo}`);
+            rmSync(repoDir, { recursive: true, force: true });
+          }
+        }
+      }
+    }
+  } catch (err) {
+    console.error("[pi-packages] Git prune scan failed:", err.message);
+  }
+}
+'
+
+# 2. Ensure all configured packages are installed
 packages=(
 {{- range $pkg := (fromJson (include "dot_pi/agent/settings.json")).packages }}
 {{-   $source := $pkg }}
