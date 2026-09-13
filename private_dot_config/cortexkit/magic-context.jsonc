@@ -1,6 +1,7 @@
 {
   "$schema": "https://raw.githubusercontent.com/cortexkit/magic-context/master/assets/magic-context.schema.json",
   "enabled": true,
+  "allow_home_project": true,
   "historian": {
     "pi": {
       "model": "kekulv/gemini-3.8-flash-high",
