@@ -46,11 +46,11 @@
   //   【无文档,按实测】grok  10m  — 实测 >5m 41%、>10m 31%、>30m 0%
   //                    gemini 5m  — 隐式缓存无 TTL 承诺;实测 >5m 17%、>10m 0%
   //                    glm    5m  — 实测 >5m 15%、>10m 0%
-  //   【动态/尽力而为】deepseek 2h — 官方只说"不再使用后通常在几小时~几天内被清理",无固定 TTL
+  //   【动态/尽力而为】deepseek 45m — 实测 <30m 99.4% 命中, 36m 99.8%, 51m 失效; 设为 45m 平衡保前缀与防冷重算
   "cache_ttl": {
     "default": "5m",
     "kekulv/gpt": "30m",
-    "kekulv/deepseek": "2h",
+    "kekulv/deepseek": "45m",
     "kekulv/grok": "10m"
   },
   "pi": {
