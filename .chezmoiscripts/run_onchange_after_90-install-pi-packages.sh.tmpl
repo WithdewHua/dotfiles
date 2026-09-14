@@ -7,6 +7,7 @@ set -eufo pipefail
 # Re-run when the configured package list or the aft patch script changes.
 # packages: {{ (fromJson (include "dot_pi/agent/settings.json")).packages | toJson }}
 # patch_hash: {{ include "dot_pi/agent/scripts/patch-aft-pi.mjs" | sha256sum }}
+# patch_fff_hash: {{ include "dot_pi/agent/scripts/patch-pi-fff.mjs" | sha256sum }}
 
 export PATH="${HOME}/.local/bin:/opt/homebrew/bin:/usr/local/bin:${PATH}"
 export NPM_CONFIG_ALLOW_REMOTE=all
@@ -115,4 +116,7 @@ done
 
 # 3. Patch @cortexkit/aft-pi to support then_run (Action Fusion) and expanded diffs
 node "${HOME}/.pi/agent/scripts/patch-aft-pi.mjs"
+
+# 4. Patch @ff-labs/pi-fff to make session_start warmup non-blocking (Issue #477 / PR #599)
+node "${HOME}/.pi/agent/scripts/patch-pi-fff.mjs"
 {{- end -}}
