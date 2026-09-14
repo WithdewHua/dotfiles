@@ -4,8 +4,9 @@
 
 set -eufo pipefail
 
-# Re-run when the configured package list changes.
+# Re-run when the configured package list or the aft patch script changes.
 # packages: {{ (fromJson (include "dot_pi/agent/settings.json")).packages | toJson }}
+# patch_hash: {{ include "dot_pi/agent/scripts/patch-aft-pi.mjs" | sha256sum }}
 
 export PATH="${HOME}/.local/bin:/opt/homebrew/bin:/usr/local/bin:${PATH}"
 export NPM_CONFIG_ALLOW_REMOTE=all
