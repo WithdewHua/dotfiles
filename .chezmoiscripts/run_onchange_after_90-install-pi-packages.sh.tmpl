@@ -8,6 +8,7 @@ set -eufo pipefail
 # packages: {{ (fromJson (include "dot_pi/agent/settings.json")).packages | toJson }}
 
 export PATH="${HOME}/.local/bin:/opt/homebrew/bin:/usr/local/bin:${PATH}"
+export NPM_CONFIG_ALLOW_REMOTE=all
 
 if ! command -v pi >/dev/null 2>&1; then
     echo "pi not found; skip package install" >&2
