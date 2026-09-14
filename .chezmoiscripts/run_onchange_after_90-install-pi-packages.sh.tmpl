@@ -111,4 +111,7 @@ fi
 for source in "${packages[@]}"; do
     pi install --no-approve "${source}"
 done
+
+# 3. Patch @cortexkit/aft-pi to support then_run (Action Fusion) and expanded diffs
+node "${HOME}/.pi/agent/scripts/patch-aft-pi.mjs"
 {{- end -}}
