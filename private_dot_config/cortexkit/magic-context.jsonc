@@ -15,6 +15,7 @@
     "kekulv/deepseek": 280000,
     "kekulv/claude": 250000,
     "kekulv/glm": 250000,
+    "kekulv/qwen3.8": 250000,
     "kekulv/qwen": 250000
   },
   "historian": {
