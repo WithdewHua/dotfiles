@@ -1,6 +1,6 @@
 {
   "defaultProvider": "kekulv",
-  "defaultModel": "deepseek-v4-flash",
+  "defaultModel": "gemini-3.8-flash-high",
   "lastChangelogVersion": "0.85.1",
   "theme": "dark",
   "packages": [
