@@ -8,13 +8,31 @@
     "npm:pi-web-access",
     "npm:@tintinweb/pi-subagents",
     "npm:@juicesharp/rpiv-ask-user-question",
-    "npm:@juicesharp/rpiv-todo",
+    {
+      "source": "npm:@juicesharp/rpiv-todo",
+      "extensions": []
+    },
     "npm:pi-zentui",
     "npm:@czottmann/pi-automode",
     "git:github.com/NVlabs/SoL-Pi",
-    "npm:@ff-labs/pi-fff",
-    "npm:@cortexkit/pi-magic-context",
-    "npm:@cortexkit/aft-pi",
+    {
+      "source": "npm:@ff-labs/pi-fff",
+      "extensions": [
+        "+src/index.ts"
+      ]
+    },
+    {
+      "source": "npm:@cortexkit/pi-magic-context",
+      "extensions": [
+        "+dist/index.js"
+      ]
+    },
+    {
+      "source": "npm:@cortexkit/aft-pi",
+      "extensions": [
+        "+dist/index.js"
+      ]
+    },
     "npm:pi-context-view"
   ],
   "hideThinkingBlock": true,
@@ -41,5 +59,8 @@
   "markdown": {
     "mermaid": "streaming"
   },
-  "treeFilterMode": "default"
+  "treeFilterMode": "default",
+  "extensions": [
+    "+extensions/rtk.ts"
+  ]
 }
