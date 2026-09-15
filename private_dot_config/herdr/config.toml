@@ -1,0 +1,89 @@
+# herdr configuration
+# 参考 ~/.tmux.conf 定制，完美复刻 tmux 肌肉记忆
+
+onboarding = false
+
+[theme]
+# 匹配 tmux 的 catppuccin mocha 配色
+name = "catppuccin"
+
+[ui]
+# 类似 tmux，按 prefix+c 创建新 Tab 时不弹窗询问名称
+prompt_new_tab_name = false
+
+# 保持 tmux 习惯的鼠标支持与划选自动复制（对应 set -g mouse on / set -g set-clipboard on）
+mouse_capture = true
+copy_on_select = true
+
+# 边框渲染与间距
+pane_borders = "auto"
+pane_outer_borders = true
+
+[keys]
+# 1. Prefix 设为 Ctrl+s（对应 tmux 的 set -g prefix C-s）
+prefix = "ctrl+s"
+
+# 原 prefix+s 的 settings 调整为 prefix+comma，避免与 prefix 自身冲突
+settings = "prefix+comma"
+
+# 2. 分屏快捷键（对应 tmux 的 bind | split-window -h 和 bind - split-window -v）
+split_vertical = "prefix+|"       # 左右垂直分屏
+split_horizontal = "prefix+minus" # 上下水平分屏
+
+# 3. Vim 风格窗格聚焦（对应 tmux 的 bind h/j/k/l select-pane -L/D/U/R）
+focus_pane_left = "prefix+h"
+focus_pane_down = "prefix+j"
+focus_pane_up = "prefix+k"
+focus_pane_right = "prefix+l"
+
+# 4. 窗口/Tab 切换（对应 tmux 的 bind -r C-h select-window -t :- 和 bind -r C-l select-window -t :+）
+# 同时保留 prefix+n / prefix+p
+previous_tab = ["prefix+p", "prefix+ctrl+h"]
+next_tab = ["prefix+n", "prefix+ctrl+l"]
+switch_tab = "prefix+1..9"
+
+# 5. 调整窗格大小（对应 tmux 的 bind -r H/J/K/L resize-pane）
+# 支持无需进入 resize 模式的直接微调：prefix + Shift + H/J/K/L
+resize_pane_left = "prefix+shift+h"
+resize_pane_down = "prefix+shift+j"
+resize_pane_up = "prefix+shift+k"
+resize_pane_right = "prefix+shift+l"
+resize_mode = "prefix+shift+r"
+
+# 6. 重载配置快捷键（对应 tmux 的 bind r source-file ~/.tmux.conf）
+reload_config = "prefix+r"
+
+# 7. 基础窗口与窗格管理（对应 tmux 的 prefix+c 新建，prefix+z 缩放，prefix+x 关闭，prefix+q detach）
+new_tab = "prefix+c"
+close_tab = "prefix+shift+x"
+zoom = "prefix+z"
+close_pane = "prefix+x"
+detach = "prefix+q"
+
+# 8. 工作区导航与侧边栏
+workspace_picker = "prefix+w"
+toggle_sidebar = "prefix+b"
+
+# 9. 扩展弹窗工具（类似 tmux-popup / lazygit）
+[[keys.command]]
+key = "prefix+g"
+type = "popup"
+command = "lazygit"
+description = "Git 客户端浮层"
+width = "85%"
+height = "85%"
+
+[[keys.command]]
+key = "prefix+u"
+type = "popup"
+command = "exec \"${SHELL:-zsh}\""
+description = "便签终端 (Scratchpad)"
+width = "80%"
+height = "80%"
+
+[experimental]
+# macOS 下在按下 prefix 时自动切换为英文 ASCII 输入源，避免中文输入法吃掉快捷键
+switch_ascii_input_source_in_prefix = true
+# 针对 coding agent (pi, claude, codex 等) 修复 macOS 中文输入法候选窗跟踪
+reveal_hidden_cursor_for_cjk_ime = true
+cjk_ime_agents = ["pi", "claude", "codex", "opencode", "cursor", "kimi", "qwen"]
