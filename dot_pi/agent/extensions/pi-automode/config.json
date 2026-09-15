@@ -1,7 +1,7 @@
 {
   "autoMode": {
     "enabled": false,
-    "classifierModel": "kekulv/deepseek-v4-flash",
+    "classifierModel": "kekulv/deepseek-flash",
     "classifierReasoningLevel": "low",
     "fastClassifierMaxTokens": 2048
   }

@@ -141,7 +141,7 @@ const recallBiased = effort === 'high' || effort === 'xhigh' || effort === 'max'
 // angles run. Finders are breadth (they over-report; verification filters), so
 // they stay shallow; the verifier is the decision point and gets the deepest
 // budget. Levels absent from a model's thinkingLevelMap are clamped by pi
-// (e.g. claude-opus-5 only has xhigh/max, grok-4.6 has no max, deepseek-v4-flash
+// (e.g. claude-opus-5 only has xhigh/max, grok-4.6 has no max, deepseek-flash
 // has no medium), so treat these as requests, not guarantees. Override per run
 // with args.finderEffort / args.verifyEffort; "inherit" omits the field entirely
 // and falls back to the model's configured level.

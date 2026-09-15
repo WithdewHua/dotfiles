@@ -23,7 +23,7 @@
       "model": "kekulv/gemini-3.8-flash-high",
       "fallback_models": [
         "kekulv/gpt-5.6-luna",
-        "kekulv/deepseek-v4-flash"
+        "kekulv/deepseek-flash"
       ]
     }
   },
