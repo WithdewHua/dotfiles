@@ -60,26 +60,27 @@ zoom = "prefix+z"
 close_pane = "prefix+x"
 detach = "prefix+q"
 
-# 8. 工作区导航与侧边栏
+# 8. 工作区导航、搜索弹窗与侧边栏
 workspace_picker = "prefix+w"
+goto = "prefix+g"               # 原生会话/窗口快速检索浮动弹窗 (Goto Picker)
 toggle_sidebar = "prefix+b"
 
-# 9. 扩展弹窗工具（类似 tmux-popup / lazygit）
+# 9. 浮动终端窗口与扩展弹窗 (Floating Windows / Popups)
 [[keys.command]]
-key = "prefix+g"
+key = "prefix+f"
+type = "popup"
+command = "exec \"${SHELL:-zsh}\""
+description = "浮动终端窗口 (Floating Terminal)"
+width = "80%"
+height = "80%"
+
+[[keys.command]]
+key = "prefix+alt+g"
 type = "popup"
 command = "lazygit"
 description = "Git 客户端浮层"
 width = "85%"
 height = "85%"
-
-[[keys.command]]
-key = "prefix+u"
-type = "popup"
-command = "exec \"${SHELL:-zsh}\""
-description = "便签终端 (Scratchpad)"
-width = "80%"
-height = "80%"
 
 [experimental]
 # macOS 下在按下 prefix 时自动切换为英文 ASCII 输入源，避免中文输入法吃掉快捷键
