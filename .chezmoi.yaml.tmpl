@@ -51,3 +51,6 @@ diff:
 encryption: "gpg"
 gpg:
   recipient: {{ $gpg_encrypt_key_id }}
+  args:
+    - "--trust-model"
+    - "always"
