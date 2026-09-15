@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "actionFusion": true,
+  "actionFusion": false,
   "observationPack": true,
   "evidencePreservingReducer": true,
   "evidencePreservingReducerProvider": "kekulv",

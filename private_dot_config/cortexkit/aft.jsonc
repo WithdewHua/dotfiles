@@ -1,7 +1,7 @@
 {
   "$schema": "https://raw.githubusercontent.com/cortexkit/aft/main/schemas/aft.schema.json",
-  // 不接管 Pi 原生 read/write/edit/grep，避免与 SoL-Pi (then_run) 和 pi-fff 冲突
-  "hoist_builtin_tools": false,
+  // 接管 Pi 内置 read/write/edit 工具（已通过 patch-aft-pi 支持 then_run）
+  "hoist_builtin_tools": true,
   // 禁用 AFT 的 bash 接管，保持原生终端与现有插件环境
   "bash": false,
   // 启用代码健康度与问题检查
