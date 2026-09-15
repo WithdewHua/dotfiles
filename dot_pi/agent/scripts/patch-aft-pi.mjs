@@ -28,8 +28,12 @@ export function patchAft() {
     editParamsSchema: /then_run:\s*Type\w*\.Optional\(Type\w*\.Object\(/.test(originalCode),
     writeParamsSchema: /var\s+WriteParams\s*=\s*Type\w*\.Object\([\s\S]*?then_run:/.test(originalCode),
     executeThenRunHelper: originalCode.includes("async function executeThenRun("),
-    editExecThenRun: originalCode.includes("argsRecord.then_run && response.rolled_back !== true"),
-    writeExecThenRun: originalCode.includes("params.then_run && response.rolled_back !== true"),
+    editExecThenRun:
+      originalCode.includes('callToolCall(bridge, "edit", rawArgs, extCtx)') &&
+      originalCode.includes("const mutationResult = buildMutationResult(response);"),
+    writeExecThenRun:
+      originalCode.includes('callToolCall(bridge, "write", rawArgs, extCtx)') &&
+      originalCode.includes("const mutationResult = buildMutationResult(response);"),
     solPiBanner: originalCode.includes("⚡ SoL-Pi · Action Fusion"),
     toolNameLabels: originalCode.includes("return renderMutationCall(editName,"),
     expandedDiff: originalCode.includes("expanded: true,\n    context\n  });\n}\nfunction shortenPath"),
@@ -82,7 +86,8 @@ export function patchAft() {
     editParams: originalCode.includes("var EditParams = "),
     writeParams: originalCode.includes("var WriteParams = "),
     renderMutationCall: originalCode.includes("function renderMutationCall("),
-    editExec: originalCode.includes("return buildMutationResult(response);"),
+    editExec: originalCode.includes('callToolCall(bridge, "edit", rawArgs, extCtx);'),
+    writeExec: originalCode.includes('callToolCall(bridge, "write", rawArgs, extCtx);'),
     renderReadCall: originalCode.includes("function renderReadCall(args, theme, context) {"),
   };
 
@@ -187,52 +192,56 @@ async function executeThenRun(thenRun, extCtx, toolCallId) {
   }
 
   // 5 & 6. Edit & Write execute hooks
-  if (!code.includes("argsRecord.then_run && response.rolled_back !== true")) {
-    const oldEditExec = [
-      "return buildMutationResult(response);",
-      "      },",
-      "      renderCall(args, theme, context) {",
-    ].join("\n");
-    const newEditExec = [
-      "const mutationResult = buildMutationResult(response);",
-      "        if (argsRecord.then_run && response.rolled_back !== true) {",
-      "          const thenRunOutput = await executeThenRun(argsRecord.then_run, extCtx, _toolCallId);",
-      "          if (thenRunOutput) {",
-      '            mutationResult.content.push({ type: "text", text: thenRunOutput });',
-      "          }",
-      "        }",
-      "        return mutationResult;",
-      "      },",
-      "      renderCall(args, theme, context) {",
-    ].join("\n");
-    if (code.includes(oldEditExec)) {
-      code = code.replace(oldEditExec, newEditExec);
-      modified = true;
-    }
+  const oldWriteExec = [
+    '        const response = await callToolCall(bridge, "write", rawArgs, extCtx);',
+    "        if (response.success === false) {",
+    '          throw toolErrorFromResponse("write", response);',
+    "        }",
+    "        return buildMutationResult(response);",
+  ].join("\n");
+  const newWriteExec = [
+    '        const response = await callToolCall(bridge, "write", rawArgs, extCtx);',
+    "        if (response.success === false) {",
+    '          throw toolErrorFromResponse("write", response);',
+    "        }",
+    "        const mutationResult = buildMutationResult(response);",
+    "        if (params.then_run && response.rolled_back !== true) {",
+    "          const thenRunOutput = await executeThenRun(params.then_run, extCtx, _toolCallId);",
+    "          if (thenRunOutput) {",
+    '            mutationResult.content.push({ type: "text", text: thenRunOutput });',
+    "          }",
+    "        }",
+    "        return mutationResult;",
+  ].join("\n");
+  if (code.includes(oldWriteExec)) {
+    code = code.replace(oldWriteExec, newWriteExec);
+    modified = true;
   }
 
-  if (!code.includes("params.then_run && response.rolled_back !== true")) {
-    const oldWriteExec = [
-      "return buildMutationResult(response);",
-      "      },",
-      "      renderCall(args, theme, context) {",
-    ].join("\n");
-    const newWriteExec = [
-      "const mutationResult = buildMutationResult(response);",
-      "        if (params.then_run && response.rolled_back !== true) {",
-      "          const thenRunOutput = await executeThenRun(params.then_run, extCtx, _toolCallId);",
-      "          if (thenRunOutput) {",
-      '            mutationResult.content.push({ type: "text", text: thenRunOutput });',
-      "          }",
-      "        }",
-      "        return mutationResult;",
-      "      },",
-      "      renderCall(args, theme, context) {",
-    ].join("\n");
-    if (code.includes(oldWriteExec)) {
-      code = code.replace(oldWriteExec, newWriteExec);
-      modified = true;
-    }
+  const oldEditExec = [
+    '        const response = await callToolCall(bridge, "edit", rawArgs, extCtx);',
+    "        if (response.success === false) {",
+    '          throw toolErrorFromResponse("edit", response);',
+    "        }",
+    "        return buildMutationResult(response);",
+  ].join("\n");
+  const newEditExec = [
+    '        const response = await callToolCall(bridge, "edit", rawArgs, extCtx);',
+    "        if (response.success === false) {",
+    '          throw toolErrorFromResponse("edit", response);',
+    "        }",
+    "        const mutationResult = buildMutationResult(response);",
+    "        if (params.then_run && response.rolled_back !== true) {",
+    "          const thenRunOutput = await executeThenRun(params.then_run, extCtx, _toolCallId);",
+    "          if (thenRunOutput) {",
+    '            mutationResult.content.push({ type: "text", text: thenRunOutput });',
+    "          }",
+    "        }",
+    "        return mutationResult;",
+  ].join("\n");
+  if (code.includes(oldEditExec)) {
+    code = code.replace(oldEditExec, newEditExec);
+    modified = true;
   }
 
   // 7. Render SoL-Pi banner badge using detected UI identifiers
