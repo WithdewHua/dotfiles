@@ -147,6 +147,10 @@
           }
         }
       }
+    },
+    "thinkingSteps": {
+      "enabled": false,
+      "mode": "tree"
     }
   }
 }
