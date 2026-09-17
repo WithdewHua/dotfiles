@@ -48,9 +48,9 @@
     "kekulv/claude-fable-5-1": "xhigh",
     "kekulv/gpt-6-astra": "xhigh",
     "kekulv/glm-5.3": "max",
-    "kekulv/glm-5.3-flash": "max",
+    "kekulv/glm-5.3-flash": "high",
     "company/glm-5.3": "max",
-    "company/glm-5.3-flash": "max"
+    "company/glm-5.3-flash": "high"
   },
   "tuiMode": "regular",
   "terminal": {
