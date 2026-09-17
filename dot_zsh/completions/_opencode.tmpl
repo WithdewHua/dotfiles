@@ -1,4 +1,3 @@
-{{- $opencode := stat (joinPath .chezmoi.homeDir ".config" "opencode") -}}
-{{- if $opencode -}}
+{{- if and (stat (joinPath .chezmoi.homeDir ".config" "opencode")) (lookPath "opencode") -}}
 {{ output "opencode" "completion" }}
 {{- end -}}
