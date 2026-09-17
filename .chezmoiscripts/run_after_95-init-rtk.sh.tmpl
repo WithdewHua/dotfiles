@@ -18,9 +18,7 @@ if has_bin claude; then
     rtk init -g --auto-patch
 fi
 
-if has_bin pi; then
-    rtk init -g --agent pi
-fi
+# pi uses pi-rtk-optimizer (npm package managed in settings.json) instead of rtk.ts
 
 if has_bin codex; then
     rtk init -g --codex

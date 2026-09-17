@@ -33,7 +33,8 @@
         "+dist/index.js"
       ]
     },
-    "npm:pi-context-view"
+    "npm:pi-context-view",
+    "npm:pi-rtk-optimizer"
   ],
   "hideThinkingBlock": true,
   "modelThinkingLevels": {
@@ -62,8 +63,5 @@
   "markdown": {
     "mermaid": "streaming"
   },
-  "treeFilterMode": "default",
-  "extensions": [
-    "+extensions/rtk.ts"
-  ]
+  "treeFilterMode": "default"
 }
