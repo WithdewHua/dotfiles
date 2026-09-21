@@ -85,6 +85,42 @@ export function patchPiFff() {
     "  });",
   ].join("\n");
 
+  const oldSessionStartWithOptOut = [
+    '  pi.on("session_start", async (_event, ctx) => {',
+    "    try {",
+    "      prepareSession(ctx);",
+    "      registerAutocompleteProvider(ctx);",
+    "",
+    "      // The user opted out of indexing this cwd, so skip the picker entirely",
+    "      // instead of letting the native refusal surface as an error (issue #857).",
+    "      const optOut = scanOptOutReason(activeCwd);",
+    "      if (optOut) {",
+    '        ctx.ui.notify(optOut, "warning");',
+    "        return;",
+    "      }",
+    "",
+    "      await ensureFinder(activeCwd);",
+    "",
+    "      // Warn when launched from $HOME with home scanning on: indexing a large",
+    "      // home tree can run for a long time in the background (issue #743).",
+    "      const atHome = enableHomeDirScanning && isHomeDir(activeCwd);",
+    "      if (atHome) {",
+    "        warnHomeDirScan(activeCwd);",
+    "        ctx.ui.setStatus?.(",
+    '          HOME_SCAN_STATUS_KEY,',
+    '          "Agent is indexing $HOME, this can lead to high CPU",',
+    "        );",
+    "      }",
+    "",
+    "      // waitForScan() also resolves on timeout, so poll until the scan really",
+    "      // settles before clearing the footer.",
+    "      if (atHome) trackHomeScanStatus();",
+    "    } catch (error: unknown) {",
+    "      reportInitFailure(ctx, error);",
+    "    }",
+    "  });",
+  ].join("\n");
+
   const oldShutdown = [
     '  pi.on("session_shutdown", async () => {',
     "    destroyFinder();",
@@ -92,9 +128,15 @@ export function patchPiFff() {
   ].join("\n");
 
   // 3. Safety check: All 4 targets must match for atomic patching
+  const matchedSessionStart = code.includes(oldSessionStartWithOptOut)
+    ? oldSessionStartWithOptOut
+    : code.includes(oldSessionStart)
+    ? oldSessionStart
+    : null;
+
   const canPatchT1 = code.includes(target1);
   const canPatchT2 = code.includes(oldEnsure);
-  const canPatchT3 = code.includes(oldSessionStart);
+  const canPatchT3 = matchedSessionStart !== null;
   const canPatchT4 = code.includes(oldShutdown);
 
   if (!canPatchT1 || !canPatchT2 || !canPatchT3 || !canPatchT4) {
@@ -145,44 +187,89 @@ export function patchPiFff() {
   );
 
   // Step 3: Non-blocking session_start
-  newCode = newCode.replace(
-    oldSessionStart,
-    [
-      '  pi.on("session_start", async (_event, ctx) => {',
-      "    try {",
-      "      prepareSession(ctx);",
-      "      registerAutocompleteProvider(ctx);",
-      "      const sessionLifecycleId = ++lifecycleId;",
-      "",
-      "      // Warm the finder in the background — Pi /new and /resume must not",
-      "      // wait on the initial scan. Subsequent tool calls / mention lookups",
-      "      // share the same in-flight promise via ensureFinder().",
-      "      setTimeout(() => {",
-      "        if (sessionLifecycleId !== lifecycleId) return;",
-      "        ensureFinder(activeCwd)",
-      "          .then(() => {",
-      "            if (sessionLifecycleId !== lifecycleId) return;",
-      "            const atHome = enableHomeDirScanning && isHomeDir(activeCwd);",
-      "            if (atHome) {",
-      "              warnHomeDirScan(activeCwd);",
-      "              ctx.ui.setStatus?.(",
-      '                HOME_SCAN_STATUS_KEY,',
-      '                "Agent is indexing $HOME, this can lead to high CPU",',
-      "              );",
-      "              trackHomeScanStatus();",
-      "            }",
-      "          })",
-      "          .catch((error: unknown) => {",
-      "            if (sessionLifecycleId !== lifecycleId) return;",
-      "            reportInitFailure(ctx, error);",
-      "          });",
-      "      }, 0);",
-      "    } catch (error: unknown) {",
-      "      reportInitFailure(ctx, error);",
-      "    }",
-      "  });",
-    ].join("\n")
-  );
+  const newSessionStart =
+    matchedSessionStart === oldSessionStartWithOptOut
+      ? [
+          '  pi.on("session_start", async (_event, ctx) => {',
+          "    try {",
+          "      prepareSession(ctx);",
+          "      registerAutocompleteProvider(ctx);",
+          "",
+          "      // The user opted out of indexing this cwd, so skip the picker entirely",
+          "      // instead of letting the native refusal surface as an error (issue #857).",
+          "      const optOut = scanOptOutReason(activeCwd);",
+          "      if (optOut) {",
+          '        ctx.ui.notify(optOut, "warning");',
+          "        return;",
+          "      }",
+          "",
+          "      const sessionLifecycleId = ++lifecycleId;",
+          "",
+          "      // Warm the finder in the background — Pi /new and /resume must not",
+          "      // wait on the initial scan. Subsequent tool calls / mention lookups",
+          "      // share the same in-flight promise via ensureFinder().",
+          "      setTimeout(() => {",
+          "        if (sessionLifecycleId !== lifecycleId) return;",
+          "        ensureFinder(activeCwd)",
+          "          .then(() => {",
+          "            if (sessionLifecycleId !== lifecycleId) return;",
+          "            const atHome = enableHomeDirScanning && isHomeDir(activeCwd);",
+          "            if (atHome) {",
+          "              warnHomeDirScan(activeCwd);",
+          "              ctx.ui.setStatus?.(",
+          "                HOME_SCAN_STATUS_KEY,",
+          '                "Agent is indexing $HOME, this can lead to high CPU",',
+          "              );",
+          "              trackHomeScanStatus();",
+          "            }",
+          "          })",
+          "          .catch((error: unknown) => {",
+          "            if (sessionLifecycleId !== lifecycleId) return;",
+          "            reportInitFailure(ctx, error);",
+          "          });",
+          "      }, 0);",
+          "    } catch (error: unknown) {",
+          "      reportInitFailure(ctx, error);",
+          "    }",
+          "  });",
+        ].join("\n")
+      : [
+          '  pi.on("session_start", async (_event, ctx) => {',
+          "    try {",
+          "      prepareSession(ctx);",
+          "      registerAutocompleteProvider(ctx);",
+          "      const sessionLifecycleId = ++lifecycleId;",
+          "",
+          "      // Warm the finder in the background — Pi /new and /resume must not",
+          "      // wait on the initial scan. Subsequent tool calls / mention lookups",
+          "      // share the same in-flight promise via ensureFinder().",
+          "      setTimeout(() => {",
+          "        if (sessionLifecycleId !== lifecycleId) return;",
+          "        ensureFinder(activeCwd)",
+          "          .then(() => {",
+          "            if (sessionLifecycleId !== lifecycleId) return;",
+          "            const atHome = enableHomeDirScanning && isHomeDir(activeCwd);",
+          "            if (atHome) {",
+          "              warnHomeDirScan(activeCwd);",
+          "              ctx.ui.setStatus?.(",
+          "                HOME_SCAN_STATUS_KEY,",
+          '                "Agent is indexing $HOME, this can lead to high CPU",',
+          "              );",
+          "              trackHomeScanStatus();",
+          "            }",
+          "          })",
+          "          .catch((error: unknown) => {",
+          "            if (sessionLifecycleId !== lifecycleId) return;",
+          "            reportInitFailure(ctx, error);",
+          "          });",
+          "      }, 0);",
+          "    } catch (error: unknown) {",
+          "      reportInitFailure(ctx, error);",
+          "    }",
+          "  });",
+        ].join("\n");
+
+  newCode = newCode.replace(matchedSessionStart, newSessionStart);
 
   // Step 4: Lifecycle bump on shutdown
   newCode = newCode.replace(
