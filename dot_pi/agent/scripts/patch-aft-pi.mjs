@@ -34,12 +34,22 @@ export function patchAft() {
     writeExecThenRun:
       originalCode.includes('callToolCall(bridge, "write", rawArgs, extCtx)') &&
       originalCode.includes("const mutationResult = buildMutationResult(response);"),
-    solPiBanner: originalCode.includes("⚡ SoL-Pi · Action Fusion"),
+    solPiBanner:
+      originalCode.includes("context.args?.then_run") &&
+      originalCode.includes("Money saved · 1 model round-trip avoided"),
     toolNameLabels: originalCode.includes("return renderMutationCall(editName,"),
     expandedDiff: originalCode.includes("expanded: true,\n    context\n  });\n}\nfunction shortenPath"),
   };
 
   const isAlreadyFullyPatched = Object.values(checks).every(Boolean);
+  if (process.argv.includes("--check")) {
+    if (isAlreadyFullyPatched) {
+      console.log("[pi-packages] @cortexkit/aft-pi is already fully patched (all 9 features verified)");
+    } else {
+      console.log("[pi-packages] @cortexkit/aft-pi is NOT fully patched. Status:", checks);
+    }
+    return;
+  }
   if (isAlreadyFullyPatched) {
     console.log("[pi-packages] @cortexkit/aft-pi is already fully patched (all 9 features verified)");
     return;
@@ -69,26 +79,30 @@ export function patchAft() {
     if (spMatch) shortenPathIdent = spMatch[1];
   }
 
-  // Find container helper from adjacent definition
-  const containerMatch = originalCode.match(
-    /function\s+(reuseContainer\w*)\s*\(\s*last\s*\)\s*\{[\s\S]*?new\s+(\w+)/
-  );
-  if (containerMatch) {
-    reuseContainerIdent = containerMatch[1];
-    textIdent = containerMatch[2].replace("Container", "Text");
+  // Find container helper from adjacent definition preceding renderMutationCall
+  const rmcIdx = originalCode.indexOf("function renderMutationCall(");
+  if (rmcIdx !== -1) {
+    const preceding = originalCode.slice(Math.max(0, rmcIdx - 2000), rmcIdx);
+    const containerMatch = preceding.match(
+      /function\s+(reuseContainer\w*)\s*\(\s*last\s*\)\s*\{[\s\S]*?new\s+(\w+)/
+    );
+    if (containerMatch) {
+      reuseContainerIdent = containerMatch[1];
+      textIdent = containerMatch[2].replace("Container", "Text");
+    }
   }
 
   // Key anchors that MUST exist for safe atomic patching
   const anchorChecks = {
     canonicalKeys: originalCode.includes(
-      'var EDIT_ROOT_CANONICAL_KEYS = new Set(["path", "appendContent", "edits", "symbol", "content"]);'
+      'var EDIT_ROOT_CANONICAL_KEYS = new Set(["path", "appendContent", "edits", "symbol", "content"'
     ),
     editParams: originalCode.includes("var EditParams = "),
     writeParams: originalCode.includes("var WriteParams = "),
     renderMutationCall: originalCode.includes("function renderMutationCall("),
     editExec: originalCode.includes('callToolCall(bridge, "edit", rawArgs, extCtx);'),
     writeExec: originalCode.includes('callToolCall(bridge, "write", rawArgs, extCtx);'),
-    renderReadCall: originalCode.includes("function renderReadCall(args, theme, context) {"),
+    renderReadCall: originalCode.includes("function renderReadCall("),
   };
 
   const criticalAnchorsOk = Object.values(anchorChecks).every(Boolean);
@@ -245,7 +259,7 @@ async function executeThenRun(thenRun, extCtx, toolCallId) {
   }
 
   // 7. Render SoL-Pi banner badge using detected UI identifiers
-  if (!code.includes("⚡ SoL-Pi · Action Fusion")) {
+  if (!code.includes("context.args?.then_run")) {
     const oldRenderCall = [
       "function renderMutationCall(toolName, filePath, theme, context) {",
       `  const text = ${reuseTextIdent}(context.lastComponent);`,
