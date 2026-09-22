@@ -1,7 +1,7 @@
 {
   "defaultProvider": "kekulv",
   "defaultModel": "gemini-3.8-flash-high",
-  "lastChangelogVersion": "0.85.1",
+  "lastChangelogVersion": "0.87.0",
   "theme": "dark",
   "packages": [
     "npm:pi-mcp-adapter",
@@ -34,7 +34,9 @@
       ]
     },
     "npm:pi-context-view",
-    "npm:pi-rtk-optimizer"
+    "npm:pi-rtk-optimizer",
+    "npm:pi-better-btw-plus",
+    "npm:pi-background-tasks"
   ],
   "hideThinkingBlock": true,
   "modelThinkingLevels": {
