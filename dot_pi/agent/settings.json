@@ -35,7 +35,7 @@
     },
     "npm:pi-context-view",
     "npm:pi-rtk-optimizer",
-    "npm:pi-better-btw-plus",
+    "npm:@narumitw/pi-btw",
     "npm:pi-background-tasks"
   ],
   "hideThinkingBlock": true,
