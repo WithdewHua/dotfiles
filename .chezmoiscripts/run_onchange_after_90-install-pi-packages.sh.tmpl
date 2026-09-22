@@ -115,7 +115,10 @@ for source in "${packages[@]}"; do
     pi install --no-approve "${source}"
 done
 
-# 3. Ensure postinstall hook exists in package.json for auto-patching on npm install/update
+# 3. Ensure auto-patch lifecycle hooks exist in package.json.
+# Pi updates via `npm install <package> --prefix ...`, which skips the root
+# postinstall. The dependencies hook runs after node_modules actually changes.
+# Keep postinstall for plain npm install/ci and patch for manual recovery.
 node --input-type=module -e '
 import { readFileSync, writeFileSync, existsSync } from "node:fs";
 import { join } from "node:path";
@@ -126,17 +129,15 @@ if (existsSync(pkgPath)) {
   const pkg = JSON.parse(readFileSync(pkgPath, "utf8"));
   pkg.scripts = pkg.scripts || {};
   let modified = false;
-  if (pkg.scripts.postinstall !== "node ../scripts/patch-all.mjs") {
-    pkg.scripts.postinstall = "node ../scripts/patch-all.mjs";
-    modified = true;
-  }
-  if (pkg.scripts.patch !== "node ../scripts/patch-all.mjs") {
-    pkg.scripts.patch = "node ../scripts/patch-all.mjs";
-    modified = true;
+  for (const hook of ["dependencies", "postinstall", "patch"]) {
+    if (pkg.scripts[hook] !== "node ../scripts/patch-all.mjs") {
+      pkg.scripts[hook] = "node ../scripts/patch-all.mjs";
+      modified = true;
+    }
   }
   if (modified) {
     writeFileSync(pkgPath, JSON.stringify(pkg, null, 2) + "\n", "utf8");
-    console.log("[pi-packages] Configured auto-patch postinstall script in npm package.json");
+    console.log("[pi-packages] Configured auto-patch dependencies/postinstall hooks in npm package.json");
   }
 }
 '
