@@ -166,19 +166,35 @@ const verifyEffort = pickEffort(args && args.verifyEffort, THINK[effort].verify,
 // passes (main verify + the gap-sweep verification). Splitting them is the only way
 // to get cheap finders on models whose thinkingLevelMap has a single cell
 // (claude-opus-5, claude-fable-5-1 accept only xhigh/max, so effort alone cannot
-// make them cheap). Omit → agents inherit the session model. Accepts a
-// provider/modelId like "kekulv/gpt-5.6-luna" or a fuzzy name like "luna".
+// make them cheap). Accepts a provider/modelId like "kekulv/gpt-5.6-luna" or a
+// fuzzy name like "luna".
 //
-// The preflight deliberately does NOT inherit `model`: it runs a single numstat
-// and wants the cheapest thing available, but `effort: 'minimal'` is clamped UP on
-// models that only expose xhigh/max — so pointing `model` at claude-opus-5 would
-// run `git diff --numstat` with xhigh reasoning. Set args.scopeModel to steer it.
-const model = (args && args.model) ? String(args.model).trim() : ''
+// COST ROUTING (the #1 cost lever): finders are breadth work — they over-report
+// and the verifier filters — so when the caller names NO model they default to a
+// cheap fast model instead of inheriting the (possibly very expensive) session
+// model. The verifier is the decision point and keeps inheriting the session
+// model unless args.verifyModel says otherwise. Pass args.model: "inherit" (or
+// "session") to force session-model finders. If the default model ever leaves
+// models.json, agent() failures surface as failedAngles / preflight-fallback
+// warnings — the run degrades, it does not crash.
+//
+// The preflight follows the cheap default but never an EXPLICIT args.model: it
+// runs a single numstat and wants the cheapest thing available, and
+// `effort: 'minimal'` is clamped UP on models that only expose xhigh/max — so
+// pointing `model` at claude-opus-5 would run `git diff --numstat` with xhigh
+// reasoning. Set args.scopeModel to steer it explicitly.
+const DEFAULT_FINDER_MODEL = 'kekulv/gpt-5.6-luna' // cheap + full off→max effort range
+const rawModel = (args && args.model) ? String(args.model).trim() : ''
+const rawModelInherit = /^(inherit|session)$/i.test(rawModel)
+const modelDefaulted = !rawModel || rawModelInherit // finders on cheap default, verifier on session
+const model = !rawModel ? DEFAULT_FINDER_MODEL : (rawModelInherit ? '' : rawModel)
 const verifyModel = (args && args.verifyModel) ? String(args.verifyModel).trim() : ''
 const scopeModel = (args && args.scopeModel) ? String(args.scopeModel).trim() : ''
 const optsFor = (kind) => {
   const e = kind === 'verify' ? verifyEffort : finderEffort
-  const m = kind === 'verify' ? (verifyModel || model) : model
+  // A defaulted finder model must NOT leak into the verifier: verification is the
+  // quality decision point and stays on the session model unless told otherwise.
+  const m = kind === 'verify' ? (verifyModel || (modelDefaulted ? '' : model)) : model
   return { ...(m ? { model: m } : {}), ...(e !== 'inherit' ? { effort: e } : {}) }
 }
 
@@ -208,6 +224,11 @@ ${scopeNote}
 
 ${calibration}
 
+Reading budget (hard cost control — the diff is the primary artifact, not the repo):
+- Read the diff ONCE with extra inline context: \`git diff -U10 <target>\` — the 10 lines around each hunk usually answer "what surrounds this change" without opening the file.
+- Open a file ONLY when the inline context is still insufficient, in a ±40-line window around the point of interest — never whole files. Roughly ≤10 file reads total for this run.
+- \`git log\` / \`git blame\` / \`git show\` only when a candidate genuinely hinges on history; no repo-wide tours, no re-deriving the diff.
+
 Return up to ${cap} candidates through the findings tool. Every candidate needs: file path, 1-based line, severity (critical/major/minor), category (one of: correctness, simplification, efficiency, reuse, altitude, conventions, test-coverage), short_summary (headline compressed to ≤60 characters — the claim only, no rationale or consequence), a one-line claim, and a concrete scenario (which input/state/timing/platform makes the code misbehave). Fewer or none is fine. Do not modify files; stay read-only.`
 }
 
@@ -215,7 +236,7 @@ Return up to ${cap} candidates through the findings tool. Every candidate needs:
 // with CC's own A–E labels (CC: A line-by-line, B removed-behavior, C cross-file,
 // D language-pitfall, E wrapper/proxy) and made the two impossible to compare.
 const FINDER = {
-  correctness: `Line-by-line diff scan. Read every hunk of the target diff line by line, then open the enclosing function for each hunk: bugs in unchanged lines of a touched function are in scope (the diff re-exposes or fails to fix them). For every changed line ask what input, state, timing, or platform makes it wrong. Hunt: inverted or wrong conditions, off-by-one, null/undefined dereferences (where adjacent lines show the value can be absent), removed guards or validation, falsy-zero checks, missing await, wrong-variable copy-paste, errors swallowed in a catch that should propagate. Do not report style, performance, or missing tests.`,
+  correctness: `Line-by-line diff scan. Read every hunk of the target diff (\`git diff -U10\` — the inline context is your first stop) line by line, then open the enclosing function only where the inline context does not already show it: bugs in unchanged lines of a touched function are in scope (the diff re-exposes or fails to fix them). For every changed line ask what input, state, timing, or platform makes it wrong. Hunt: inverted or wrong conditions, off-by-one, null/undefined dereferences (where adjacent lines show the value can be absent), removed guards or validation, falsy-zero checks, missing await, wrong-variable copy-paste, errors swallowed in a catch that should propagate. Do not report style, performance, or missing tests.`,
 
   regression: `Removed behavior and broken callers — the two highest-yield regression classes.
 (1) REMOVED BEHAVIOR: read the \`-\` lines of the diff as carefully as the \`+\` lines. For every deleted or shortened line ask what it was protecting against and whether anything still protects against it: a validation or guard clause that is gone, a branch/else/default case that no longer exists, a catch or cleanup (close/unlock/rollback/clearTimeout) that was dropped, a retry or fallback that was removed, a default value that changed, a log or metric whose absence hides a failure. Deleted safety is invisible in the after-state of the file — it exists only in the diff, so work from the diff.
@@ -259,7 +280,7 @@ function verifierPrompt(candidates) {
 ${list}
 
 How to read the evidence:
-- Open each file around the cited line (grep/blame as needed). The line numbers are 1-based and may be slightly off — if the cited code is a few lines away, judge the code, not the offset.
+- Open each file in a ±40-line window around the cited line (grep to locate it; blame / git show only when the verdict hinges on history). Do not read whole files. The line numbers are 1-based and may be slightly off — if the cited code is a few lines away, judge the code, not the offset.
 - For any candidate about REMOVED or CHANGED behavior (a deleted guard, a dropped branch or catch, a changed default, code the diff made dead), the before-state exists ONLY in the diff. Pull the target's diff scoped to that file before judging — e.g. \`git diff HEAD -- ${files[0] || '<file>'}\` — for these ${files.length} file(s): ${files.join(', ')}. Reading only the current file shows you the after-state and will make you refute real regressions.
 
 Classify each candidate (return one verdict per idx, all of them):
@@ -300,7 +321,7 @@ Return up to 8 candidates through the findings tool with the same field rules (f
 const rank = { critical: 0, major: 1, minor: 2 }
 const WORKER = 'code-review-worker'
 
-log(`code-review workflow — effort=${effort} finder=${finderEffort} verify=${verifyEffort}${model ? ` model=${model}` : ' model=inherit'}${verifyModel ? ` verifyModel=${verifyModel}` : ''} target: ${targetText}${compact ? ' (compact output)' : ''}`)
+log(`code-review workflow — effort=${effort} finder=${finderEffort} verify=${verifyEffort} model=${model || 'inherit'}${modelDefaulted && model ? ' (cheap default; pass model:"inherit" for session model)' : ''}${verifyModel ? ` verifyModel=${verifyModel}` : ' verifyModel=inherit(session)'} target: ${targetText}${compact ? ' (compact output)' : ''}`)
 
 // Phase 0 — scope. CC gathers the diff once in its orchestrator and hands it to the
 // subagents. A pi workflow script cannot run git, and routing a whole diff back
@@ -333,7 +354,7 @@ ${targetText}
 ${repoNote}
 
 Run the matching git command with \`--numstat\` (e.g. \`git diff HEAD --numstat\`, \`git diff --numstat <range>\`, \`git show --numstat <commit>\`) and return one entry per changed file with its added+removed line count, plus the overall total. Return an empty file list when the target has no changes. Do not open or read any of the files.`,
-    { label: 'scope:preflight', phase: 'Scope', agentType: WORKER, schema: PREFLIGHT_SCHEMA, ...(scopeModel ? { model: scopeModel } : {}), effort: 'minimal' }
+    { label: 'scope:preflight', phase: 'Scope', agentType: WORKER, schema: PREFLIGHT_SCHEMA, ...(scopeModel ? { model: scopeModel } : (modelDefaulted && model ? { model } : {})), effort: 'minimal' }
   )
   if (pre) {
     preflightOk = true
@@ -381,8 +402,8 @@ if (preflightOk && changedLines === 0 && (!reviewableFiles || !reviewableFiles.l
 // FLOOR keeps an explicitly requested effort level meaningful: asking for xhigh on
 // a 40-line diff should still get specialists, just not all eight.
 const scaleToDiff = preflightOk && !(args && args.noScale)
-const LINES_PER_ANGLE = Number((args && args.linesPerAngle) || 120)
-const FLOOR = { low: 1, medium: 3, high: 4, xhigh: 5, max: 5 }
+const LINES_PER_ANGLE = Number((args && args.linesPerAngle) || 200)
+const FLOOR = { low: 1, medium: 3, high: 4, xhigh: 4, max: 4 }
 // Ordered by expected yield per token. Truncation takes a prefix of this list, so
 // the diff-local, highest-signal angles survive the smallest diffs. Any angle key
 // not listed here sorts LAST rather than vanishing, so adding a new CONF angle can
@@ -490,7 +511,7 @@ if (candidates.length !== toVerify.length) log(`same-line/mechanism repeats coll
 // CHUNK is a token/quality trade-off, not a correctness one: a bigger batch means
 // fewer agents re-reading the same diff (cheaper), while a smaller batch limits
 // how much one candidate can anchor the next. Override with args.verifyChunk.
-const CHUNK = Math.max(1, Number((args && args.verifyChunk) || 20))
+const CHUNK = Math.max(1, Number((args && args.verifyChunk) || 25))
 
 // Pack candidates into chunks by FILE, not by severity rank. Severity-first
 // ordering scattered a file's candidates across several chunks, so two or three
@@ -643,7 +664,8 @@ return {
   finderEffort,
   verifyEffort,
   model: model || 'inherit',
-  verifyModel: verifyModel || model || 'inherit',
+  finderModelDefaulted: modelDefaulted,
+  verifyModel: verifyModel || (modelDefaulted ? 'inherit' : model || 'inherit'),
   angles: finderKeys.length,
   anglesRun: finderKeys,
   failedAngles,

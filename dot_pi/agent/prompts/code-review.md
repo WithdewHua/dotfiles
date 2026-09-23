@@ -5,7 +5,7 @@ argument-hint: "[target: uncommitted | <commit> | <range> | <path>] [low|medium|
 
 用 code-review workflow 做一次多 agent 深度代码评审（风格对齐 Claude Code /code-review：finder 多角度扫描 + verifier 逐条独立反驳式验证，只报能给出具体出错场景的真 bug，不报风格/性能/缺测试类噪音）。
 
-直接调用 SubagentWorkflow 工具，`name: "code-review"`。**先解析，再调用**——用户的话可能同时含目标/档位/模型，也可能只有一个：
+直接调用 SubagentWorkflow 工具，`name: "code-review"`。**若当前会话没有 SubagentWorkflow 工具**（该项目未启用 workflows——全局默认关闭，这是正常情况而非故障），不要排查原因、不要读源码——直接回退：用 Agent 工具 spawn `code-review` agent（单遍 CC 式评审，无多角度+验证），并把目标/档位语义传给它；如果用户要的是深度多 agent 评审，提示在项目里建 `.pi/subagents.json` 写 `{"workflowsEnabled": true}` 后重启会话。先解析，再调用——用户的话可能同时含目标/档位/模型，也可能只有一个：
 
 1. 目标 → `args.target`：commit / 区间 / 路径 / "未提交改动"等
 2. 档位 → `args.effort`：出现 **low / medium / high / xhigh / max**（或"快速/仔细/深度/最深"）时填
@@ -32,16 +32,17 @@ argument-hint: "[target: uncommitted | <commit> | <range> | <path>] [low|medium|
 
 `xhigh` 与 `max` 结构完全相同，只差 verifier 的推理档（xhigh vs max）。
 
-**实际角度数会按 diff 规模自动收敛**：workflow 先跑一个廉价 preflight 拿 `--numstat`，排除 lock/生成/vendor 文件后，按 ⌈可评审行数 / 120⌉ 决定跑几个角度，并按 effort 设下限（medium 3 / high 4 / xhigh·max 5）。小改动不会白烧 8 个 agent；`noScale: true` 可强制跑满。
+**实际角度数会按 diff 规模自动收敛**：workflow 先跑一个廉价 preflight 拿 `--numstat`，排除 lock/生成/vendor 文件后，按 ⌈可评审行数 / 200⌉ 决定跑几个角度，并按 effort 设下限（medium 3 / high 4 / xhigh·max 4）。小改动不会白烧 8 个 agent；`noScale: true` 可强制跑满。
+
+**成本控制（默认已启用）**：未点名模型时，finder + preflight 默认跑便宜快速模型（gpt-5.6-luna），**verifier 始终继承会话强模型**（验证是质量决策点）。想全部继承会话模型传 `args.model: "inherit"`。finder 带硬性阅读预算（`-U10` 内联上下文、±40 行窗口、≤10 次开文件），防止 context 无限膨胀。
 
 ## 可选参数（按需，通常都省略）
 - `args.repo`：仅当当前会话工作目录不在目标仓库内、或目标文本里包含仓库路径时才填（绝对路径）
-- `args.model`：统一指定 finder 用的模型；`args.verifyModel` 只改 verifier + gap sweep；`args.scopeModel` 只改 preflight
-  （preflight **不会**继承 `args.model`——它只跑一次 numstat，而 claude-opus/fable 这类只有 xhigh/max 档的模型会把"最低档"抬成 xhigh，让一次 numstat 变得很贵）
+- `args.model`：指定 finder 模型；**不填时默认 gpt-5.6-luna（便宜），不会继承会话模型**，传 `"inherit"` 才继承；`args.verifyModel` 只改 verifier + gap sweep（默认继承会话模型）；`args.scopeModel` 只改 preflight（默认随 finder 的便宜模型；显式 `args.model` 不会传给 preflight——claude-opus/fable 这类只有 xhigh/max 档的模型会把“最低档”抬成 xhigh，让一次 numstat 变得很贵）
 - `args.finderEffort` / `args.verifyEffort`：单独覆盖两阶段推理档（`off|minimal|low|medium|high|xhigh|max|inherit`）
 - `args.compact`：精简返回载荷（去掉 verifier 的 evidence，保留 scenario）
 - `args.noScale`：关闭按 diff 规模收敛角度数
-- `args.linesPerAngle`（默认 120）、`args.verifyChunk`（默认 20）、`args.maxGapFiles`（默认 12）、`args.plausibleCap`（默认 8）
+- `args.linesPerAngle`（默认 200）、`args.verifyChunk`（默认 25）、`args.maxGapFiles`（默认 12）、`args.plausibleCap`（默认 8）
 
 可用模型随 models.json 变化，以现场查询为准，模板不维护清单。未点名模型时全部子代理继承会话模型。
 
