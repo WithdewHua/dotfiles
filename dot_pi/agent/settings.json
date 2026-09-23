@@ -1,7 +1,7 @@
 {
   "defaultProvider": "kekulv",
   "defaultModel": "gemini-3.8-flash-high",
-  "lastChangelogVersion": "0.87.0",
+  "lastChangelogVersion": "0.87.1",
   "theme": "dark",
   "packages": [
     "npm:pi-mcp-adapter",
