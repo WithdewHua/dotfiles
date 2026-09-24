@@ -146,7 +146,7 @@ function normalizeToolCall(toolCall: { name: string; arguments: Record<string, a
   else if (lowerName === "bash") toolCall.name = "bash";
   else if (lowerName === "grep") toolCall.name = "grep";
   else if (lowerName === "glob") toolCall.name = "find";
-  else if (NAME_MAP[lowerName]) toolCall.name = lowerName;
+  else if (fromClaudeCodeName(toolCall.name)) toolCall.name = fromClaudeCodeName(toolCall.name);
 
   const args = toolCall.arguments;
   if (!args || typeof args !== "object") return;
@@ -165,6 +165,19 @@ function normalizeToolCall(toolCall: { name: string; arguments: Record<string, a
   }
 }
 
+function toClaudeCodeName(name?: string | null): string {
+  if (!name || typeof name !== "string") return name || "";
+  return NAME_MAP[name.toLowerCase()] ?? name;
+}
+
+function fromClaudeCodeName(name?: string | null): string {
+  if (!name || typeof name !== "string") return name ?? "";
+  const lower = name.toLowerCase();
+  for (const [from, to] of Object.entries(NAME_MAP)) {
+    if (to.toLowerCase() === lower) return from;
+  }
+  return name;
+}
 
 function isCodexModel(modelId: string, configuredApi?: string): boolean {
   if (configuredApi) return configuredApi === "openai-codex-responses";
@@ -285,7 +298,7 @@ function convertClaudeMessages(messages: Message[]): any[] {
           blocks.push({
             type: "tool_use",
             id: block.id,
-            name: block.name,
+            name: toClaudeCodeName(block.name),
             input: block.arguments,
           });
         }
@@ -372,33 +385,61 @@ function extractToolsAndSystem(context: Context): { tools: Tool[]; systemPrompt:
   };
 }
 
-function buildClaudeCodeTools(customTools: Tool[] = []): any[] {
-  // 1. Keep the 20 Claude Code stub tools ONLY as inactive placeholders to pass AnyRouter upstream validation
-  const ccStubs = CLAUDE_STUB_NAMES.map((name) => ({
-    name,
-    description: `[Inactive compatibility stub - DO NOT USE]. Always use the native lowercase tool instead.`,
-    input_schema: { type: "object", properties: {} },
-  }));
+function sanitizeInputSchema(parameters: any, toolName: string): any {
+  const props = { ...((parameters as any)?.properties || {}) };
+  const required = [...((parameters as any)?.required || [])];
 
-  // 2. Pass all Pi native and extension tools directly with their original names and full JSON schemas
-  const converted = customTools.map((t) => ({
-    name: t.name,
-    description: t.description,
-    input_schema: t.parameters || { type: "object", properties: {} },
-  }));
-
-  const seen = new Set<string>();
-  const result: any[] = [];
-
-  for (const stub of ccStubs) {
-    seen.add(stub.name);
-    result.push(stub);
+  const lower = toolName.toLowerCase();
+  // Provide file_path alias for tools expecting path to avoid model hallucination errors
+  if ((lower === "read" || lower === "edit" || lower === "write") && props.path && !props.file_path) {
+    props.file_path = { type: "string", description: "Alias for path" };
   }
 
-  for (const tool of converted) {
-    if (!seen.has(tool.name)) {
-      seen.add(tool.name);
-      result.push(tool);
+  return {
+    type: "object",
+    properties: props,
+    ...(required.length > 0 ? { required } : {}),
+  };
+}
+
+function buildClaudeCodeTools(customTools: Tool[] = []): any[] {
+  const piToolsMap = new Map<string, Tool>();
+  for (const t of customTools) {
+    if (t && t.name) {
+      piToolsMap.set(t.name.toLowerCase(), t);
+    }
+  }
+
+  const result: any[] = [];
+
+  // Iterate over the 20 standard Claude Code tools.
+  // AnyRouter upstream strictly validates that the request tools match the Claude Code toolset.
+  for (const ccName of CLAUDE_STUB_NAMES) {
+    let matchedPiTool: Tool | undefined;
+    for (const [piName, mappedCcName] of Object.entries(NAME_MAP)) {
+      if (mappedCcName.toLowerCase() === ccName.toLowerCase() && piToolsMap.has(piName)) {
+        matchedPiTool = piToolsMap.get(piName);
+        break;
+      }
+    }
+    if (!matchedPiTool && piToolsMap.has(ccName.toLowerCase())) {
+      matchedPiTool = piToolsMap.get(ccName.toLowerCase());
+    }
+
+    if (matchedPiTool) {
+      // Tool exists in Pi: keep CC name for gateway compatibility, but inject Pi's description & full schema
+      result.push({
+        name: ccName,
+        description: matchedPiTool.description || `Claude Code ${ccName} tool`,
+        input_schema: sanitizeInputSchema(matchedPiTool.parameters, ccName),
+      });
+    } else {
+      // CC tool not in Pi: keep as empty placeholder stub to satisfy AnyRouter validation
+      result.push({
+        name: ccName,
+        description: `Claude Code ${ccName} tool`,
+        input_schema: { type: "object", properties: {} },
+      });
     }
   }
 
@@ -629,7 +670,7 @@ async function streamClaudeCode(
         const toolCall = {
           type: "toolCall" as const,
           id: block.id,
-          name: block.name,
+          name: fromClaudeCodeName(block.name),
           arguments: {},
         };
         output.content.push(toolCall as any);
