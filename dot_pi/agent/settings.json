@@ -64,6 +64,7 @@
     "showTerminalProgress": true
   },
   "showHardwareCursor": true,
+  "cacheWarming": "idle",
   "showCacheMissNotices": true,
   "followUpMode": "one-at-a-time",
   "markdown": {

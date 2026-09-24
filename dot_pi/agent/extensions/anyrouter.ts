@@ -92,6 +92,7 @@ interface ProviderConfigFile {
     cost?: { input?: number; output?: number; cacheRead?: number; cacheWrite?: number };
     contextWindow?: number;
     maxTokens?: number;
+    promptCache?: { short?: number; long?: number };
   }>;
 }
 
@@ -763,6 +764,7 @@ export default function (pi: ExtensionAPI) {
       },
       contextWindow: m.contextWindow ?? 1000000,
       maxTokens: m.maxTokens ?? 128000,
+      promptCache: m.promptCache,
     })),
     streamSimple: (model: Model<Api>, context: Context, options?: SimpleStreamOptions) => {
       const stream = createAssistantMessageEventStream();
