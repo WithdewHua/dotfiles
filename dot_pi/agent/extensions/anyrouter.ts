@@ -386,7 +386,7 @@ function extractToolsAndSystem(context: Context): { tools: Tool[]; systemPrompt:
 }
 
 function sanitizeInputSchema(parameters: any, toolName: string): any {
-  const props = { ...((parameters as any)?.properties || {}) };
+  const props = { ...((parameters as any)?.properties) };
   const required = [...((parameters as any)?.required || [])];
 
   const lower = toolName.toLowerCase();
@@ -621,10 +621,10 @@ async function streamClaudeCode(
     tools: buildClaudeCodeTools(effectiveTools),
   };
 
-  if (options?.reasoning && model.reasoning) {
-    body.thinking = { type: "adaptive", display: "omitted" };
-    body.output_config = { effort: mapReasoningEffort(options.reasoning) };
-  }
+    if (options?.reasoning && model.reasoning) {
+      body.thinking = { type: "adaptive", display: "summarized" };
+      body.output_config = { effort: mapReasoningEffort(options.reasoning) };
+    }
 
   stream.push({ type: "start", partial: output });
 
@@ -690,6 +690,9 @@ async function streamClaudeCode(
         const blk = output.content[contentIndex] as ThinkingContent;
         blk.thinking += delta.thinking;
         stream.push({ type: "thinking_delta", contentIndex, delta: delta.thinking, partial: output });
+      } else if (delta.type === "signature_delta") {
+        const blk = output.content[contentIndex] as ThinkingContent;
+        blk.thinkingSignature = (blk.thinkingSignature || "") + delta.signature;
       } else if (delta.type === "input_json_delta") {
         (output.content[contentIndex] as any)._rawArgs =
           ((output.content[contentIndex] as any)._rawArgs || "") + delta.partial_json;
@@ -721,6 +724,17 @@ async function streamClaudeCode(
     }
   }
 
+  // Defensive cleanup for any tool calls if stream ended unexpectedly
+  for (const block of output.content) {
+    if (block.type === "toolCall" && (block as any)._rawArgs !== undefined) {
+      try {
+        block.arguments = JSON.parse((block as any)._rawArgs || "{}");
+      } catch {}
+      delete (block as any)._rawArgs;
+      normalizeToolCall(block);
+    }
+  }
+
   output.stopReason = output.stopReason === "pending" ? "stop" : output.stopReason;
   stream.push({ type: "done", reason: output.stopReason as any, message: output });
   stream.end();
@@ -737,7 +751,6 @@ async function streamCodex(
 ) {
   const { tools: effectiveTools, systemPrompt: effectiveSystemPrompt } = extractToolsAndSystem(context);
   const sessionId = options?.sessionId || randomUUID();
-  const turnId = randomUUID();
   const windowId = `${sessionId}:0`;
 
   const url = baseUrl.endsWith("/v1") ? `${baseUrl}/responses` : `${baseUrl}/v1/responses`;
@@ -750,6 +763,7 @@ async function streamCodex(
     "user-agent": `codex_exec/${CODEX_VERSION} (Linux; x86_64) (codex_exec; ${CODEX_VERSION})`,
     "x-openai-internal-codex-responses-lite": "true",
     "x-codex-beta-features": "remote_compaction_v2",
+    "x-codex-installation-id": CODEX_INSTALLATION_ID,
     "x-codex-window-id": windowId,
     "x-client-request-id": sessionId,
     "session-id": sessionId,
@@ -791,8 +805,8 @@ async function streamCodex(
     throw new Error(`HTTP ${resp.status}: ${errText}`);
   }
 
-  let textStarted = false;
-  let contentIndex = 0;
+  // Maps output_index from SSE events to output.content index
+  const slotMap = new Map<number, number>();
 
   for await (const { data } of parseSseLines(resp)) {
     if (!data || data === "[DONE]") continue;
@@ -803,25 +817,99 @@ async function streamCodex(
       continue;
     }
 
-    if (payload.type === "response.output_text.delta") {
-      const delta = payload.delta || "";
-      if (!delta) continue;
-      if (!textStarted) {
+    if (payload.type === "response.output_item.added") {
+      const outputIndex = payload.output_index ?? 0;
+      const item = payload.item;
+      if (!item) continue;
+
+      if (item.type === "message") {
+        output.content.push({ type: "text", text: "" });
+        const contentIndex = output.content.length - 1;
+        slotMap.set(outputIndex, contentIndex);
+        stream.push({ type: "text_start", contentIndex, partial: output });
+      } else if (item.type === "reasoning") {
+        output.content.push({ type: "thinking", thinking: "", thinkingSignature: "" });
+        const contentIndex = output.content.length - 1;
+        slotMap.set(outputIndex, contentIndex);
+        stream.push({ type: "thinking_start", contentIndex, partial: output });
+      } else if (item.type === "function_call") {
+        const toolCall = {
+          type: "toolCall" as const,
+          id: item.call_id || item.id || `call_${randomUUID().slice(0, 8)}`,
+          name: item.name,
+          arguments: {},
+        };
+        output.content.push(toolCall as any);
+        const contentIndex = output.content.length - 1;
+        slotMap.set(outputIndex, contentIndex);
+        stream.push({ type: "toolcall_start", contentIndex, partial: output });
+      }
+    } else if (payload.type === "response.output_text.delta") {
+      const outputIndex = payload.output_index ?? 0;
+      let contentIndex = slotMap.get(outputIndex);
+      if (contentIndex == null) {
         output.content.push({ type: "text", text: "" });
         contentIndex = output.content.length - 1;
-        textStarted = true;
+        slotMap.set(outputIndex, contentIndex);
         stream.push({ type: "text_start", contentIndex, partial: output });
       }
-      (output.content[contentIndex] as TextContent).text += delta;
-      stream.push({ type: "text_delta", contentIndex, delta, partial: output });
-    } else if (payload.type === "response.output_text.done" || payload.type === "response.output_item.done") {
-      if (textStarted) {
+      const delta = payload.delta || "";
+      if (delta) {
+        (output.content[contentIndex] as TextContent).text += delta;
+        stream.push({ type: "text_delta", contentIndex, delta, partial: output });
+      }
+    } else if (payload.type === "response.reasoning_text.delta" || payload.type === "response.reasoning_summary_text.delta") {
+      const outputIndex = payload.output_index ?? 0;
+      let contentIndex = slotMap.get(outputIndex);
+      if (contentIndex == null) {
+        output.content.push({ type: "thinking", thinking: "", thinkingSignature: "" });
+        contentIndex = output.content.length - 1;
+        slotMap.set(outputIndex, contentIndex);
+        stream.push({ type: "thinking_start", contentIndex, partial: output });
+      }
+      const delta = payload.delta || "";
+      if (delta) {
+        (output.content[contentIndex] as ThinkingContent).thinking += delta;
+        stream.push({ type: "thinking_delta", contentIndex, delta, partial: output });
+      }
+    } else if (payload.type === "response.function_call_arguments.delta") {
+      const outputIndex = payload.output_index ?? 0;
+      const contentIndex = slotMap.get(outputIndex);
+      if (contentIndex != null && output.content[contentIndex]?.type === "toolCall") {
+        const delta = payload.delta || "";
+        (output.content[contentIndex] as any)._rawArgs =
+          ((output.content[contentIndex] as any)._rawArgs || "") + delta;
+        stream.push({ type: "toolcall_delta", contentIndex, delta, partial: output });
+      }
+    } else if (payload.type === "response.output_item.done") {
+      const outputIndex = payload.output_index ?? 0;
+      const contentIndex = slotMap.get(outputIndex);
+      const item = payload.item;
+      if (contentIndex != null && item) {
+        const blk = output.content[contentIndex];
+        if (blk.type === "text") {
+          stream.push({ type: "text_end", contentIndex, content: blk.text, partial: output });
+        } else if (blk.type === "thinking") {
+          stream.push({ type: "thinking_end", contentIndex, content: blk.thinking, partial: output });
+        } else if (blk.type === "toolCall") {
+          try {
+            blk.arguments = JSON.parse(item.arguments || (blk as any)._rawArgs || "{}");
+          } catch {}
+          delete (blk as any)._rawArgs;
+          stream.push({ type: "toolcall_end", contentIndex, toolCall: blk, partial: output });
+          output.stopReason = "toolUse";
+        }
+      }
+    } else if (payload.type === "response.output_text.done") {
+      const outputIndex = payload.output_index ?? 0;
+      const contentIndex = slotMap.get(outputIndex);
+      if (contentIndex != null && output.content[contentIndex]?.type === "text") {
         const text = (output.content[contentIndex] as TextContent).text;
         stream.push({ type: "text_end", contentIndex, content: text, partial: output });
-        textStarted = false;
       }
     } else if (payload.type === "response.completed") {
       const response = payload.response;
+      // Fallback if streaming events were missed
       if (output.content.length === 0 && response?.output?.length) {
         for (const item of response.output) {
           if (item?.type === "message" && Array.isArray(item.content)) {
@@ -834,17 +922,46 @@ async function streamCodex(
                 stream.push({ type: "text_end", contentIndex: idx, content: part.text, partial: output });
               }
             }
+          } else if (item?.type === "function_call") {
+            let args = {};
+            try {
+              args = JSON.parse(item.arguments || "{}");
+            } catch {}
+            const toolCall = {
+              type: "toolCall" as const,
+              id: item.call_id || item.id,
+              name: item.name,
+              arguments: args,
+            };
+            output.content.push(toolCall as any);
+            const idx = output.content.length - 1;
+            stream.push({ type: "toolcall_start", contentIndex: idx, partial: output });
+            stream.push({ type: "toolcall_end", contentIndex: idx, toolCall, partial: output });
+            output.stopReason = "toolUse";
           }
         }
       }
+
       if (response?.usage) {
         output.usage.input = response.usage.input_tokens || 0;
         output.usage.output = response.usage.output_tokens || 0;
         output.usage.totalTokens = output.usage.input + output.usage.output;
         calculateCost(model, output.usage);
       }
-      output.stopReason = "stop";
+
+      const hasToolCall = output.content.some((c) => c.type === "toolCall");
+      output.stopReason = hasToolCall ? "toolUse" : "stop";
       break;
+    }
+  }
+
+  // Defensive cleanup for any tool calls if stream ended unexpectedly
+  for (const block of output.content) {
+    if (block.type === "toolCall" && (block as any)._rawArgs !== undefined) {
+      try {
+        block.arguments = JSON.parse((block as any)._rawArgs || "{}");
+      } catch {}
+      delete (block as any)._rawArgs;
     }
   }
 
