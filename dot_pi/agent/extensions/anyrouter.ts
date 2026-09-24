@@ -136,19 +136,35 @@ function sanitizeText(text: string): string {
   return (text || "").replace(/[\uD800-\uDFFF]/g, "\uFFFD");
 }
 
-function toClaudeCodeName(name?: string | null): string {
-  if (!name || typeof name !== "string") return name || "";
-  return NAME_MAP[name.toLowerCase()] ?? (name.charAt(0).toUpperCase() + name.slice(1));
+function normalizeToolCall(toolCall: { name: string; arguments: Record<string, any> }) {
+  if (!toolCall) return;
+
+  const lowerName = (toolCall.name || "").toLowerCase();
+  if (lowerName === "read") toolCall.name = "read";
+  else if (lowerName === "write") toolCall.name = "write";
+  else if (lowerName === "edit") toolCall.name = "edit";
+  else if (lowerName === "bash") toolCall.name = "bash";
+  else if (lowerName === "grep") toolCall.name = "grep";
+  else if (lowerName === "glob") toolCall.name = "find";
+  else if (NAME_MAP[lowerName]) toolCall.name = lowerName;
+
+  const args = toolCall.arguments;
+  if (!args || typeof args !== "object") return;
+
+  // Normalize file_path -> path for read, write, edit
+  if (args.file_path && !args.path) {
+    args.path = args.file_path;
+    delete args.file_path;
+  }
+
+  // Normalize old_string / new_string -> edits for edit
+  if (toolCall.name === "edit" && args.old_string !== undefined && args.new_string !== undefined && !args.edits) {
+    args.edits = [{ oldString: args.old_string, newString: args.new_string }];
+    delete args.old_string;
+    delete args.new_string;
+  }
 }
 
-function fromClaudeCodeName(name?: string | null): string {
-  if (!name || typeof name !== "string") return name ?? "";
-  const lower = name.toLowerCase();
-  for (const [from, to] of Object.entries(NAME_MAP)) {
-    if (to.toLowerCase() === lower) return from;
-  }
-  return name.charAt(0).toLowerCase() + name.slice(1);
-}
 
 function isCodexModel(modelId: string, configuredApi?: string): boolean {
   if (configuredApi) return configuredApi === "openai-codex-responses";
@@ -269,7 +285,7 @@ function convertClaudeMessages(messages: Message[]): any[] {
           blocks.push({
             type: "tool_use",
             id: block.id,
-            name: toClaudeCodeName(block.name),
+            name: block.name,
             input: block.arguments,
           });
         }
@@ -310,34 +326,35 @@ function convertClaudeMessages(messages: Message[]): any[] {
 }
 
 function buildClaudeCodeTools(customTools: Tool[] = []): any[] {
-  const converted = customTools.map((t) => ({
-    name: toClaudeCodeName(t.name),
-    description: t.description,
-    input_schema: {
-      type: "object",
-      properties: (t.parameters as any)?.properties || {},
-      required: (t.parameters as any)?.required || [],
-    },
+  // 1. Keep the 20 Claude Code stub tools ONLY as inactive placeholders to pass AnyRouter upstream validation
+  const ccStubs = CLAUDE_STUB_NAMES.map((name) => ({
+    name,
+    description: `[Inactive compatibility stub - DO NOT USE]. Always use the native lowercase tool instead.`,
+    input_schema: { type: "object", properties: {} },
   }));
 
-  const customMap = new Map(converted.map((t) => [t.name, t]));
-  // Always include the complete set of 20 Claude Code stub tools to pass AnyRouter validation
-  const result: any[] = CLAUDE_STUB_NAMES.map((name) => {
-    return (
-      customMap.get(name) || {
-        name,
-        description: `Claude Code ${name} tool`,
-        input_schema: { type: "object", properties: {} },
-      }
-    );
-  });
+  // 2. Pass all Pi native and extension tools directly with their original names and full JSON schemas
+  const converted = customTools.map((t) => ({
+    name: t.name,
+    description: t.description,
+    input_schema: t.parameters || { type: "object", properties: {} },
+  }));
 
-  // Append any extra custom tools not in standard CC list
-  for (const [name, tool] of customMap.entries()) {
-    if (!CLAUDE_STUB_NAMES.includes(name)) {
+  const seen = new Set<string>();
+  const result: any[] = [];
+
+  for (const stub of ccStubs) {
+    seen.add(stub.name);
+    result.push(stub);
+  }
+
+  for (const tool of converted) {
+    if (!seen.has(tool.name)) {
+      seen.add(tool.name);
       result.push(tool);
     }
   }
+
   return result;
 }
 
@@ -562,7 +579,7 @@ async function streamClaudeCode(
         const toolCall = {
           type: "toolCall" as const,
           id: block.id,
-          name: fromClaudeCodeName(block.name),
+          name: block.name,
           arguments: {},
         };
         output.content.push(toolCall as any);
@@ -600,6 +617,7 @@ async function streamClaudeCode(
           blk.arguments = JSON.parse((blk as any)._rawArgs || "{}");
         } catch {}
         delete (blk as any)._rawArgs;
+        normalizeToolCall(blk);
         stream.push({ type: "toolcall_end", contentIndex, toolCall: blk, partial: output });
       }
     } else if (payload.type === "message_delta") {
@@ -649,6 +667,12 @@ async function streamCodex(
   const body: any = {
     model: model.id,
     input: convertCodexMessages(context),
+    tools: context.tools?.map((t) => ({
+      type: "function",
+      name: t.name,
+      description: t.description,
+      parameters: t.parameters || { type: "object", properties: {} },
+    })),
     tool_choice: "auto",
     parallel_tool_calls: false,
     reasoning: {
