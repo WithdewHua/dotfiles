@@ -325,6 +325,53 @@ function convertClaudeMessages(messages: Message[]): any[] {
   return params;
 }
 
+function extractToolsAndSystem(context: Context): { tools: Tool[]; systemPrompt: string } {
+  const toolsMap = new Map<string, Tool>();
+
+  if (Array.isArray(context.tools)) {
+    for (const tool of context.tools) {
+      if (tool && tool.name) toolsMap.set(tool.name, tool);
+    }
+  }
+
+  const systemTexts: string[] = [];
+  if (context.systemPrompt) {
+    systemTexts.push(context.systemPrompt);
+  }
+
+  if (Array.isArray(context.messages)) {
+    for (const msg of context.messages) {
+      if ((msg as any).role === "system") {
+        const sysMsg = msg as any;
+        if (typeof sysMsg.content === "string" && sysMsg.content.trim()) {
+          systemTexts.push(sysMsg.content);
+        } else if (Array.isArray(sysMsg.content)) {
+          for (const part of sysMsg.content) {
+            if (part && typeof part.text === "string" && part.text.trim()) {
+              systemTexts.push(part.text);
+            }
+          }
+        }
+        if (Array.isArray(sysMsg.toolsAdded)) {
+          for (const tool of sysMsg.toolsAdded) {
+            if (tool && tool.name) toolsMap.set(tool.name, tool);
+          }
+        }
+        if (Array.isArray(sysMsg.toolsRemoved)) {
+          for (const tool of sysMsg.toolsRemoved) {
+            if (tool && tool.name) toolsMap.delete(tool.name);
+          }
+        }
+      }
+    }
+  }
+
+  return {
+    tools: Array.from(toolsMap.values()),
+    systemPrompt: systemTexts.join("\n\n"),
+  };
+}
+
 function buildClaudeCodeTools(customTools: Tool[] = []): any[] {
   // 1. Keep the 20 Claude Code stub tools ONLY as inactive placeholders to pass AnyRouter upstream validation
   const ccStubs = CLAUDE_STUB_NAMES.map((name) => ({
@@ -360,17 +407,19 @@ function buildClaudeCodeTools(customTools: Tool[] = []): any[] {
 
 // ── Codex Responses Builder ─────────────────────────────────────────────────
 
-function convertCodexMessages(context: Context): any[] {
+function convertCodexMessages(context: Context, systemPrompt?: string): any[] {
   const input: any[] = [];
-  if (context.systemPrompt) {
+  const effectiveSystem = systemPrompt || context.systemPrompt;
+  if (effectiveSystem) {
     input.push({
       type: "message",
       role: "developer",
-      content: [{ type: "input_text", text: sanitizeText(context.systemPrompt) }],
+      content: [{ type: "input_text", text: sanitizeText(effectiveSystem) }],
     });
   }
 
   for (const msg of context.messages) {
+    if ((msg as any).role === "system") continue;
     if (msg.role === "user") {
       if (typeof msg.content === "string") {
         input.push({
@@ -479,6 +528,7 @@ async function streamClaudeCode(
 ) {
   const sessionId = options?.sessionId || randomUUID();
   const url = `${baseUrl}/v1/messages?beta=true`;
+  const { tools: effectiveTools, systemPrompt: effectiveSystemPrompt } = extractToolsAndSystem(context);
 
   const headers = {
     "content-type": "application/json",
@@ -520,14 +570,14 @@ async function streamClaudeCode(
       },
       {
         type: "text",
-        text: sanitizeText(context.systemPrompt || "You are an expert coding assistant operating inside pi."),
+        text: sanitizeText(effectiveSystemPrompt || "You are an expert coding assistant operating inside pi."),
         cache_control: { type: "ephemeral" },
       },
     ],
     context_management: {
       edits: [{ type: "clear_thinking_20251015", keep: "all" }],
     },
-    tools: buildClaudeCodeTools(context.tools || []),
+    tools: buildClaudeCodeTools(effectiveTools),
   };
 
   if (options?.reasoning && model.reasoning) {
@@ -644,6 +694,7 @@ async function streamCodex(
   stream: AssistantMessageEventStream,
   options?: SimpleStreamOptions
 ) {
+  const { tools: effectiveTools, systemPrompt: effectiveSystemPrompt } = extractToolsAndSystem(context);
   const sessionId = options?.sessionId || randomUUID();
   const turnId = randomUUID();
   const windowId = `${sessionId}:0`;
@@ -666,8 +717,8 @@ async function streamCodex(
 
   const body: any = {
     model: model.id,
-    input: convertCodexMessages(context),
-    tools: context.tools?.map((t) => ({
+    input: convertCodexMessages(context, effectiveSystemPrompt),
+    tools: effectiveTools.map((t) => ({
       type: "function",
       name: t.name,
       description: t.description,
