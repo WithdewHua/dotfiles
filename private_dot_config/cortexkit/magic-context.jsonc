@@ -5,18 +5,18 @@
   "execute_threshold_tokens": {
     "default": 150000,
     // 272k 窗口模型 (gpt-5.6-sol / terra / luna, 扣除25%预留后可用204k): 设为 140k (约 68.6%), 留足 64k 输入缓冲
-    "kekulv/gpt-5.6": 140000,
+    "gpt-5.6": 140000, 
     // 1.05M 窗口模型 (gpt-6-astra): >272k 阶梯翻倍加价, 设为 250k 避免触发加价
-    "kekulv/gpt-6": 250000,
+    "gpt-6": 250000, 
     // 500k 窗口模型 (grok-4.6): >200k 阶梯翻倍加价, 设为 180k 避免触发加价
-    "kekulv/grok": 180000,
+    "grok": 180000, 
     // 1M/1.05M 窗口且无阶梯加价模型:
-    "kekulv/gemini": 250000,
-    "kekulv/deepseek": 280000,
-    "kekulv/claude": 250000,
-    "kekulv/glm": 250000,
-    "kekulv/qwen3.8": 250000,
-    "kekulv/qwen": 250000
+    "gemini": 250000, 
+    "deepseek": 280000, 
+    "claude": 250000, 
+    "glm": 250000, 
+    "qwen3.8": 250000, 
+    "qwen": 250000
   },
   "historian": {
     "pi": {
@@ -50,9 +50,9 @@
   //   【动态/尽力而为】deepseek 45m — 实测 <30m 99.4% 命中, 36m 99.8%, 51m 失效; 设为 45m 平衡保前缀与防冷重算
   "cache_ttl": {
     "default": "5m",
-    "kekulv/gpt": "30m",
-    "kekulv/deepseek": "45m",
-    "kekulv/grok": "10m"
+    "gpt": "30m",
+    "deepseek": "45m",
+    "grok": "10m"
   },
   "pi": {
     "subagent_extensions": []
