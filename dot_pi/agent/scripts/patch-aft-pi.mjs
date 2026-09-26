@@ -36,9 +36,13 @@ export function patchAft() {
       originalCode.includes("const mutationResult = buildMutationResult(response);"),
     solPiBanner:
       originalCode.includes("context.args?.then_run") &&
-      originalCode.includes("Money saved · 1 model round-trip avoided"),
+      originalCode.includes("Money saved · 1 model round-trip avoided") &&
+      originalCode.includes("context.args.then_run.command"),
     toolNameLabels: originalCode.includes("return renderMutationCall(editName,"),
-    expandedDiff: originalCode.includes("expanded: true,\n    context\n  });\n}\nfunction shortenPath"),
+    expandedDiffAndThenRun:
+      originalCode.includes("isThenRunSuccess") &&
+      originalCode.includes("[then_run:succeeded]") &&
+      originalCode.includes("expanded: true,\n    context\n  });\n}\nfunction shortenPath"),
   };
 
   const isAlreadyFullyPatched = Object.values(checks).every(Boolean);
@@ -90,6 +94,19 @@ export function patchAft() {
       reuseContainerIdent = containerMatch[1];
       textIdent = containerMatch[2].replace("Container", "Text");
     }
+  }
+
+  // Extract Spacer and renderDiff identifiers from renderMutationResult scope
+  let spacerIdent = "Spacer2";
+  let renderDiffIdent = "renderDiff2";
+  const rmrMatch = originalCode.match(
+    /function\s+renderMutationResult\s*\([\s\S]*?\n\}\n(?=function\s+shortenPath)/
+  );
+  if (rmrMatch) {
+    const sm = rmrMatch[0].match(/new\s+(Spacer\w*)\s*\(/);
+    if (sm) spacerIdent = sm[1];
+    const dm = rmrMatch[0].match(/renderedDiff\s*=\s*(\w+)\s*\(\s*diff\s*\)/);
+    if (dm) renderDiffIdent = dm[1];
   }
 
   // Key anchors that MUST exist for safe atomic patching
@@ -258,16 +275,9 @@ async function executeThenRun(thenRun, extCtx, toolCallId) {
     modified = true;
   }
 
-  // 7. Render SoL-Pi banner badge using detected UI identifiers
-  if (!code.includes("context.args?.then_run")) {
-    const oldRenderCall = [
-      "function renderMutationCall(toolName, filePath, theme, context) {",
-      `  const text = ${reuseTextIdent}(context.lastComponent);`,
-      `  const pathDisplay = filePath ? theme.fg("accent", ${shortenPathIdent}(filePath)) : theme.fg("toolOutput", "...");`,
-      '  text.setText(`${theme.fg("toolTitle", theme.bold(toolName))} ${pathDisplay}`);',
-      "  return text;",
-      "}",
-    ].join("\n");
+  // 7. Render SoL-Pi banner badge and command preview using detected UI identifiers
+  if (!code.includes("context.args?.then_run") || !code.includes("context.args.then_run.command")) {
+    const renderCallRegex = /function\s+renderMutationCall\s*\([\s\S]*?\n\}\n(?=function\s+renderMutationResult)/;
     const newRenderCall = [
       "function renderMutationCall(toolName, filePath, theme, context) {",
       `  const pathDisplay = filePath ? theme.fg("accent", ${shortenPathIdent}(filePath)) : theme.fg("toolOutput", "...");`,
@@ -278,6 +288,9 @@ async function executeThenRun(thenRun, extCtx, toolCallId) {
       `    container.addChild(new ${textIdent}(\`\${theme.fg("warning", "⚡")} \${theme.fg("accent", theme.bold("SoL-Pi · Action Fusion"))}\`, 0, 0));`,
       `    container.addChild(new ${textIdent}(theme.fg("success", "Money saved · 1 model round-trip avoided"), 0, 0));`,
       `    container.addChild(new ${textIdent}(baseTitle, 0, 0));`,
+      "    if (context.args.then_run.command) {",
+      `      container.addChild(new ${textIdent}(\`\${theme.fg("muted", "$")} \${theme.fg("toolOutput", context.args.then_run.command)}\`, 0, 0));`,
+      "    }",
       "    return container;",
       "  }",
       `  const text = ${reuseTextIdent}(context.lastComponent);`,
@@ -285,8 +298,8 @@ async function executeThenRun(thenRun, extCtx, toolCallId) {
       "  return text;",
       "}",
     ].join("\n");
-    if (code.includes(oldRenderCall)) {
-      code = code.replace(oldRenderCall, newRenderCall);
+    if (renderCallRegex.test(code)) {
+      code = code.replace(renderCallRegex, newRenderCall + "\n");
       modified = true;
     }
   }
@@ -334,15 +347,105 @@ async function executeThenRun(thenRun, extCtx, toolCallId) {
     modified = true;
   }
 
-  // 9. Expanded diff
-  const oldDiffPattern =
-    /expanded:\s*options\.expanded,\s*context\s*\n\s*\}\);\s*\n\}\s*\nfunction\s+shortenPath/;
-  if (oldDiffPattern.test(code)) {
-    code = code.replace(
-      /expanded:\s*options\.expanded,\s*context\s*\n\s*\}\);\s*\n\}\s*\nfunction\s+shortenPath/,
-      "expanded: true,\n    context\n  });\n}\nfunction shortenPath"
-    );
-    modified = true;
+  // 9. Expanded diff and then_run result presentation in renderMutationResult
+  if (!code.includes("isThenRunSuccess")) {
+    const renderResultRegex = /function\s+renderMutationResult\s*\([\s\S]*?\n\}\n(?=function\s+shortenPath)/;
+    const newRenderResult = [
+      "function renderMutationResult(result, theme, context, options = { expanded: true }) {",
+      "  if (context.isError) {",
+      '    const errorText = result.content.filter((c) => c.type === "text").map((c) => c.text ?? "").join("\\n").trim();',
+      `    const text = ${reuseTextIdent}(context.lastComponent);`,
+      '    text.setText(`\\n${theme.fg("error", errorText || "edit failed")}`);',
+      "    return text;",
+      "  }",
+      "  const details = result.details;",
+      '  const diff = typeof details?.diff === "string" ? details.diff : undefined;',
+      "",
+      "  let thenRunBlock;",
+      "  if (Array.isArray(result?.content)) {",
+      "    for (const item of result.content) {",
+      '      if (item && item.type === "text" && typeof item.text === "string" && (item.text.startsWith("[then_run:succeeded]") || item.text.startsWith("[then_run:failed]"))) {',
+      "        thenRunBlock = item;",
+      "        break;",
+      "      }",
+      "    }",
+      "  }",
+      '  const isThenRunSuccess = thenRunBlock ? thenRunBlock.text.startsWith("[then_run:succeeded]") : false;',
+      '  const isThenRunFailed = thenRunBlock ? thenRunBlock.text.startsWith("[then_run:failed]") : false;',
+      '  const thenRunStatus = isThenRunSuccess ? "succeeded" : isThenRunFailed ? "failed" : "";',
+      '  const thenRunBody = thenRunBlock ? (isThenRunSuccess ? thenRunBlock.text.slice(20) : thenRunBlock.text.slice(17)).replace(/^\\n+/, "").trim() : "";',
+      '  const thenRunCmd = context.args?.then_run && typeof context.args.then_run === "object" && typeof context.args.then_run.command === "string" ? context.args.then_run.command : "";',
+      "",
+      "  if (!diff) {",
+      "    const additions = details?.additions ?? 0;",
+      "    const deletions = details?.deletions ?? 0;",
+      '    const countDetail = typeof details?.editsApplied === "number" && details.editsApplied > 1 ? `, ${details.editsApplied} edits` : typeof details?.replacements === "number" && details.replacements > 1 ? `, ${details.replacements} replacements` : "";',
+      '    const summary = theme.fg("success", `+${additions}/-${deletions}${countDetail}`);',
+      '    let suffix = "";',
+      "    if (details?.truncated) {",
+      '      suffix = ` ${theme.fg("muted", "(diff truncated)")}`;',
+      "    } else if (details?.noOp) {",
+      '      suffix = ` ${theme.fg("muted", "(no net change)")}`;',
+      "    }",
+      '    let thenRunText = "";',
+      "    if (context.args?.then_run) {",
+      "      const statusLabel = isThenRunSuccess",
+      '        ? theme.fg("success", "[then_run:succeeded]")',
+      "        : isThenRunFailed",
+      '        ? theme.fg("error", "[then_run:failed]")',
+      '        : theme.fg("warning", "[then_run]");',
+      '      const cmdDisplay = thenRunCmd ? `${theme.fg("muted", "$")} ${theme.fg("toolOutput", thenRunCmd)} ` : "";',
+      '      thenRunText = `\\n\\n${theme.fg("warning", "⚡")} ${cmdDisplay}${statusLabel}${thenRunBody ? `\\n  ${normalizeTerminalText(thenRunBody).split("\\n").join("\\n  ")}` : ""}`;',
+      "    }",
+      `    const full = ${reuseTextIdent}(context.lastComponent);`,
+      "    full.setText(`\\n${summary}${suffix}${thenRunText}`);",
+      '    const thenRunSummary = thenRunStatus ? ` · then_run: ${thenRunStatus}` : "";',
+      "    return collapsibleResult({",
+      "      summary: `${summary}${suffix}${thenRunSummary}`,",
+      "      full,",
+      "      expanded: true,",
+      "      context",
+      "    });",
+      "  }",
+      `  const container = ${reuseContainerIdent}(context.lastComponent);`,
+      "  container.clear();",
+      `  container.addChild(new ${spacerIdent}(1));`,
+      "  let renderedDiff;",
+      "  try {",
+      `    renderedDiff = ${renderDiffIdent}(diff);`,
+      "  } catch {",
+      "    renderedDiff = diff;",
+      "  }",
+      `  container.addChild(new ${textIdent}(normalizeTerminalText(renderedDiff), 1, 0));`,
+      "  if (context.args?.then_run) {",
+      `    container.addChild(new ${spacerIdent}(1));`,
+      "    const statusLabel = isThenRunSuccess",
+      '      ? theme.fg("success", "[then_run:succeeded]")',
+      "      : isThenRunFailed",
+      '      ? theme.fg("error", "[then_run:failed]")',
+      '      : theme.fg("warning", "[then_run]");',
+      '    const cmdDisplay = thenRunCmd ? `${theme.fg("muted", "$")} ${theme.fg("toolOutput", thenRunCmd)} ` : "";',
+      `    container.addChild(new ${textIdent}(\`\${theme.fg("warning", "⚡")} \${cmdDisplay}\${statusLabel}\`, 1, 0));`,
+      "    if (thenRunBody) {",
+      `      container.addChild(new ${textIdent}(normalizeTerminalText(thenRunBody), 2, 0));`,
+      "    }",
+      "  }",
+      '  const rawPath = context.args && typeof context.args === "object" && typeof context.args.path === "string" ? context.args.path : undefined;',
+      `  const summaryPath = rawPath ? \` \${${shortenPathIdent}(rawPath)}\` : "";`,
+      '  const thenRunSummary = thenRunStatus ? ` · then_run: ${thenRunStatus}` : "";',
+      '  const summary = `edited${summaryPath} (+${details?.additions ?? 0}/-${details?.deletions ?? 0})${thenRunSummary}`;',
+      "  return collapsibleResult({",
+      "    summary,",
+      "    full: container,",
+      "    expanded: true,",
+      "    context",
+      "  });",
+      "}",
+    ].join("\n");
+    if (renderResultRegex.test(code)) {
+      code = code.replace(renderResultRegex, newRenderResult + "\n");
+      modified = true;
+    }
   }
 
   // 4. Save and Validate
