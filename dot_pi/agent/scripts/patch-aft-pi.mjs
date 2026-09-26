@@ -42,6 +42,7 @@ export function patchAft() {
     expandedDiffAndThenRun:
       originalCode.includes("isThenRunSuccess") &&
       originalCode.includes("[then_run:succeeded]") &&
+      !originalCode.includes("normalizeTerminalText(thenRunBody)") &&
       originalCode.includes("expanded: true,\n    context\n  });\n}\nfunction shortenPath"),
   };
 
@@ -348,7 +349,7 @@ async function executeThenRun(thenRun, extCtx, toolCallId) {
   }
 
   // 9. Expanded diff and then_run result presentation in renderMutationResult
-  if (!code.includes("isThenRunSuccess")) {
+  if (!code.includes("isThenRunSuccess") || code.includes("normalizeTerminalText(thenRunBody)")) {
     const renderResultRegex = /function\s+renderMutationResult\s*\([\s\S]*?\n\}\n(?=function\s+shortenPath)/;
     const newRenderResult = [
       "function renderMutationResult(result, theme, context, options = { expanded: true }) {",
@@ -373,7 +374,6 @@ async function executeThenRun(thenRun, extCtx, toolCallId) {
       '  const isThenRunSuccess = thenRunBlock ? thenRunBlock.text.startsWith("[then_run:succeeded]") : false;',
       '  const isThenRunFailed = thenRunBlock ? thenRunBlock.text.startsWith("[then_run:failed]") : false;',
       '  const thenRunStatus = isThenRunSuccess ? "succeeded" : isThenRunFailed ? "failed" : "";',
-      '  const thenRunBody = thenRunBlock ? (isThenRunSuccess ? thenRunBlock.text.slice(20) : thenRunBlock.text.slice(17)).replace(/^\\n+/, "").trim() : "";',
       '  const thenRunCmd = context.args?.then_run && typeof context.args.then_run === "object" && typeof context.args.then_run.command === "string" ? context.args.then_run.command : "";',
       "",
       "  if (!diff) {",
@@ -395,7 +395,7 @@ async function executeThenRun(thenRun, extCtx, toolCallId) {
       '        ? theme.fg("error", "[then_run:failed]")',
       '        : theme.fg("warning", "[then_run]");',
       '      const cmdDisplay = thenRunCmd ? `${theme.fg("muted", "$")} ${theme.fg("toolOutput", thenRunCmd)} ` : "";',
-      '      thenRunText = `\\n\\n${theme.fg("warning", "⚡")} ${cmdDisplay}${statusLabel}${thenRunBody ? `\\n  ${normalizeTerminalText(thenRunBody).split("\\n").join("\\n  ")}` : ""}`;',
+      '      thenRunText = `\\n\\n${theme.fg("warning", "⚡")} ${cmdDisplay}${statusLabel}`;',
       "    }",
       `    const full = ${reuseTextIdent}(context.lastComponent);`,
       "    full.setText(`\\n${summary}${suffix}${thenRunText}`);",
@@ -426,9 +426,6 @@ async function executeThenRun(thenRun, extCtx, toolCallId) {
       '      : theme.fg("warning", "[then_run]");',
       '    const cmdDisplay = thenRunCmd ? `${theme.fg("muted", "$")} ${theme.fg("toolOutput", thenRunCmd)} ` : "";',
       `    container.addChild(new ${textIdent}(\`\${theme.fg("warning", "⚡")} \${cmdDisplay}\${statusLabel}\`, 1, 0));`,
-      "    if (thenRunBody) {",
-      `      container.addChild(new ${textIdent}(normalizeTerminalText(thenRunBody), 2, 0));`,
-      "    }",
       "  }",
       '  const rawPath = context.args && typeof context.args === "object" && typeof context.args.path === "string" ? context.args.path : undefined;',
       `  const summaryPath = rawPath ? \` \${${shortenPathIdent}(rawPath)}\` : "";`,
