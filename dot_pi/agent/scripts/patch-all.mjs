@@ -12,6 +12,7 @@ const scriptsDir = existsSync(join(__dirname, "patch-aft-pi.mjs"))
 const patches = [
   { name: "aft-pi", file: "patch-aft-pi.mjs" },
   { name: "pi-fff", file: "patch-pi-fff.mjs" },
+  { name: "pi-automode", file: "patch-pi-automode.mjs" },
 ];
 
 console.log("[pi-packages] Running automated patches for Pi extensions...");

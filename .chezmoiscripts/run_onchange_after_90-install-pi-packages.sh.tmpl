@@ -8,6 +8,7 @@ set -eufo pipefail
 # packages: {{ (fromJson (include "dot_pi/agent/settings.json")).packages | toJson }}
 # patch_hash: {{ include "dot_pi/agent/scripts/patch-aft-pi.mjs" | sha256sum }}
 # patch_fff_hash: {{ include "dot_pi/agent/scripts/patch-pi-fff.mjs" | sha256sum }}
+# patch_automode_hash: {{ include "dot_pi/agent/scripts/patch-pi-automode.mjs" | sha256sum }}
 # patch_all_hash: {{ include "dot_pi/agent/scripts/patch-all.mjs" | sha256sum }}
 
 export PATH="${HOME}/.local/bin:/opt/homebrew/bin:/usr/local/bin:${PATH}"

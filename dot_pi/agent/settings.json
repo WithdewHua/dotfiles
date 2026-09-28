@@ -36,7 +36,8 @@
     "npm:pi-context-view",
     "npm:pi-rtk-optimizer",
     "npm:@narumitw/pi-btw",
-    "npm:pi-background-tasks"
+    "npm:pi-background-tasks",
+    "npm:@hank-warren/pi-stats"
   ],
   "hideThinkingBlock": true,
   "modelThinkingLevels": {
