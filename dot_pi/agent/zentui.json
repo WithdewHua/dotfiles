@@ -106,7 +106,7 @@
             "error": 90
           },
           "pathDisplay": {
-            "mode": "full",
+            "mode": "basename",
             "depth": 2
           },
           "segments": {
@@ -142,15 +142,23 @@
           },
           "extensionStatuses": {
             "defaultPlacement": "right",
-            "placements": {},
+            "placements": {
+              "pi-automode": "right"
+            },
             "colorModes": {}
           }
         }
-      }
+      },
+      "codexQuota": false
     },
     "thinkingSteps": {
-      "enabled": false,
+      "enabled": true,
       "mode": "tree"
+    },
+    "extensionStatuses": {
+      "visibility": {
+        "pi-automode": "show"
+      }
     }
   }
 }
