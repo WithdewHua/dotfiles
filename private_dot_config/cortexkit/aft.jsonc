@@ -1,13 +1,21 @@
 {
-  "$schema": "https://raw.githubusercontent.com/cortexkit/aft/main/schemas/aft.schema.json",
+  "$schema": "https://raw.githubusercontent.com/cortexkit/aft/main/assets/aft.schema.json",
   // 接管 Pi 内置 read/write/edit 工具（已通过 patch-aft-pi 支持 then_run）
-  "hoist_builtin_tools": true,
-  // 禁用 AFT 的 bash 接管，保持原生终端与现有插件环境
-  "bash": false,
   // 启用代码健康度与问题检查
   "inspect": {
     "enabled": true
   },
   // 允许抓取解析为私网/保留地址的 URL（解决 Clash/Mihomo 等 Fake-IP 198.18.x.x 导致的 SSRF 拦截）
-  "url_fetch_allow_private": true
+  "url_fetch_allow_private": true,
+  // 保持 read/write/edit 由 AFT 接管；禁用 bash（使用原生终端与 bg 插件）、禁用 grep（由 pi-fff 接管）、禁用 delete/move
+  "disabled_tools": [
+    "aft_delete",
+    "aft_move",
+    "bash",
+    "bash_kill",
+    "bash_status",
+    "bash_watch",
+    "bash_write",
+    "grep"
+  ]
 }
