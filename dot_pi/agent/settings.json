@@ -1,10 +1,9 @@
 {
   "defaultProvider": "kekulv",
   "defaultModel": "gemini-3.8-flash-high",
-  "lastChangelogVersion": "0.87.1",
+  "lastChangelogVersion": "0.99.2",
   "theme": "dark",
   "packages": [
-    "npm:pi-mcp-adapter",
     "npm:pi-web-access",
     "npm:@tintinweb/pi-subagents",
     "npm:@juicesharp/rpiv-ask-user-question",
