@@ -1,7 +1,7 @@
 {
   "defaultProvider": "kekulv",
   "defaultModel": "gemini-3.8-flash-high",
-  "lastChangelogVersion": "0.99.2",
+  "lastChangelogVersion": "1.0.0",
   "theme": "dark",
   "packages": [
     "npm:pi-web-access",
@@ -59,7 +59,7 @@
     "company/glm-5.3": "max",
     "company/glm-5.3-flash": "high"
   },
-  "tuiMode": "regular",
+  "tuiMode": "fullscreen",
   "terminal": {
     "showTerminalProgress": true
   },
