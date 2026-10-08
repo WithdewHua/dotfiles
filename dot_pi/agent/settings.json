@@ -5,7 +5,7 @@
   "theme": "dark",
   "packages": [
     "npm:pi-web-access",
-    "npm:@tintinweb/pi-subagents",
+    "npm:pi-subagents",
     "npm:@juicesharp/rpiv-ask-user-question",
     {
       "source": "npm:@juicesharp/rpiv-todo",
