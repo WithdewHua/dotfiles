@@ -39,10 +39,14 @@
     "npm:pi-subagents"
   ],
   "subagents": {
-    "defaultModel": "kekulv/glm-5.3-flash",
+    "defaultModel": "kekulv/gpt-6-luna",
     "agentOverrides": {
-      "reviewer": { "model": "kekulv/glm-5.3" },
-      "oracle": { "model": "kekulv/gpt-6-astra" }
+      "reviewer": {
+        "model": "kekulv/glm-6.1-sol"
+      },
+      "oracle": {
+        "model": "kekulv/gpt-6-astra"
+      }
     }
   },
   "hideThinkingBlock": true,
