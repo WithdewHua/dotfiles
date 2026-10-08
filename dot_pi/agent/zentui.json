@@ -4,7 +4,7 @@
       "enabled": true,
       "style": "opencode",
       "colorSource": "theme",
-      "borderColorMode": "static",
+      "borderColorMode": "adaptive",
       "modelLabel": "id",
       "viewportIndicators": true,
       "styles": {
@@ -32,9 +32,12 @@
           "contextThresholds": {
             "warning": 70,
             "error": 90
-          }
+          },
+          "showCacheHit": false,
+          "separator": "dash"
         }
-      }
+      },
+      "codexQuota": false
     },
     "userMessages": {
       "enabled": true,
@@ -54,7 +57,7 @@
       "spinnerIntervalMs": 100,
       "animateSpinnerColor": false,
       "textIntervalMs": 60,
-      "textAnimation": "classic",
+      "textAnimation": "kitt",
       "colorSource": "theme",
       "messages": {
         "custom": true,
@@ -81,8 +84,11 @@
         "tool": true,
         "elapsed": true,
         "thought": true,
-        "tokens": true
-      }
+        "tokens": true,
+        "tokenRate": true
+      },
+      "turnSummaryFormat": "Turn took $turn_duration$join_sep(thought for $thought_duration)$join_sep(↑$input_tokens ↓$output_tokens)$join_sep$token_rate",
+      "placement": "above"
     },
     "selectorBorders": {
       "enabled": true,
