@@ -1,11 +1,10 @@
 {
   "defaultProvider": "kekulv",
   "defaultModel": "gemini-3.8-flash-high",
-  "lastChangelogVersion": "1.0.0",
+  "lastChangelogVersion": "1.1.0",
   "theme": "dark",
   "packages": [
     "npm:pi-web-access",
-    "npm:pi-subagents",
     "npm:@juicesharp/rpiv-ask-user-question",
     {
       "source": "npm:@juicesharp/rpiv-todo",
@@ -36,8 +35,16 @@
     "npm:pi-rtk-optimizer",
     "npm:@narumitw/pi-btw",
     "npm:pi-background-tasks",
-    "npm:@hank-warren/pi-stats"
+    "npm:@hank-warren/pi-stats",
+    "npm:pi-subagents"
   ],
+  "subagents": {
+    "defaultModel": "kekulv/glm-5.3-flash",
+    "agentOverrides": {
+      "reviewer": { "model": "kekulv/glm-5.3" },
+      "oracle": { "model": "kekulv/gpt-6-astra" }
+    }
+  },
   "hideThinkingBlock": true,
   "modelThinkingLevels": {
     "kekulv/gpt-5.6-sol": "xhigh",
