@@ -25,8 +25,20 @@ export function patchAft() {
   // 1. Check if already fully patched
   const checks = {
     canonicalKeys: originalCode.includes('"then_run"])'),
-    editParamsSchema: /then_run:\s*Type\w*\.Optional\(Type\w*\.Object\(/.test(originalCode),
-    writeParamsSchema: /var\s+WriteParams\s*=\s*Type\w*\.Object\([\s\S]*?then_run:/.test(originalCode),
+    editParamsSchema: (() => {
+      const idx = originalCode.indexOf("var EditParams = ");
+      if (idx === -1) return false;
+      const end = originalCode.indexOf("});", idx);
+      if (end === -1) return false;
+      return originalCode.slice(idx, end).includes("then_run:");
+    })(),
+    writeParamsSchema: (() => {
+      const idx = originalCode.indexOf("var WriteParams = ");
+      if (idx === -1) return false;
+      const end = originalCode.indexOf("});", idx);
+      if (end === -1) return false;
+      return originalCode.slice(idx, end).includes("then_run:");
+    })(),
     executeThenRunHelper: originalCode.includes("async function executeThenRun("),
     editExecThenRun:
       originalCode.includes('callToolCall(bridge, "edit", rawArgs, extCtx)') &&
@@ -38,12 +50,14 @@ export function patchAft() {
       originalCode.includes("context.args?.then_run") &&
       originalCode.includes("Money saved · 1 model round-trip avoided") &&
       originalCode.includes("context.args.then_run.command"),
-    toolNameLabels: originalCode.includes("return renderMutationCall(editName,"),
+    toolNameLabels:
+      originalCode.includes("return renderMutationCall(editName,") &&
+      originalCode.includes("function renderReadCall(toolName, args, theme, context)"),
     expandedDiffAndThenRun:
       originalCode.includes("isThenRunSuccess") &&
       originalCode.includes("[then_run:succeeded]") &&
       !originalCode.includes("normalizeTerminalText(thenRunBody)") &&
-      originalCode.includes("expanded: true,\n    context\n  });\n}\nfunction shortenPath"),
+      originalCode.includes("expanded: true,\n    context\n  });"),
   };
 
   const isAlreadyFullyPatched = Object.values(checks).every(Boolean);
@@ -67,13 +81,15 @@ export function patchAft() {
 
   // Match renderMutationCall to extract local Text/reuseText/shortenPath identifiers
   const renderMutationMatch = originalCode.match(
-    /function\s+renderMutationCall\s*\(\s*toolName\s*,\s*filePath\s*,\s*theme\s*,\s*context\s*\)\s*\{([\s\S]*?)\n\}/
+    /function\s+renderMutationCall\s*\(\s*(?:toolName\s*,\s*)?filePath\s*,\s*theme\s*,\s*context\s*\)\s*\{([\s\S]*?)\n\}/
   );
 
   let reuseTextIdent = "reuseText2";
-  let shortenPathIdent = "shortenPath3";
-  let textIdent = "Text2";
+  let shortenPathIdent = "shortenHomePath";
+  let textIdent = "Text3";
   let reuseContainerIdent = "reuseContainer2";
+  let spacerIdent = "Spacer2";
+  let renderDiffIdent = "renderDiff2";
 
   if (renderMutationMatch) {
     const fnBody = renderMutationMatch[1];
@@ -93,21 +109,25 @@ export function patchAft() {
     );
     if (containerMatch) {
       reuseContainerIdent = containerMatch[1];
-      textIdent = containerMatch[2].replace("Container", "Text");
+    }
+    const textMatch = preceding.match(
+      /function\s+reuseText\w*\s*\(\s*last\s*\)\s*\{[\s\S]*?instanceof\s+(\w+)/
+    );
+    if (textMatch) {
+      textIdent = textMatch[1];
     }
   }
 
-  // Extract Spacer and renderDiff identifiers from renderMutationResult scope
-  let spacerIdent = "Spacer2";
-  let renderDiffIdent = "renderDiff2";
-  const rmrMatch = originalCode.match(
-    /function\s+renderMutationResult\s*\([\s\S]*?\n\}\n(?=function\s+shortenPath)/
-  );
+  // Extract Spacer, renderDiff, and Text identifiers from renderMutationResult scope
+  const rmrRegex = /function\s+renderMutationResult\s*\([\s\S]*?\n\}\n(?=(?:async\s+)?function\s|\/\/)/;
+  const rmrMatch = originalCode.match(rmrRegex);
   if (rmrMatch) {
     const sm = rmrMatch[0].match(/new\s+(Spacer\w*)\s*\(/);
     if (sm) spacerIdent = sm[1];
     const dm = rmrMatch[0].match(/renderedDiff\s*=\s*(\w+)\s*\(\s*diff\s*\)/);
     if (dm) renderDiffIdent = dm[1];
+    const tm = rmrMatch[0].match(/new\s+(Text\w*)\s*\(/);
+    if (tm) textIdent = tm[1];
   }
 
   // Key anchors that MUST exist for safe atomic patching
@@ -147,49 +167,27 @@ export function patchAft() {
   }
 
   // 2. Add then_run schema to EditParams using detected typeIdent
-  const oldEditParamsSuffix = [
-    '    description: "Batch edits — non-empty array of { oldString, newString }, { oldString, newString, replaceAll: true }, or { startLine, endLine, content } objects applied atomically."',
-    "  }))",
-    "});",
-  ].join("\n");
-  const newEditParamsSuffix = [
-    '    description: "Batch edits — non-empty array of { oldString, newString }, { oldString, newString, replaceAll: true }, or { startLine, endLine, content } objects applied atomically."',
-    "  })),",
-    `  then_run: ${typeIdent}.Optional(${typeIdent}.Object({`,
-    `    command: ${typeIdent}.String({ description: "Bash command to execute" }),`,
-    `    timeout: ${typeIdent}.Optional(${typeIdent}.Number({ description: "Timeout in seconds (optional, no default timeout)" }))`,
-    '  }, { description: "Command to run next on this file after the edit succeeds — e.g. run, build, start/restart, install, or check it; optional timeout in seconds. Skipped if the edit fails; a non-zero exit is reported but keeps the edit." }))',
-    "});",
-  ].join("\n");
-  if (code.includes(oldEditParamsSuffix) && !code.includes("then_run: " + typeIdent)) {
-    code = code.replace(oldEditParamsSuffix, newEditParamsSuffix);
-    modified = true;
+  if (!checks.editParamsSchema) {
+    const editParamsRegex = /(var\s+EditParams\s*=\s*(Type\w*)\.Object\(\{[\s\S]*?edits:\s*\w+\.Optional\(\w+\.Array\(BatchEditParams,\s*\{[\s\S]*?\}\)\))\s*\n\}\);/;
+    const m = code.match(editParamsRegex);
+    if (m) {
+      const tIdent = m[2];
+      const newSuffix = `$1,\n  then_run: ${tIdent}.Optional(${tIdent}.Object({\n    command: ${tIdent}.String({ description: "Bash command to execute" }),\n    timeout: ${tIdent}.Optional(${tIdent}.Number({ description: "Timeout in seconds (optional, no default timeout)" }))\n  }, { description: "Command to run next on this file after the edit succeeds — e.g. run, build, start/restart, install, or check it; optional timeout in seconds. Skipped if the edit fails; a non-zero exit is reported but keeps the edit." }))\n});`;
+      code = code.replace(editParamsRegex, newSuffix);
+      modified = true;
+    }
   }
 
   // 3. Add then_run schema to WriteParams
-  const oldWriteParams = [
-    `var WriteParams = ${typeIdent}.Object({`,
-    `  path: ${typeIdent}.String({`,
-    '    description: "Path to the file to write (absolute or relative to project root)"',
-    "  }),",
-    `  content: ${typeIdent}.String({ description: "Full file contents to write" })`,
-    "});",
-  ].join("\n");
-  const newWriteParams = [
-    `var WriteParams = ${typeIdent}.Object({`,
-    `  path: ${typeIdent}.String({`,
-    '    description: "Path to the file to write (absolute or relative to project root)"',
-    "  }),",
-    `  content: ${typeIdent}.String({ description: "Full file contents to write" }),`,
-    `  then_run: ${typeIdent}.Optional(${typeIdent}.Object({`,
-    `    command: ${typeIdent}.String({ description: "Bash command to execute" }),`,
-    `    timeout: ${typeIdent}.Optional(${typeIdent}.Number({ description: "Timeout in seconds (optional, no default timeout)" }))`,
-    '  }, { description: "Command to run next on this file after the edit succeeds — e.g. run, build, start/restart, install, or check it; optional timeout in seconds. Skipped if the edit fails; a non-zero exit is reported but keeps the edit." }))',
-    "});",
-  ].join("\n");
-  if (code.includes(oldWriteParams)) {
-    code = code.replace(oldWriteParams, newWriteParams);
-    modified = true;
+  if (!checks.writeParamsSchema) {
+    const writeParamsRegex = /(var\s+WriteParams\s*=\s*(Type\w*)\.Object\(\{[\s\S]*?content:\s*\w+\.String\(\{[\s\S]*?\}\))\s*\n\}\);/;
+    const m = code.match(writeParamsRegex);
+    if (m) {
+      const tIdent = m[2];
+      const newSuffix = `$1,\n  then_run: ${tIdent}.Optional(${tIdent}.Object({\n    command: ${tIdent}.String({ description: "Bash command to execute" }),\n    timeout: ${tIdent}.Optional(${tIdent}.Number({ description: "Timeout in seconds (optional, no default timeout)" }))\n  }, { description: "Command to run next on this file after the edit succeeds — e.g. run, build, start/restart, install, or check it; optional timeout in seconds. Skipped if the edit fails; a non-zero exit is reported but keeps the edit." }))\n});`;
+      code = code.replace(writeParamsRegex, newSuffix);
+      modified = true;
+    }
   }
 
   // 4. Inject executeThenRun helper
@@ -333,24 +331,27 @@ async function executeThenRun(thenRun, extCtx, toolCallId) {
       "return renderReadCall(args, theme, context);",
       "return renderReadCall(readName, args, theme, context);"
     );
-    code = code.replace(
-      "function renderReadCall(args, theme, context) {\n  const text = " +
-        reuseTextIdent +
-        '(context.lastComponent);\n  const filePath = args ? readPathArg(args) : undefined;\n  const pathDisplay = filePath ? theme.fg("accent", ' +
-        shortenPathIdent +
-        '(filePath)) : theme.fg("toolOutput", "...");\n  text.setText(`${theme.fg("toolTitle", theme.bold("read"))} ${pathDisplay}`);\n  return text;\n}',
-      'function renderReadCall(toolName, args, theme, context) {\n  const text = ' +
-        reuseTextIdent +
-        '(context.lastComponent);\n  const filePath = args ? readPathArg(args) : undefined;\n  const pathDisplay = filePath ? theme.fg("accent", ' +
-        shortenPathIdent +
-        '(filePath)) : theme.fg("toolOutput", "...");\n  text.setText(`${theme.fg("toolTitle", theme.bold(typeof toolName === "string" ? toolName : "read"))} ${pathDisplay}`);\n  return text;\n}'
-    );
     modified = true;
+  }
+  if (!code.includes("function renderReadCall(toolName,")) {
+    const readFnRegex = /function\s+renderReadCall\s*\(\s*args\s*,\s*theme\s*,\s*context\s*\)\s*\{[\s\S]*?\n\}/;
+    if (readFnRegex.test(code)) {
+      const newReadFn = [
+        "function renderReadCall(toolName, args, theme, context) {",
+        `  const text = ${reuseTextIdent}(context.lastComponent);`,
+        "  const filePath = readPathArg(args);",
+        `  const pathDisplay = filePath ? theme.fg("accent", ${shortenPathIdent}(filePath)) : theme.fg("toolOutput", "...");`,
+        '  text.setText(`${theme.fg("toolTitle", theme.bold(typeof toolName === "string" ? toolName : "read"))} ${pathDisplay}`);',
+        "  return text;",
+        "}",
+      ].join("\n");
+      code = code.replace(readFnRegex, newReadFn);
+      modified = true;
+    }
   }
 
   // 9. Expanded diff and then_run result presentation in renderMutationResult
   if (!code.includes("isThenRunSuccess") || code.includes("normalizeTerminalText(thenRunBody)")) {
-    const renderResultRegex = /function\s+renderMutationResult\s*\([\s\S]*?\n\}\n(?=function\s+shortenPath)/;
     const newRenderResult = [
       "function renderMutationResult(result, theme, context, options = { expanded: true }) {",
       "  if (context.isError) {",
@@ -439,8 +440,8 @@ async function executeThenRun(thenRun, extCtx, toolCallId) {
       "  });",
       "}",
     ].join("\n");
-    if (renderResultRegex.test(code)) {
-      code = code.replace(renderResultRegex, newRenderResult + "\n");
+    if (rmrRegex.test(code)) {
+      code = code.replace(rmrRegex, newRenderResult + "\n");
       modified = true;
     }
   }
