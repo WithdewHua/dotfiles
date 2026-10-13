@@ -1,7 +1,7 @@
 {
   "defaultProvider": "kekulv",
   "defaultModel": "gemini-3.8-flash-high",
-  "lastChangelogVersion": "1.1.0",
+  "lastChangelogVersion": "1.2.0",
   "theme": "dark",
   "packages": [
     "npm:pi-web-access",
@@ -36,7 +36,8 @@
     "npm:@narumitw/pi-btw",
     "npm:pi-background-tasks",
     "npm:@hank-warren/pi-stats",
-    "npm:pi-subagents"
+    "npm:pi-subagents",
+    "npm:pi-sticky-model"
   ],
   "subagents": {
     "defaultModel": "kekulv/gpt-6-luna",
