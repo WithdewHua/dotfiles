@@ -101,7 +101,7 @@
       "modelLabel": "id",
       "styles": {
         "starship": {
-          "format": "$cwd( in $session_name)( on $git_branch$git_status)( $git_metrics) $runtime $fill $context( $auto_compaction) | $tokens( $cache_read)( $cache_write) | $cost $fill",
+          "format": "$cwd( in $session_name)( on $git_branch$git_status)( $git_metrics) $runtime $fill $context( $auto_compaction)$sep$tokens( $cache_read)( $cache_write)$sep$cost $fill",
           "responsive": true,
           "compactFormat": "$cwd$wrap(in $session_name)$wrap(on $git_branch) $git_status$wrap$context$wrap_sep$tokens",
           "compactMaxLines": 3,
@@ -149,7 +149,8 @@
           "extensionStatuses": {
             "defaultPlacement": "right",
             "placements": {
-              "pi-automode": "right"
+              "pi-automode": "right",
+              "sticky-model": "left"
             },
             "colorModes": {}
           }
@@ -163,7 +164,8 @@
     },
     "extensionStatuses": {
       "visibility": {
-        "pi-automode": "show"
+        "pi-automode": "show",
+        "sticky-model": "show"
       }
     }
   }
