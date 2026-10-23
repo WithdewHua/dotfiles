@@ -1,3 +1,4 @@
 {
-  "advisor": "kekulv/gpt-6-astra"
+  "advisor": "magpie/gpt-6-astra",
+  "advisorEffort": "xhigh"
 }
