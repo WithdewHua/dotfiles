@@ -1,6 +1,6 @@
 {
   "workflow": "auto-summary",
-  "summaryModel": "kekulv/gpt-5.6-luna",
+  "summaryModel": "magpie/gpt-5.6-luna",
   "ssrf": {
     "allowRanges": ["198.18.0.0/15"]
   }

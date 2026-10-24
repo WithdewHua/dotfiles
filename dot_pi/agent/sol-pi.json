@@ -3,7 +3,7 @@
   "actionFusion": false,
   "observationPack": true,
   "evidencePreservingReducer": true,
-  "evidencePreservingReducerProvider": "kekulv",
+  "evidencePreservingReducerProvider": "magpie",
   "evidencePreservingReducerModel": "gemini-3.8-flash-high",
   "onlineContextCompact": false
 }

@@ -21,18 +21,19 @@
   },
   "historian": {
     "pi": {
-      "model": "kekulv/gemini-3.8-flash-high",
+      "model": "magpie/gemini-3.8-flash-high",
       "fallback_models": [
-        "kekulv/gpt-5.6-luna",
-        "kekulv/deepseek-flash"
+        "magpie/gpt-6-luna",
+        "magpie/deepseek-flash"
       ]
     }
   },
   "dreamer": {
     "pi": {
-      "model": "kekulv/gemini-3.8-flash-high",
+      "model": "magpie/gemini-3.8-flash-high",
       "fallback_models": [
-        "kekulv/gpt-5.6-luna"
+        "magpie/gpt-6-luna",
+        "magpie/deepseek-flash"
       ]
     }
   },
