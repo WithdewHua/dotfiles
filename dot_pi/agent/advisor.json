@@ -1,4 +1,5 @@
 {
   "advisor": "magpie/gpt-6-astra",
-  "advisorEffort": "xhigh"
+  "advisorEffort": "xhigh",
+  "advisorFallbackModel": "magpie/claude-opus-5-5"
 }
