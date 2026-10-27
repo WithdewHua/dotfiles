@@ -1,9 +1,0 @@
-{
-  "version": 1,
-  "actionFusion": false,
-  "observationPack": true,
-  "evidencePreservingReducer": true,
-  "evidencePreservingReducerProvider": "magpie",
-  "evidencePreservingReducerModel": "gemini-3.8-flash-high",
-  "onlineContextCompact": false
-}

@@ -20,7 +20,39 @@ export function patchAft() {
     return;
   }
 
-  const originalCode = readFileSync(aftIndex, "utf8");
+  let originalCode = readFileSync(aftIndex, "utf8");
+
+  // 0. SoL-Pi branding migration (pre-patch repair, runs before the idempotency early-return).
+  // AFT copied the Action Fusion UX from SoL-Pi; when the SoL-Pi package is removed the
+  // branding must not survive in AFT's own UI. This block is string-based so it works on
+  // both pristine and already-patched bundles, and stays idempotent.
+  const SOLPI_LEGACY_MARKERS = [
+    "⚡ SoL-Pi · Action Fusion",
+    'setStatus("sol-pi"',
+    "setStatus('sol-pi'",
+  ];
+  const migrateSolPiBranding = (code) => {
+    let next = code;
+    next = next.replaceAll("⚡ SoL-Pi · Action Fusion", "⚡ AFT · Action Fusion");
+    next = next.replaceAll('"SoL-Pi · Action Fusion"', '"AFT · Action Fusion"');
+    next = next.replaceAll("SoL-Pi · Action Fusion", "AFT · Action Fusion");
+    next = next.replaceAll('setStatus("sol-pi"', 'setStatus("aft-action-fusion"');
+    next = next.replaceAll("setStatus('sol-pi'", "setStatus('aft-action-fusion'");
+    return next;
+  };
+  if (SOLPI_LEGACY_MARKERS.some((marker) => originalCode.includes(marker))) {
+    const migrated = migrateSolPiBranding(originalCode);
+    if (migrated !== originalCode) {
+      writeFileSync(aftIndex, migrated);
+      originalCode = migrated;
+      console.log("[pi-packages] Migrated @cortexkit/aft-pi SoL-Pi branding to AFT branding");
+    }
+  }
+  if (originalCode.includes("SoL-Pi")) {
+    console.error(
+      "[pi-packages] WARNING: @cortexkit/aft-pi still references SoL-Pi branding after migration; inspect the bundle manually"
+    );
+  }
 
   // 1. Check if already fully patched
   const checks = {
@@ -46,7 +78,7 @@ export function patchAft() {
     writeExecThenRun:
       originalCode.includes('callToolCall(bridge, "write", rawArgs, extCtx)') &&
       originalCode.includes("const mutationResult = buildMutationResult(response);"),
-    solPiBanner:
+    banner:
       originalCode.includes("context.args?.then_run") &&
       originalCode.includes("Money saved · 1 model round-trip avoided") &&
       originalCode.includes("context.args.then_run.command"),
@@ -203,10 +235,10 @@ async function executeThenRun(thenRun, extCtx, toolCallId) {
 
     if (extCtx?.mode === "tui" && extCtx.ui) {
       try {
-        extCtx.ui.notify("⚡ SoL-Pi · Action Fusion\\nMoney saved · 1 model round-trip avoided", "info");
-        extCtx.ui.setStatus("sol-pi", "⚡ Action Fusion · 1 model round-trip avoided");
+        extCtx.ui.notify("⚡ AFT · Action Fusion\\nMoney saved · 1 model round-trip avoided", "info");
+        extCtx.ui.setStatus("aft-action-fusion", "⚡ Action Fusion · 1 model round-trip avoided");
         setTimeout(() => {
-          extCtx.ui.setStatus("sol-pi", undefined);
+          extCtx.ui.setStatus("aft-action-fusion", undefined);
         }, 5000);
       } catch {}
     }
@@ -284,7 +316,7 @@ async function executeThenRun(thenRun, extCtx, toolCallId) {
       "  if (context.args?.then_run) {",
       `    const container = ${reuseContainerIdent}(context.lastComponent);`,
       "    container.clear();",
-      `    container.addChild(new ${textIdent}(\`\${theme.fg("warning", "⚡")} \${theme.fg("accent", theme.bold("SoL-Pi · Action Fusion"))}\`, 0, 0));`,
+      `    container.addChild(new ${textIdent}(\`\${theme.fg("warning", "⚡")} \${theme.fg("accent", theme.bold("AFT · Action Fusion"))}\`, 0, 0));`,
       `    container.addChild(new ${textIdent}(theme.fg("success", "Money saved · 1 model round-trip avoided"), 0, 0));`,
       `    container.addChild(new ${textIdent}(baseTitle, 0, 0));`,
       "    if (context.args.then_run.command) {",
