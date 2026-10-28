@@ -76,6 +76,6 @@
   "defaultTools": [
     "+codemode"
   ],
-  "fullscreenScrollbar": "hidden",
+  "fullscreenScrollbar": "auto",
   "fullscreenWheelScrollLines": 5
 }
