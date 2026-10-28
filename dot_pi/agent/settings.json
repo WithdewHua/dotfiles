@@ -75,5 +75,7 @@
   "treeFilterMode": "default",
   "defaultTools": [
     "+codemode"
-  ]
+  ],
+  "fullscreenScrollbar": "hidden",
+  "fullscreenWheelScrollLines": 5
 }
