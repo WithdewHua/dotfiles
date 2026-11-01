@@ -32,7 +32,7 @@
   },
   "historian": {
     "pi": {
-      "model": "magpie/deepseek-flash",
+      "model": "magpie/group/deepseek-flash",
       "fallback_models": [
         "magpie/gemini-3.8-flash-high",
         "magpie/gpt-6-luna"
@@ -41,7 +41,7 @@
   },
   "dreamer": {
     "pi": {
-      "model": "magpie/deepseek-flash",
+      "model": "magpie/group/deepseek-flash",
       "fallback_models": [
         "magpie/gemini-3.8-flash-high",
         "magpie/gpt-6-luna"
