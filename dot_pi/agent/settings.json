@@ -1,6 +1,6 @@
 {
   "defaultProvider": "magpie",
-  "defaultModel": "gemini-3.8-flash-high",
+  "defaultModel": "group/deepseek-flash",
   "lastChangelogVersion": "1.4.0",
   "theme": "dark",
   "packages": [
