@@ -1,6 +1,13 @@
+{{- /* Device-specific startup model: personal machine uses magpie, the company machine uses the company gateway. Reuse .work_machine for any future per-device divergence. */ -}}
+{{- $provider := "magpie" -}}
+{{- $model := "group/deepseek-flash" -}}
+{{- if .work_machine -}}
+{{-   $provider = "company" -}}
+{{-   $model = "glm-5.3-flash" -}}
+{{- end -}}
 {
-  "defaultProvider": "magpie",
-  "defaultModel": "group/deepseek-flash",
+  "defaultProvider": "{{ $provider }}",
+  "defaultModel": "{{ $model }}",
   "lastChangelogVersion": "1.4.0",
   "theme": "dark",
   "packages": [

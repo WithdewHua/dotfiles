@@ -1,0 +1,12 @@
+{{- /* Device-specific advisor model: personal machine uses magpie with a fallback, the company machine uses the company gateway and has no fallback. Reuse .work_machine for any future per-device divergence. */ -}}
+{{- $advisor := "magpie/auto/gpt-6-astra" -}}
+{{- $fallback := "magpie/group/claude-opus-5-5" -}}
+{{- if .work_machine -}}
+{{-   $advisor = "company/glm-5.3" -}}
+{{-   $fallback = "" -}}
+{{- end -}}
+{{- $cfg := dict "advisor" $advisor "advisorEffort" "xhigh" -}}
+{{- if $fallback -}}
+{{-   $cfg = merge (dict "advisorFallbackModel" $fallback) $cfg -}}
+{{- end -}}
+{{- $cfg | toPrettyJson -}}

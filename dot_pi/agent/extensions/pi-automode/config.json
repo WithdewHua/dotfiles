@@ -1,8 +1,0 @@
-{
-  "autoMode": {
-    "enabled": false,
-    "classifierModel": "magpie/group/deepseek-flash",
-    "classifierReasoningLevel": "low",
-    "fastClassifierMaxTokens": 2048
-  }
-}

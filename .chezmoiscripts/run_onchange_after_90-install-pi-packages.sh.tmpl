@@ -5,7 +5,7 @@
 set -eufo pipefail
 
 # Re-run when the configured package list or the aft patch script changes.
-# packages: {{ (fromJson (include "dot_pi/agent/settings.json")).packages | toJson }}
+# packages: {{ (fromJson (includeTemplate "dot_pi/agent/settings.json.tmpl" .)).packages | toJson }}
 # patch_hash: {{ include "dot_pi/agent/scripts/patch-aft-pi.mjs" | sha256sum }}
 # patch_fff_hash: {{ include "dot_pi/agent/scripts/patch-pi-fff.mjs" | sha256sum }}
 # patch_automode_hash: {{ include "dot_pi/agent/scripts/patch-pi-automode.mjs" | sha256sum }}
@@ -100,7 +100,7 @@ if (existsSync(gitDir)) {
 
 # 2. Ensure all configured packages are installed
 packages=(
-{{- range $pkg := (fromJson (include "dot_pi/agent/settings.json")).packages }}
+{{- range $pkg := (fromJson (includeTemplate "dot_pi/agent/settings.json.tmpl" .)).packages }}
 {{-   $source := $pkg }}
 {{-   if not (kindIs "string" $pkg) }}
 {{-     $source = $pkg.source }}

@@ -1,0 +1,15 @@
+{{- /* Device-specific web-search models: personal machine uses magpie, the company machine uses the company gateway. Reuse .work_machine for any future per-device divergence. */ -}}
+{{- $summary := "magpie/gpt-6-luna" -}}
+{{- $rewrite := "magpie/gpt-6-luna" -}}
+{{- if .work_machine -}}
+{{-   $summary = "company/glm-5.3-flash" -}}
+{{-   $rewrite = "company/glm-5.3-flash" -}}
+{{- end -}}
+{
+  "workflow": "auto-summary",
+  "summaryModel": "{{ $summary }}",
+  "queryRewriteModel": "{{ $rewrite }}",
+  "ssrf": {
+    "allowRanges": ["198.18.0.0/15"]
+  }
+}

@@ -1,8 +1,0 @@
-{
-  "workflow": "auto-summary",
-  "summaryModel": "magpie/gpt-6-luna",
-  "queryRewriteModel": "magpie/gpt-6-luna",
-  "ssrf": {
-    "allowRanges": ["198.18.0.0/15"]
-  }
-}

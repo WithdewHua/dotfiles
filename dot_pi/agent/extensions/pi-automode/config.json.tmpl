@@ -1,0 +1,13 @@
+{{- /* Device-specific automode classifier: personal machine uses magpie, the company machine uses the company gateway. Reuse .work_machine for any future per-device divergence. */ -}}
+{{- $classifier := "magpie/group/deepseek-flash" -}}
+{{- if .work_machine -}}
+{{-   $classifier = "company/glm-5.3-flash" -}}
+{{- end -}}
+{
+  "autoMode": {
+    "enabled": false,
+    "classifierModel": "{{ $classifier }}",
+    "classifierReasoningLevel": "low",
+    "fastClassifierMaxTokens": 2048
+  }
+}
