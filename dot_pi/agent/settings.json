@@ -35,7 +35,6 @@
     "npm:@narumitw/pi-btw",
     "npm:pi-background-tasks",
     "npm:@hank-warren/pi-stats",
-    "npm:pi-subagents",
     "npm:pi-sticky-model",
     "npm:pi-advisor-flow"
   ],

@@ -56,7 +56,7 @@ if (existsSync(npmPackageJsonPath)) {
   for (const pkg of toRemove) {
     console.log(`[pi-packages] Pruning unneeded npm package: ${pkg}`);
     try {
-      execSync(`npm rm ${pkg}`, { cwd: npmDir, stdio: "inherit" });
+      execSync(`npm rm ${pkg} --legacy-peer-deps --no-audit --no-fund`, { cwd: npmDir, stdio: "inherit" });
     } catch (e) {
       console.error(`[pi-packages] Failed to remove ${pkg}:`, e.message);
     }
