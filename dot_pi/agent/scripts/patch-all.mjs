@@ -14,6 +14,7 @@ const patches = [
   { name: "pi-fff", file: "patch-pi-fff.mjs" },
   { name: "pi-automode", file: "patch-pi-automode.mjs" },
   { name: "pi-advisor-flow", file: "patch-pi-advisor-flow.mjs" },
+  { name: "pi-magic-context", file: "patch-pi-magic-context.mjs" },
 ];
 
 console.log("[pi-packages] Running automated patches for Pi extensions...");
