@@ -196,6 +196,138 @@ function patchArrayCandidateFile(path) {
   );
 }
 
+// ---------------------------------------------------------------- image tokens
+// Pi sends images as parts whose `data` is the whole base64 payload (a screenshot
+// is ~300KB). Magic Context bills such a part PI_IMAGE_TOKENS (1200) in
+// tokenizePiMessages(), but two other places re-price it from the base64 JSON:
+//
+//  1. estimatePiOverflowRecoveryInputTokens():
+//       const delta = estimateTokens(JSON.stringify(part)) - PI_IMAGE_TOKENS;
+//     which ADDS the full payload to the already-counted 1200, so each image
+//     costs ~74k tokens instead of 1200 (~62x).
+//
+//  2. piFitMessageBytes(): returns JSON.stringify length including `data`, used as
+//     the byte upper bound for outgoing fit.
+//
+// Measured damage: a 46-message tail holding 11 screenshots was 172,472 tokens by
+// the provider but 1,606,057 by estimate 1), so the request always exceeded the
+// overflow window and every turn failed closed with "still summarizing older
+// history" — send refused, provider-visible usage never moved, emergency reclaim
+// dropped a handful of tags each attempt and reclaimed almost nothing. Estimate 2)
+// kept classifying the fit as `upper-estimate-pressure`, which kept triggering
+// those pointless emergency drops.
+//
+// An image is billed PI_IMAGE_TOKENS in every bound: the base64 payload is a wire
+// detail, not prose.
+const IMAGE_DELTA_MARKER = "magic-context patch: image delta counts overhead only";
+const IMAGE_FIT_MARKER = "magic-context patch: image fit bytes capped";
+
+const IMAGE_TRANSFORMS = [
+  {
+    label: "overflow-recovery image delta",
+    applied: IMAGE_DELTA_MARKER,
+    target: "const delta = estimateTokens(JSON.stringify(part)) - PI_IMAGE_TOKENS;",
+    replacement: `// ${IMAGE_DELTA_MARKER} — tokenizePiMessages already charged PI_IMAGE_TOKENS
+        const delta = estimateTokens(JSON.stringify({ ...part, data: "" }));`,
+  },
+  {
+    label: "image fit-byte accounting",
+    applied: IMAGE_FIT_MARKER,
+    target: "function piFitMessageBytes(raw) {\n  const message = raw;",
+    replacement: `function piFitContentWithoutImageData(raw) {
+  // ${IMAGE_FIT_MARKER}: replace the base64 payload with its PI_IMAGE_TOKENS cost
+  // in bytes (1200 tokens * 4 bytes) so byte-derived token bounds stay sane.
+  const content = raw?.content;
+  if (!Array.isArray(content)) return { value: raw, imageBytes: 0 };
+  let imageCount = 0;
+  const mapped = content.map((part) => {
+    if (!part || typeof part !== "object" || part.type !== "image" || typeof part.data !== "string")
+      return part;
+    imageCount += 1;
+    return { ...part, data: "" };
+  });
+  if (imageCount === 0) return { value: raw, imageBytes: 0 };
+  return { value: { ...raw, content: mapped }, imageBytes: imageCount * PI_IMAGE_TOKENS * 4 };
+}
+
+function piFitMessageBytes(rawInput) {
+  const prepared = piFitContentWithoutImageData(rawInput);
+  const raw = prepared.value;
+  const imageBytes = prepared.imageBytes;
+  const message = raw;`,
+  },
+  {
+    label: "fit byte return",
+    applied: "return imageBytes + Buffer.byteLength(JSON.stringify(raw));",
+    target: "    return Buffer.byteLength(JSON.stringify(raw));",
+    replacement: "    return imageBytes + Buffer.byteLength(JSON.stringify(raw));",
+  },
+  {
+    label: "fit byte return (signed-thinking branch)",
+    applied: "return imageBytes + bytes + (opaque ? 4 * opaqueThinkingCost(",
+    target: "  return bytes + (opaque ? 4 * opaqueThinkingCost(",
+    replacement: "  return imageBytes + bytes + (opaque ? 4 * opaqueThinkingCost(",
+  },
+];
+
+function patchImageTokenFile(path) {
+  if (!existsSync(path)) {
+    console.error(`[pi-packages] magic-context dist file missing: ${path}`);
+    process.exitCode = 1;
+    return;
+  }
+  let code = readFileSync(path, "utf8");
+  const applied = [];
+  const missing = [];
+  for (const transform of IMAGE_TRANSFORMS) {
+    if (code.includes(transform.applied)) continue;
+    const hits = code.split(transform.target).length - 1;
+    if (hits !== 1) {
+      missing.push(`${transform.label} (expected 1 occurrence, found ${hits})`);
+      continue;
+    }
+    code = code.split(transform.target).join(transform.replacement);
+    applied.push(transform.label);
+  }
+  if (missing.length > 0) {
+    console.error(
+      `[pi-packages] magic-context image accounting unrecognised in ${path}: ${missing.join("; ")}; upstream dist changed, update patch-pi-magic-context.mjs`
+    );
+    process.exitCode = 1;
+    return;
+  }
+  if (applied.length === 0) {
+    console.log(`[pi-packages] magic-context image token accounting already patched (${path})`);
+    return;
+  }
+  writeFileSync(path, code, "utf8");
+  console.log(
+    `[pi-packages] Patched magic-context image token accounting (${applied.join(", ")}): ${path}`
+  );
+}
+
+function findImageTokenFiles(dir) {
+  const found = [];
+  for (const name of readdirSync(dir)) {
+    if (!name.endsWith(".js")) continue;
+    const code = readFileSync(join(dir, name), "utf8");
+    if (
+      code.includes("function piFitMessageBytes(") ||
+      code.includes(IMAGE_DELTA_MARKER) ||
+      code.includes(IMAGE_TRANSFORMS[0].target)
+    ) {
+      found.push(join(dir, name));
+    }
+  }
+  if (found.length === 0) {
+    console.error(
+      `[pi-packages] no dist file holds the image token accounting in ${dir}; cannot apply image token patch`
+    );
+    process.exitCode = 1;
+  }
+  return found;
+}
+
 export function patchPiMagicContext() {
   const dir = distDir();
   if (!existsSync(dir)) {
@@ -208,6 +340,8 @@ export function patchPiMagicContext() {
   patchGeneratorFile(join(dir, "index.js"));
   // Shared chunk: array-of-candidate variant used by resolveModelConfigValue.
   for (const chunk of findArrayCandidateFiles(dir)) patchArrayCandidateFile(chunk);
+  // Image parts must be billed at PI_IMAGE_TOKENS, not as their base64 payload.
+  for (const file of findImageTokenFiles(dir)) patchImageTokenFile(file);
 }
 
 function findArrayCandidateFiles(dir) {
