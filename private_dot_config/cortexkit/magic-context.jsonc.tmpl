@@ -1,3 +1,13 @@
+{{- /* Device-specific historian/dreamer models: personal machine uses the magpie gateway with magpie fallbacks, the company machine uses the company gateway and has no fallback (glm-5.3 is too expensive to use as a silent fallback). Reuse .work_machine for any future per-device divergence. */ -}}
+{{- $secondary := "magpie/group/deepseek-flash" -}}
+{{- $secondaryFallbacks := list "magpie/gemini-3.8-flash-high" "magpie/gpt-6-luna" -}}
+{{- if .work_machine -}}
+{{-   $secondary = "company/glm-5.3-flash" -}}
+{{-   $secondaryFallbacks = list -}}
+{{- end -}}
+{{- define "modelList" -}}
+{{- range $i, $m := . }}{{ if $i }}, {{ end }}{{ $m | quote }}{{ end -}}
+{{- end -}}
 {
   "$schema": "https://raw.githubusercontent.com/cortexkit/magic-context/master/assets/magic-context.schema.json",
   "enabled": true,
@@ -40,20 +50,14 @@
   },
   "historian": {
     "pi": {
-      "model": "magpie/group/deepseek-flash",
-      "fallback_models": [
-        "magpie/gemini-3.8-flash-high",
-        "magpie/gpt-6-luna"
-      ]
+      "model": "{{ $secondary }}"{{ if $secondaryFallbacks }},
+      "fallback_models": [{{ template "modelList" $secondaryFallbacks }}]{{ end }}
     }
   },
   "dreamer": {
     "pi": {
-      "model": "magpie/group/deepseek-flash",
-      "fallback_models": [
-        "magpie/gemini-3.8-flash-high",
-        "magpie/gpt-6-luna"
-      ]
+      "model": "{{ $secondary }}"{{ if $secondaryFallbacks }},
+      "fallback_models": [{{ template "modelList" $secondaryFallbacks }}]{{ end }}
     }
   },
   "embedding": {
