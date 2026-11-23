@@ -2,7 +2,7 @@
 {{- $advisor := "magpie/auto/gpt-6-astra" -}}
 {{- $fallback := "magpie/group/claude-opus-5-5" -}}
 {{- if .work_machine -}}
-{{-   $advisor = "company/glm-5.3" -}}
+{{-   $advisor = "company/glm-5.4" -}}
 {{-   $fallback = "" -}}
 {{- end -}}
 {{- $cfg := dict "advisor" $advisor "advisorEffort" "xhigh" -}}
