@@ -7,6 +7,10 @@
   },
   // 允许抓取解析为私网/保留地址的 URL（解决 Clash/Mihomo 等 Fake-IP 198.18.x.x 导致的 SSRF 拦截）
   "url_fetch_allow_private": true,
+  // 桥接对项目根之外的 write/edit 不再弹 "Allow outside access?" 确认框：ask 直接授予后重试，
+  "pi": {
+    "external_access_ask": false
+  },
   // 保持 read/write/edit 由 AFT 接管；禁用 bash（使用原生终端与 bg 插件）、禁用 grep（由 pi-fff 接管）、禁用 delete/move
   "disabled_tools": [
     "aft_delete",
