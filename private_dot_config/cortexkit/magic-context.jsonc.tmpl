@@ -79,6 +79,12 @@
     "deepseek": "45m",
     "grok": "10m"
   },
+  // Pi-only：MC 自带 todowrite 工具 + /todos 命令 + 编辑器上方常驻面板（OpenCode 自带 todowrite，与此无关）。
+  // 默认 enabled=false，属启动期注册，改完要重启 pi 才生效。
+  "todowrite": {
+    "enabled": true,
+    "overlay": true
+  },
   "pi": {
     "subagent_extensions": []
   }
