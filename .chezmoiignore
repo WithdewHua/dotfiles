@@ -27,9 +27,16 @@ README.md
 .config/atuin
 {{ end }}
 
-{{ if not (has ".ssh" $personal) }}
-.ssh
+{{ if not (has ".ssh/config" $personal) }}
+.ssh/config
 {{ end }}
+
+{{/* Private keys, public keys, and known_hosts come from Bitwarden or the machine
+     itself: chezmoi only manages ~/.ssh/config. */}}
+.ssh/id_*
+.ssh/*.pub
+.ssh/known_hosts*
+.ssh/authorized_keys
 
 {{ if not (has ".claude" $personal) }}
 .claude

@@ -31,16 +31,16 @@ chezmoi update
 ## What a machine manages
 
 `chezmoi init` shows one multi-select listing the GPG-encrypted personal files; toggle
-the ones this machine should take. The list is the target paths, so selecting `.ssh`
-and nothing else leaves the machine's `.claude` and opencode settings untouched. The
-answer is stored as `personal` in the `data` section of
+the ones this machine should take. The list is the target paths, so selecting
+`.ssh/config` and nothing else leaves the machine's `.claude` and opencode settings
+untouched. The answer is stored as `personal` in the `data` section of
 `~/.config/chezmoi/chezmoi.yaml`; change it there (or re-run `chezmoi init`) and run
 `chezmoi apply` to move the machine elsewhere.
 
 | Choice | Deploys |
 | --- | --- |
 | `.pi/agent/models.json` | Pi's gateway API keys — needed for Pi to reach a provider |
-| `.ssh` | `~/.ssh/config` and the private key — replaces the machine's own SSH setup |
+| `.ssh/config` | the SSH host list — private/public keys and known_hosts are never managed (Bitwarden) |
 | `.claude` | `~/.claude/settings.json` and the statusline — replaces its Claude settings |
 | `.config/opencode` | `~/.config/opencode/opencode.json` — only when opencode is installed |
 
@@ -74,7 +74,7 @@ terminal emulator, and vim files are skipped by `chezmoi apply` — see `.chezmo
    ```
 
 3. Install chezmoi, then init. In the "Personal, GPG-encrypted files to manage here"
-   multi-select keep `.pi/agent/models.json` and leave `.ssh`, `.claude`, and
+   multi-select keep `.pi/agent/models.json` and `.ssh/config`, and leave `.claude` and
    `.config/opencode` off unless this machine should take them (see
    [What a machine manages](#what-a-machine-manages)).
 
@@ -127,7 +127,7 @@ terminal emulator, and vim files are skipped by `chezmoi apply` — see `.chezmo
 
 ### SSH
 
-- `~/.ssh/config` and keys (encrypted)
+- `~/.ssh/config` (encrypted). Private keys live in Bitwarden, not here.
 
 ### GnuPG
 

@@ -39,7 +39,7 @@
      listing the actual paths, so a second machine can take the Pi provider keys and
      the SSH keys while leaving its own Claude/opencode settings alone. Defaults to
      the Pi provider keys, which is what a machine needs for Pi to reach a provider. */}}
-{{- $personal := promptMultichoiceOnce . "personal" "Personal, GPG-encrypted files to manage here" (list ".pi/agent/models.json" ".ssh" ".claude" ".config/opencode") (list ".pi/agent/models.json") -}}
+{{- $personal := promptMultichoiceOnce . "personal" "Personal, GPG-encrypted files to manage here" (list ".pi/agent/models.json" ".ssh/config" ".claude" ".config/opencode") (list ".pi/agent/models.json") -}}
 {{- $needs_gpg := ne (len $personal) 0 -}}
 
 {{- $gpg_encrypt_key_id := "" -}}
