@@ -8,7 +8,7 @@
 {
   "defaultProvider": "{{ $provider }}",
   "defaultModel": "{{ $model }}",
-  "lastChangelogVersion": "1.4.0",
+  "lastChangelogVersion": "1.6.0",
   "theme": "dark",
   "packages": [
     "npm:pi-web-access",
@@ -48,6 +48,7 @@
   "hideThinkingBlock": true,
   "modelThinkingLevels": {
     "magpie/auto/gpt-6-astra": "xhigh",
+    "magpie/auto/gpt-6.2-astra": "xhigh",
     "company/glm-5.3": "max",
     "company/glm-5.4": "max",
     "company/glm-5.3-flash": "high",
@@ -55,6 +56,7 @@
     "magpie/gpt-5.6-terra": "high",
     "magpie/gpt-6-sol": "xhigh",
     "magpie/auto/gpt-6.1-sol": "xhigh",
+    "magpie/auto/gpt-6.2-sol": "xhigh",
     "magpie/gpt-6-luna": "low",
     "magpie/grok-4.7": "high",
     "magpie/group/deepseek-flash": "high",
@@ -82,5 +84,18 @@
     "+codemode"
   ],
   "fullscreenScrollbar": "auto",
-  "fullscreenWheelScrollLines": 5
+  "fullscreenWheelScrollLines": 5,
+  "extensionChangelogVersions": {
+    "{\"source\":\"npm:pi-web-access\",\"scope\":\"user\"}": "0.48.0",
+    "{\"source\":\"npm:@czottmann/pi-automode\",\"scope\":\"user\"}": "1.18.0",
+    "{\"source\":\"npm:pi-context-view\",\"scope\":\"user\"}": "0.8.4",
+    "{\"source\":\"npm:pi-rtk-optimizer\",\"scope\":\"user\"}": "0.9.0",
+    "{\"source\":\"npm:@narumitw/pi-btw\",\"scope\":\"user\"}": "0.63.8",
+    "{\"source\":\"npm:@hank-warren/pi-stats\",\"scope\":\"user\"}": "0.5.0",
+    "{\"source\":\"npm:pi-sticky-model\",\"scope\":\"user\"}": "0.4.12",
+    "{\"source\":\"npm:pi-advisor-flow\",\"scope\":\"user\"}": "0.16.0"
+  },
+  "compaction": {
+    "enabled": false
+  }
 }

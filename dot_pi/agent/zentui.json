@@ -149,8 +149,7 @@
           "extensionStatuses": {
             "defaultPlacement": "right",
             "placements": {
-              "pi-automode": "right",
-              "sticky-model": "left"
+              "pi-automode": "right"
             },
             "colorModes": {}
           }
@@ -165,8 +164,38 @@
     "extensionStatuses": {
       "visibility": {
         "pi-automode": "show",
-        "sticky-model": "show"
+        "sticky-model": "hide"
       }
+    },
+    "toolDisplay": {
+      "enabled": false,
+      "style": "opencode",
+      "registerToolOverrides": {
+        "read": true,
+        "write": true,
+        "edit": true,
+        "bash": true,
+        "grep": true,
+        "find": true,
+        "ls": true
+      },
+      "builtinRendererOverrides": {},
+      "compatibleToolSources": {},
+      "customToolOverrides": {},
+      "readOutputMode": "hidden",
+      "searchOutputMode": "hidden",
+      "mcpOutputMode": "hidden",
+      "bashOutputMode": "opencode",
+      "bashSyntax": "semantic",
+      "previewLines": 8,
+      "expandedPreviewMaxLines": 4000,
+      "bashCollapsedLines": 10,
+      "diffViewMode": "auto",
+      "diffIndicatorMode": "bars",
+      "diffSplitMinWidth": 120,
+      "diffCollapsedLines": 24,
+      "diffWordWrap": true,
+      "showTruncationHints": false
     }
   }
 }
