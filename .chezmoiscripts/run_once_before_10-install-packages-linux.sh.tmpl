@@ -10,7 +10,7 @@ packages=(
 )
 pip_packages=()
 
-{{ if .personal_secrets }}
+{{ if .needs_gpg }}
 packages+=(gnupg)
 {{ end }}
 

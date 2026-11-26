@@ -35,20 +35,16 @@
 {{-   end -}}
 {{- end -}}
 
-{{/* What this machine manages: one question with three levels, so there is only one
-     switch to remember.
-       tools     - tool configs only (Neovim, Pi without providers, Git, GnuPG, Python); no GPG needed
-       providers - plus the GPG-encrypted Pi provider keys (~/.pi/agent/models.json)
-       all       - plus machine-local personal state: SSH keys, Claude, opencode
-     "all" overwrites what the machine already has, so a second machine stops at
-     "providers". personal_secrets/personal_keys below are derived, not asked. */}}
-{{- $profile := promptChoiceOnce . "profile" "This machine manages (tools / providers / all)" (list "tools" "providers" "all") "tools" -}}
-{{- $personal_secrets := ne $profile "tools" -}}
-{{- $personal_keys := eq $profile "all" -}}
+{{/* Which GPG-encrypted personal files this machine takes. One multi-select prompt
+     listing the actual paths, so a second machine can take the Pi provider keys and
+     the SSH keys while leaving its own Claude/opencode settings alone. Defaults to
+     the Pi provider keys, which is what a machine needs for Pi to reach a provider. */}}
+{{- $personal := promptMultichoiceOnce . "personal" "Personal, GPG-encrypted files to manage here" (list ".pi/agent/models.json" ".ssh" ".claude" ".config/opencode") (list ".pi/agent/models.json") -}}
+{{- $needs_gpg := ne (len $personal) 0 -}}
 
 {{- $gpg_encrypt_key_id := "" -}}
 {{- $gpg_sign_key_id := "" -}}
-{{- if $personal_secrets -}}
+{{- if $needs_gpg -}}
 {{-     if not $gpg_path -}}
 {{-         warnf "gpg was not found on PATH; the encrypted files will fail to decrypt. Install GnuPG (winget install --id GnuPG.GnuPG --exact) and re-run chezmoi init." -}}
 {{-     end -}}
@@ -72,9 +68,8 @@ data:
   config_python_format_tools: {{ $config_python_format_tools }}
   install_more_packages: {{ $install_more_packages }}
   is_desktop: {{ $is_desktop }}
-  profile: {{ $profile }}
-  personal_secrets: {{ $personal_secrets }}
-  personal_keys: {{ $personal_keys }}
+  personal: {{ $personal | toJson }}
+  needs_gpg: {{ $needs_gpg }}
   zsh_theme: {{ $zsh_theme }}
   work_machine: {{ $work_machine }}
   gpg_encrypt_key_id: {{ $gpg_encrypt_key_id | quote }}

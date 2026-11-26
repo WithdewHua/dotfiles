@@ -30,25 +30,27 @@ chezmoi update
 
 ## What a machine manages
 
-One answer during `chezmoi init` decides which of the personal, GPG-encrypted files
-this machine takes. It is stored as `profile` in the `data` section of
-`~/.config/chezmoi/chezmoi.yaml`; change it there and run `chezmoi apply` to move a
-machine to another level.
+`chezmoi init` shows one multi-select listing the GPG-encrypted personal files; toggle
+the ones this machine should take. The list is the target paths, so selecting `.ssh`
+and nothing else leaves the machine's `.claude` and opencode settings untouched. The
+answer is stored as `personal` in the `data` section of
+`~/.config/chezmoi/chezmoi.yaml`; change it there (or re-run `chezmoi init`) and run
+`chezmoi apply` to move the machine elsewhere.
 
-| `profile` | Manages | Needs GPG |
-| --- | --- | --- |
-| `tools` | Neovim, Pi (without provider keys), Git, Python formatting | no |
-| `providers` | + `~/.pi/agent/models.json` (the gateway API keys Pi needs) and `gpg-agent.conf` | yes |
-| `all` | + `~/.ssh`, `~/.claude`, `~/.config/opencode` | yes |
+| Choice | Deploys |
+| --- | --- |
+| `.pi/agent/models.json` | Pi's gateway API keys — needed for Pi to reach a provider |
+| `.ssh` | `~/.ssh/config` and the private key — replaces the machine's own SSH setup |
+| `.claude` | `~/.claude/settings.json` and the statusline — replaces its Claude settings |
+| `.config/opencode` | `~/.config/opencode/opencode.json` — only when opencode is installed |
 
-`all` overwrites what the machine already has there, so it only fits the machine the
-files come from. Everything else stops at `providers`. A config without `profile` is
-treated as `tools`, which manages the fewest files.
+Nothing selected needs no GPG at all, and `gpg-agent.conf` is always managed because it
+holds no secrets. A config without `personal` manages none of the files above.
 
 ## Windows
 
 Windows is a partial target: Neovim, Pi, GnuPG, Git, and the Python formatting configs
-are managed there (per the [profile](#what-a-machine-manages)). The zsh, tmux,
+are managed there (see [What a machine manages](#what-a-machine-manages)). The zsh, tmux,
 terminal emulator, and vim files are skipped by `chezmoi apply` — see `.chezmoiignore`.
 
 ### Prerequisites
@@ -71,9 +73,9 @@ terminal emulator, and vim files are skipped by `chezmoi apply` — see `.chezmo
    powershell -c "irm https://pi.dev/install.ps1 | iex"
    ```
 
-3. Install chezmoi, then init and answer `providers` to "This machine manages
-   (tools / providers / all)" — that is the only secrets question, and it keeps the
-   machine's own SSH keys and agent settings alone (see
+3. Install chezmoi, then init. In the "Personal, GPG-encrypted files to manage here"
+   multi-select keep `.pi/agent/models.json` and leave `.ssh`, `.claude`, and
+   `.config/opencode` off unless this machine should take them (see
    [What a machine manages](#what-a-machine-manages)).
 
    ```powershell

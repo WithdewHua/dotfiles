@@ -1,4 +1,4 @@
-{{- if and (eq .chezmoi.os "darwin") (.personal_secrets) }}
+{{- if eq .chezmoi.os "darwin" }}
 {{- if eq .chezmoi.arch "arm64" }}
 pinentry-program /opt/homebrew/bin/pinentry-mac
 {{- end }}
