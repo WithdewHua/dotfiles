@@ -1,3 +1,4 @@
+{{- if ne .chezmoi.os "windows" -}}
 #!/usr/bin/env bash
 
 set -eufo pipefail
@@ -35,3 +36,4 @@ fi
 if has_bin gemini; then
     rtk init -g --gemini
 fi
+{{- end }}

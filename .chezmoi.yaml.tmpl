@@ -10,6 +10,9 @@
 {{-   $editor = "nvim" -}}
 {{- else if lookPath "vim" -}}
 {{-   $editor = "vim" -}}
+{{- else if eq .chezmoi.os "windows" -}}
+{{/* Windows has no vi; the winget step installs Neovim, so nvim is the right default. */}}
+{{-   $editor = "nvim" -}}
 {{- end -}}
 
 {{/* boolean flag */}}
@@ -19,17 +22,37 @@
 
 {{- $install_more_packages := promptBoolOnce . "install_more_packages" "Install more packages" -}}
 
+{{/* gpg command: chezmoi runs this for the encrypted files. The Windows GnuPG
+     installer does not always put gpg on PATH, so fall back to its install dirs. */}}
+{{- $gpg_command := "gpg" -}}
+{{- $gpg_path := lookPath "gpg" -}}
+{{- if not $gpg_path -}}
+{{-   range $candidate := list "C:\\Program Files (x86)\\GnuPG\\bin\\gpg.exe" "C:\\Program Files\\GnuPG\\bin\\gpg.exe" -}}
+{{-     if and (eq $gpg_command "gpg") (stat $candidate) -}}
+{{-       $gpg_command = $candidate -}}
+{{-       $gpg_path = $candidate -}}
+{{-     end -}}
+{{-   end -}}
+{{- end -}}
+
 {{- $gpg_encrypt_key_id := "" -}}
 {{- $gpg_sign_key_id := "" -}}
 {{- $personal_secrets := promptBoolOnce . "personal_secrets" "Decrypt encrypted data" -}}
 {{- if $personal_secrets -}}
+{{-     if not $gpg_path -}}
+{{-         warnf "gpg was not found on PATH; the encrypted files will fail to decrypt. Install GnuPG (winget install --id GnuPG.GnuPG --exact) and re-run chezmoi init." -}}
+{{-     end -}}
 {{-     $gpg_encrypt_key_id = promptStringOnce . "gpg_encrypt_key_id" "GPG Key ID for encryption: " -}}
 {{-     $gpg_sign_key_id = promptStringOnce . "gpg_sign_key_id" "GPG Key ID for signing: " -}}
 {{- end -}}
 
 {{- $is_desktop := promptBoolOnce . "is_desktop" "Desktop?" -}}
 
-{{- $zsh_theme := promptStringOnce . "zsh_theme" "Zsh theme(pure/starship): " -}}
+{{/* zsh is not managed on Windows, so do not ask about its prompt theme. */}}
+{{- $zsh_theme := "pure" -}}
+{{- if ne .chezmoi.os "windows" -}}
+{{-   $zsh_theme = promptStringOnce . "zsh_theme" "Zsh theme(pure/starship): " -}}
+{{- end -}}
 
 
 data:
@@ -50,6 +73,7 @@ diff:
     - scripts
 encryption: "gpg"
 gpg:
+  command: {{ $gpg_command | quote }}
   recipient: {{ $gpg_encrypt_key_id }}
   args:
     - "--trust-model"

@@ -1,0 +1,22 @@
+{{- if eq .chezmoi.os "windows" -}}
+$ErrorActionPreference = "Stop"
+
+# Neovim on Windows reads its config from %LOCALAPPDATA%\nvim unless
+# XDG_CONFIG_HOME is set. Point it at ~/.config so the managed ~/.config/nvim
+# directory is the config Neovim actually loads.
+$xdgConfigHome = Join-Path $env:USERPROFILE ".config"
+
+# A locked-down environment should not abort the whole apply before any file is
+# written, but silently leaving XDG_CONFIG_HOME unset would leave Neovim reading
+# a config chezmoi never manages, so report it loudly.
+try {
+  $current = [Environment]::GetEnvironmentVariable("XDG_CONFIG_HOME", "User")
+  if ($current -ne $xdgConfigHome) {
+    [Environment]::SetEnvironmentVariable("XDG_CONFIG_HOME", $xdgConfigHome, "User")
+    Write-Host "[windows] Set user XDG_CONFIG_HOME=$xdgConfigHome; open a new terminal to pick it up"
+  }
+} catch {
+  Write-Warning "[windows] Could not set user XDG_CONFIG_HOME to ${xdgConfigHome}: $($_.Exception.Message)"
+  Write-Warning "[windows] Neovim will keep reading %LOCALAPPDATA%\nvim; set XDG_CONFIG_HOME=$xdgConfigHome manually"
+}
+{{- end -}}

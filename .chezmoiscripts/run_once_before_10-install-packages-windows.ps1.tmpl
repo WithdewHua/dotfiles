@@ -1,0 +1,48 @@
+{{- if eq .chezmoi.os "windows" -}}
+$ErrorActionPreference = "Stop"
+
+# Neovim needs a git binary to clone lazy.nvim/LazyVim and ripgrep/fd for the
+# LazyVim picker and grep. Git for Windows also provides the bash that Pi runs
+# its shell commands in. GnuPG decrypts the files this repo keeps encrypted.
+$packages = @(
+  @{ Id = "Git.Git"; Reason = "lazy.nvim plugin clones, Pi bash tool" },
+  @{ Id = "Neovim.Neovim"; Reason = "editor" },
+  @{ Id = "GnuPG.GnuPG"; Reason = "decrypt chezmoi encrypted files" },
+  @{ Id = "BurntSushi.ripgrep.MSVC"; Reason = "LazyVim grep" },
+  @{ Id = "sharkdp.fd"; Reason = "LazyVim finder" }
+)
+
+{{ if .install_more_packages -}}
+$packages += @(
+  @{ Id = "OpenJS.NodeJS.LTS"; Reason = "node/npm" },
+  @{ Id = "astral-sh.uv"; Reason = "python tooling" },
+  @{ Id = "jqlang.jq"; Reason = "json" },
+  @{ Id = "sharkdp.bat"; Reason = "cat clone" },
+  @{ Id = "junegunn.fzf"; Reason = "fuzzy finder" },
+  @{ Id = "ajeetdsouza.zoxide"; Reason = "smart cd" }
+)
+{{ end -}}
+
+if (-not (Get-Command winget -ErrorAction SilentlyContinue)) {
+  Write-Warning "[windows] winget not found; install these packages manually:"
+  foreach ($package in $packages) {
+    Write-Warning "[windows]   $($package.Id) - $($package.Reason)"
+  }
+  exit 0
+}
+
+foreach ($package in $packages) {
+  & winget list --id $package.Id --exact --accept-source-agreements *> $null
+  if ($LASTEXITCODE -eq 0) {
+    continue
+  }
+
+  Write-Host "[windows] winget install $($package.Id) - $($package.Reason)"
+  & winget install --id $package.Id --exact --silent --accept-source-agreements --accept-package-agreements
+  # winget reports a few non-zero codes for otherwise installed packages; keep
+  # going so one package never blocks the rest of the apply.
+  if ($LASTEXITCODE -ne 0) {
+    Write-Warning "[windows] winget install failed for $($package.Id) (exit $LASTEXITCODE); continuing"
+  }
+}
+{{- end -}}

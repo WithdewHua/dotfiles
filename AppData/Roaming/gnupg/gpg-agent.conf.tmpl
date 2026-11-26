@@ -1,0 +1,3 @@
+{{/* GnuPG on Windows keeps its home directory in %APPDATA%\gnupg instead of ~/.gnupg,
+     so the agent options live where gpg actually reads them. */}}
+{{- includeTemplate ".chezmoitemplates/gpg-agent-options" -}}

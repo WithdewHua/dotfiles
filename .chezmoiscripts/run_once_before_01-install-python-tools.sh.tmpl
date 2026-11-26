@@ -1,4 +1,4 @@
-{{- if .install_more_packages -}}
+{{- if and (ne .chezmoi.os "windows") .install_more_packages -}}
 #!/usr/bin/env bash
 
 set -eufo pipefail

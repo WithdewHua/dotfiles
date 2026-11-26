@@ -12,7 +12,10 @@ README.md
 .isort.cfg
 {{ end }}
 
-{{ if not (lookPath "nvim") }}
+{{/* Windows always manages the Neovim config: the Windows package script installs
+     Neovim during the same apply, so a lookPath check would skip the config on the
+     very first run. */}}
+{{ if and (ne .chezmoi.os "windows") (not (lookPath "nvim")) }}
 .config/nvim
 {{ end }}
 
@@ -22,8 +25,17 @@ README.md
 
 {{ if not .personal_secrets }}
 .ssh
-.gnupg
 .claude
+{{ end }}
+
+{{/* GnuPG reads ~/.gnupg on macOS/Linux and %APPDATA%\gnupg on Windows, so only the
+     directory gpg actually uses is managed, and only once the secrets are unlocked. */}}
+{{ if or (not .personal_secrets) (eq .chezmoi.os "windows") }}
+.gnupg
+{{ end }}
+
+{{ if or (not .personal_secrets) (ne .chezmoi.os "windows") }}
+AppData
 {{ end }}
 
 {{ if not (lookPath "tmux") }}
@@ -38,12 +50,29 @@ README.md
 .config/helix
 {{ end }}
 
-{{- $hasPath := stat (joinPath .chezmoi.homeDir ".opencode" "bin") -}}
-{{- if and (not $hasPath) (not (lookPath "opencode")) }}
+{{/* The opencode config is encrypted, so it can only be applied when the secrets
+     are unlocked; otherwise skip it even if opencode is installed. */}}
+{{- $hasOpenCode := or (stat (joinPath .chezmoi.homeDir ".opencode" "bin")) (lookPath "opencode") -}}
+{{- if or (not .personal_secrets) (not $hasOpenCode) }}
 .config/opencode
 {{- end }}
 
-{{- $hasPiBin := or (stat (joinPath .chezmoi.homeDir ".local" "bin" "pi")) (stat "/usr/local/bin/pi") (stat "/opt/homebrew/bin/pi") -}}
+{{/* Windows is a partial target: only Neovim, Pi, Git, GnuPG, and the Python
+     formatting configs are managed there. Everything below needs a POSIX shell, tmux,
+     or a Unix terminal emulator, so it stays out of a Windows apply. */}}
+{{- if eq .chezmoi.os "windows" }}
+.zsh
+.zshrc
+.tmux.conf
+.vimrc
+.config/alacritty
+.config/wezterm
+.config/ghostty
+.config/atuin
+.config/starship.toml
+{{- end }}
+
+{{- $hasPiBin := or (stat (joinPath .chezmoi.homeDir ".local" "bin" "pi")) (stat (joinPath .chezmoi.homeDir ".pi" "agent" "bin" "pi")) (stat (joinPath .chezmoi.homeDir ".pi" "agent" "bin" "pi.cmd")) (stat "/usr/local/bin/pi") (stat "/opt/homebrew/bin/pi") -}}
 {{- if and (not $hasPiBin) (not (lookPath "pi")) }}
 .pi
 {{- end }}
@@ -54,6 +83,10 @@ README.md
 
 .pi/agent/sessions
 .pi/agent/npm
+.pi/agent/git
+.pi/agent/bin
+.pi/agent/install
+.pi/agent/win-git-bash
 .pi/agent/auth.json
 .pi/agent/trust.json
 .pi/agent/models-store.json

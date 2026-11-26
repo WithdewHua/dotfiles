@@ -1,0 +1,76 @@
+{{- /* Windows counterpart of 90-install-pi-packages.sh.tmpl: same prune/install/hook/patch pipeline, driven by PowerShell. */ -}}
+{{- $hasPiBin := or (stat (joinPath .chezmoi.homeDir ".pi" "agent" "bin" "pi.cmd")) (stat (joinPath .chezmoi.homeDir ".pi" "agent" "bin" "pi")) (lookPath "pi") -}}
+{{- if and (eq .chezmoi.os "windows") $hasPiBin -}}
+# Re-run when the configured package list or any patch/sync script changes.
+# packages: {{ (fromJson (includeTemplate "dot_pi/agent/settings.json.tmpl" .)).packages | toJson }}
+# prune_hash: {{ include "dot_pi/agent/scripts/prune-pi-packages.mjs" | sha256sum }}
+# hooks_hash: {{ include "dot_pi/agent/scripts/ensure-patch-hooks.mjs" | sha256sum }}
+# patch_hash: {{ include "dot_pi/agent/scripts/patch-aft-pi.mjs" | sha256sum }}
+# patch_fff_hash: {{ include "dot_pi/agent/scripts/patch-pi-fff.mjs" | sha256sum }}
+# patch_automode_hash: {{ include "dot_pi/agent/scripts/patch-pi-automode.mjs" | sha256sum }}
+# patch_advisor_flow_hash: {{ include "dot_pi/agent/scripts/patch-pi-advisor-flow.mjs" | sha256sum }}
+# patch_magic_context_hash: {{ include "dot_pi/agent/scripts/patch-pi-magic-context.mjs" | sha256sum }}
+# patch_all_hash: {{ include "dot_pi/agent/scripts/patch-all.mjs" | sha256sum }}
+
+$ErrorActionPreference = "Stop"
+
+$piAgentDir = Join-Path $env:USERPROFILE ".pi\agent"
+$piBinDir = Join-Path $piAgentDir "bin"
+$piScriptsDir = Join-Path $piAgentDir "scripts"
+
+# The managed Pi installer keeps node in %LOCALAPPDATA%\pi-node and only adds the
+# pi and node directories to PATH for shells started after installation, so put
+# both in front of PATH for this run.
+$piNodeDir = Join-Path $env:LOCALAPPDATA "pi-node\current"
+if (Test-Path (Join-Path $piNodeDir "node.exe")) {
+  $env:PATH = "$piNodeDir;$env:PATH"
+}
+if (Test-Path $piBinDir) {
+  $env:PATH = "$piBinDir;$env:PATH"
+}
+$env:NPM_CONFIG_ALLOW_REMOTE = "all"
+
+if (-not (Get-Command pi -ErrorAction SilentlyContinue)) {
+  Write-Host "pi not found; skip package install"
+  exit 0
+}
+if (-not (Get-Command node -ErrorAction SilentlyContinue)) {
+  Write-Host "node not found; skip package install"
+  exit 0
+}
+
+# 1. Prune unneeded npm & git packages no longer listed in settings.json
+& node (Join-Path $piScriptsDir "prune-pi-packages.mjs")
+if ($LASTEXITCODE -ne 0) {
+  exit $LASTEXITCODE
+}
+
+# 2. Ensure all configured packages are installed
+$packages = @(
+{{- range $pkg := (fromJson (includeTemplate "dot_pi/agent/settings.json.tmpl" .)).packages }}
+{{-   $source := $pkg }}
+{{-   if not (kindIs "string" $pkg) }}
+{{-     $source = $pkg.source }}
+{{-   end }}
+  {{ $source | quote }}
+{{- end }}
+)
+
+if ($packages.Count -eq 0) {
+  exit 0
+}
+
+foreach ($source in $packages) {
+  & pi install --no-approve $source
+  if ($LASTEXITCODE -ne 0) {
+    Write-Warning "[pi-packages] pi install failed for $source (exit $LASTEXITCODE)"
+    exit $LASTEXITCODE
+  }
+}
+
+# 3. Ensure auto-patch lifecycle hooks exist in npm/package.json
+& node (Join-Path $piScriptsDir "ensure-patch-hooks.mjs")
+
+# 4. Run automated patches
+& node (Join-Path $piScriptsDir "patch-all.mjs")
+{{- end -}}

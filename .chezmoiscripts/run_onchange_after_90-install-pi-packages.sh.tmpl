@@ -1,19 +1,24 @@
-{{- $hasPiBin := or (stat (joinPath .chezmoi.homeDir ".local" "bin" "pi")) (stat "/usr/local/bin/pi") (stat "/opt/homebrew/bin/pi") -}}
-{{- if or $hasPiBin (lookPath "pi") -}}
+{{- $hasPiBin := or (stat (joinPath .chezmoi.homeDir ".local" "bin" "pi")) (stat (joinPath .chezmoi.homeDir ".pi" "agent" "bin" "pi")) (stat "/usr/local/bin/pi") (stat "/opt/homebrew/bin/pi") -}}
+{{- if and (ne .chezmoi.os "windows") (or $hasPiBin (lookPath "pi")) -}}
 #!/usr/bin/env bash
 
 set -eufo pipefail
 
-# Re-run when the configured package list or the aft patch script changes.
+# Re-run when the configured package list or any patch/sync script changes.
 # packages: {{ (fromJson (includeTemplate "dot_pi/agent/settings.json.tmpl" .)).packages | toJson }}
+# prune_hash: {{ include "dot_pi/agent/scripts/prune-pi-packages.mjs" | sha256sum }}
+# hooks_hash: {{ include "dot_pi/agent/scripts/ensure-patch-hooks.mjs" | sha256sum }}
 # patch_hash: {{ include "dot_pi/agent/scripts/patch-aft-pi.mjs" | sha256sum }}
 # patch_fff_hash: {{ include "dot_pi/agent/scripts/patch-pi-fff.mjs" | sha256sum }}
 # patch_automode_hash: {{ include "dot_pi/agent/scripts/patch-pi-automode.mjs" | sha256sum }}
 # patch_advisor_flow_hash: {{ include "dot_pi/agent/scripts/patch-pi-advisor-flow.mjs" | sha256sum }}
+# patch_magic_context_hash: {{ include "dot_pi/agent/scripts/patch-pi-magic-context.mjs" | sha256sum }}
 # patch_all_hash: {{ include "dot_pi/agent/scripts/patch-all.mjs" | sha256sum }}
 
 export PATH="${HOME}/.local/bin:/opt/homebrew/bin:/usr/local/bin:${PATH}"
 export NPM_CONFIG_ALLOW_REMOTE=all
+
+PI_SCRIPTS_DIR="${HOME}/.pi/agent/scripts"
 
 if ! command -v pi >/dev/null 2>&1; then
     echo "pi not found; skip package install" >&2
@@ -21,82 +26,7 @@ if ! command -v pi >/dev/null 2>&1; then
 fi
 
 # 1. Prune unneeded npm & git packages no longer listed in settings.json
-node --input-type=module -e '
-import { readFileSync, existsSync, rmSync, readdirSync, statSync } from "node:fs";
-import { join } from "node:path";
-import { homedir } from "node:os";
-import { execSync } from "node:child_process";
-
-const agentDir = join(homedir(), ".pi", "agent");
-const settingsPath = join(agentDir, "settings.json");
-if (!existsSync(settingsPath)) process.exit(0);
-
-const settings = JSON.parse(readFileSync(settingsPath, "utf8"));
-const configuredPackages = settings.packages || [];
-
-// Prune unneeded npm packages
-const npmDir = join(agentDir, "npm");
-const npmPackageJsonPath = join(npmDir, "package.json");
-if (existsSync(npmPackageJsonPath)) {
-  const npmPkg = JSON.parse(readFileSync(npmPackageJsonPath, "utf8"));
-  const installedDeps = Object.keys(npmPkg.dependencies || {});
-  const configuredNpm = new Set();
-  for (const p of configuredPackages) {
-    const s = typeof p === "string" ? p : p.source;
-    if (s.startsWith("npm:")) {
-      let spec = s.slice(4);
-      if (spec.startsWith("@")) {
-        configuredNpm.add("@" + spec.slice(1).split("@")[0]);
-      } else {
-        configuredNpm.add(spec.split("@")[0]);
-      }
-    }
-  }
-  const toRemove = installedDeps.filter(d => !configuredNpm.has(d));
-  for (const pkg of toRemove) {
-    console.log(`[pi-packages] Pruning unneeded npm package: ${pkg}`);
-    try {
-      execSync(`npm rm ${pkg} --legacy-peer-deps --no-audit --no-fund`, { cwd: npmDir, stdio: "inherit" });
-    } catch (e) {
-      console.error(`[pi-packages] Failed to remove ${pkg}:`, e.message);
-    }
-  }
-}
-
-// Prune unneeded git packages
-const gitDir = join(agentDir, "git");
-if (existsSync(gitDir)) {
-  const configuredGitPaths = new Set();
-  for (const p of configuredPackages) {
-    const s = typeof p === "string" ? p : p.source;
-    if (s.startsWith("git:")) {
-      let cleaned = s.slice(4).replace(/^https?:\/\//, "").replace(/\.git$/, "").split("@")[0];
-      configuredGitPaths.add(cleaned.toLowerCase());
-    }
-  }
-  try {
-    for (const host of readdirSync(gitDir)) {
-      const hostDir = join(gitDir, host);
-      if (!statSync(hostDir).isDirectory()) continue;
-      for (const owner of readdirSync(hostDir)) {
-        const ownerDir = join(hostDir, owner);
-        if (!statSync(ownerDir).isDirectory()) continue;
-        for (const repo of readdirSync(ownerDir)) {
-          const repoDir = join(ownerDir, repo);
-          if (!statSync(repoDir).isDirectory()) continue;
-          const repoPath = `${host}/${owner}/${repo}`.toLowerCase();
-          if (!configuredGitPaths.has(repoPath)) {
-            console.log(`[pi-packages] Pruning unneeded git package: ${host}/${owner}/${repo}`);
-            rmSync(repoDir, { recursive: true, force: true });
-          }
-        }
-      }
-    }
-  } catch (err) {
-    console.error("[pi-packages] Git prune scan failed:", err.message);
-  }
-}
-'
+node "${PI_SCRIPTS_DIR}/prune-pi-packages.mjs"
 
 # 2. Ensure all configured packages are installed
 packages=(
@@ -117,33 +47,9 @@ for source in "${packages[@]}"; do
     pi install --no-approve "${source}"
 done
 
-# 3. Ensure auto-patch lifecycle hooks exist in package.json.
-# Pi updates via `npm install <package> --prefix ...`, which skips the root
-# postinstall. The dependencies hook runs after node_modules actually changes.
-# Keep postinstall for plain npm install/ci and patch for manual recovery.
-node --input-type=module -e '
-import { readFileSync, writeFileSync, existsSync } from "node:fs";
-import { join } from "node:path";
-import { homedir } from "node:os";
-
-const pkgPath = join(homedir(), ".pi", "agent", "npm", "package.json");
-if (existsSync(pkgPath)) {
-  const pkg = JSON.parse(readFileSync(pkgPath, "utf8"));
-  pkg.scripts = pkg.scripts || {};
-  let modified = false;
-  for (const hook of ["dependencies", "postinstall", "patch"]) {
-    if (pkg.scripts[hook] !== "node ../scripts/patch-all.mjs") {
-      pkg.scripts[hook] = "node ../scripts/patch-all.mjs";
-      modified = true;
-    }
-  }
-  if (modified) {
-    writeFileSync(pkgPath, JSON.stringify(pkg, null, 2) + "\n", "utf8");
-    console.log("[pi-packages] Configured auto-patch dependencies/postinstall hooks in npm package.json");
-  }
-}
-'
+# 3. Ensure auto-patch lifecycle hooks exist in npm/package.json
+node "${PI_SCRIPTS_DIR}/ensure-patch-hooks.mjs"
 
 # 4. Run automated patches
-node "${HOME}/.pi/agent/scripts/patch-all.mjs"
+node "${PI_SCRIPTS_DIR}/patch-all.mjs"
 {{- end -}}
