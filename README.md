@@ -53,7 +53,13 @@ are managed there. The zsh, tmux, terminal emulator, and vim files are skipped b
    powershell -c "irm https://pi.dev/install.ps1 | iex"
    ```
 
-3. Install chezmoi, then init and answer `y` to "Decrypt encrypted data":
+3. Install chezmoi, then init and answer:
+
+   - `y` to "Decrypt encrypted data" — needed for the Pi provider keys;
+   - `n` to "Manage SSH/Claude/opencode settings" unless this machine really should
+     use the SSH keys and agent settings from the repo. Answering `y` overwrites
+     `%USERPROFILE%\.ssh\config`, `.claude\settings.json`, and
+     `.config\opencode\opencode.json` on this machine.
 
    ```powershell
    winget install --id twpayne.chezmoi --exact
@@ -75,10 +81,15 @@ are managed there. The zsh, tmux, terminal emulator, and vim files are skipped b
 
 ### Encrypted files
 
-Answering `y` to "Decrypt encrypted data" manages `~/.pi/agent/models.json` (the
-gateway API keys Pi needs to reach a provider), `~/.ssh`, `~/.gnupg`, and `~/.claude`;
-all of them are GPG-encrypted in this repository. With `personal_secrets` off they are
-skipped, and Pi is left without a configured provider.
+Two separate answers, because they serve different needs:
+
+- "Decrypt encrypted data" (`personal_secrets`) unlocks the GPG-encrypted files and
+  manages `~/.pi/agent/models.json` — the gateway API keys Pi needs to reach a
+  provider — plus `gpg-agent.conf`. Without it Pi has no configured provider.
+- "Manage SSH/Claude/opencode settings" (`personal_keys`) additionally manages
+  `~/.ssh`, `~/.claude`, and `~/.config/opencode`. These are machine-local: applying
+  them overwrites what the machine already has, so on a second machine keep this off.
+  It fails safe — a config without `personal_keys` leaves them unmanaged.
 
 ## Managed
 

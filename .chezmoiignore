@@ -23,7 +23,10 @@ README.md
 .config/atuin
 {{ end }}
 
-{{ if not .personal_secrets }}
+{{/* SSH keys, Claude settings, and opencode settings are machine-local: a second
+     machine usually already has its own and applying these overwrites it, so they
+     are opt-in separately from the encrypted Pi provider keys. */}}
+{{ if not (get . "personal_keys") }}
 .ssh
 .claude
 {{ end }}
@@ -50,10 +53,10 @@ AppData
 .config/helix
 {{ end }}
 
-{{/* The opencode config is encrypted, so it can only be applied when the secrets
-     are unlocked; otherwise skip it even if opencode is installed. */}}
+{{/* The opencode config is encrypted and machine-local, so it needs both the
+     unlocked secrets and the explicit opt-in. */}}
 {{- $hasOpenCode := or (stat (joinPath .chezmoi.homeDir ".opencode" "bin")) (lookPath "opencode") -}}
-{{- if or (not .personal_secrets) (not $hasOpenCode) }}
+{{- if or (not (get . "personal_keys")) (not $hasOpenCode) }}
 .config/opencode
 {{- end }}
 

@@ -46,6 +46,14 @@
 {{-     $gpg_sign_key_id = promptStringOnce . "gpg_sign_key_id" "GPG Key ID for signing: " -}}
 {{- end -}}
 
+{{/* Machine-local personal state (SSH keys, Claude and opencode settings). A second
+     machine usually has its own, and applying these overwrites it, so they are
+     opt-in separately from the Pi provider keys inside personal_secrets. */}}
+{{- $personal_keys := false -}}
+{{- if $personal_secrets -}}
+{{-     $personal_keys = promptBoolOnce . "personal_keys" "Manage SSH/Claude/opencode settings (overwrites existing ones)" -}}
+{{- end -}}
+
 {{- $is_desktop := promptBoolOnce . "is_desktop" "Desktop?" -}}
 
 {{/* zsh is not managed on Windows, so do not ask about its prompt theme. */}}
@@ -63,6 +71,7 @@ data:
   install_more_packages: {{ $install_more_packages }}
   is_desktop: {{ $is_desktop }}
   personal_secrets: {{ $personal_secrets }}
+  personal_keys: {{ $personal_keys }}
   zsh_theme: {{ $zsh_theme }}
   work_machine: {{ $work_machine }}
   gpg_encrypt_key_id: {{ $gpg_encrypt_key_id | quote }}
