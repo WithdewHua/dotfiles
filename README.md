@@ -28,16 +28,34 @@ chezmoi init --apply --verbose WithdewHua
 chezmoi update
 ```
 
+## What a machine manages
+
+One answer during `chezmoi init` decides which of the personal, GPG-encrypted files
+this machine takes. It is stored as `profile` in the `data` section of
+`~/.config/chezmoi/chezmoi.yaml`; change it there and run `chezmoi apply` to move a
+machine to another level.
+
+| `profile` | Manages | Needs GPG |
+| --- | --- | --- |
+| `tools` | Neovim, Pi (without provider keys), Git, Python formatting | no |
+| `providers` | + `~/.pi/agent/models.json` (the gateway API keys Pi needs) and `gpg-agent.conf` | yes |
+| `all` | + `~/.ssh`, `~/.claude`, `~/.config/opencode` | yes |
+
+`all` overwrites what the machine already has there, so it only fits the machine the
+files come from. Everything else stops at `providers`. A config without `profile` is
+treated as `tools`, which manages the fewest files.
+
 ## Windows
 
 Windows is a partial target: Neovim, Pi, GnuPG, Git, and the Python formatting configs
-are managed there. The zsh, tmux, terminal emulator, and vim files are skipped by
-`chezmoi apply` — see `.chezmoiignore`.
+are managed there (per the [profile](#what-a-machine-manages)). The zsh, tmux,
+terminal emulator, and vim files are skipped by `chezmoi apply` — see `.chezmoiignore`.
 
 ### Prerequisites
 
-1. Install GnuPG and import the private key. It has to exist before the first apply,
-   because the encrypted files are decrypted during that same run:
+1. From `providers` up, install GnuPG and import the private key. It has to exist
+   before the first apply, because the encrypted files are decrypted during that same
+   run:
 
    ```powershell
    winget install --id GnuPG.GnuPG --exact
@@ -53,13 +71,10 @@ are managed there. The zsh, tmux, terminal emulator, and vim files are skipped b
    powershell -c "irm https://pi.dev/install.ps1 | iex"
    ```
 
-3. Install chezmoi, then init and answer:
-
-   - `y` to "Decrypt encrypted data" — needed for the Pi provider keys;
-   - `n` to "Manage SSH/Claude/opencode settings" unless this machine really should
-     use the SSH keys and agent settings from the repo. Answering `y` overwrites
-     `%USERPROFILE%\.ssh\config`, `.claude\settings.json`, and
-     `.config\opencode\opencode.json` on this machine.
+3. Install chezmoi, then init and answer `providers` to "This machine manages
+   (tools / providers / all)" — that is the only secrets question, and it keeps the
+   machine's own SSH keys and agent settings alone (see
+   [What a machine manages](#what-a-machine-manages)).
 
    ```powershell
    winget install --id twpayne.chezmoi --exact
@@ -78,18 +93,6 @@ are managed there. The zsh, tmux, terminal emulator, and vim files are skipped b
   because Neovim on Windows otherwise reads `%LOCALAPPDATA%\nvim`.
 - `run_onchange_after_90-install-pi-packages.ps1` installs and patches the Pi packages
   from `~/.pi/agent/settings.json`, the same pipeline the macOS/Linux apply runs.
-
-### Encrypted files
-
-Two separate answers, because they serve different needs:
-
-- "Decrypt encrypted data" (`personal_secrets`) unlocks the GPG-encrypted files and
-  manages `~/.pi/agent/models.json` — the gateway API keys Pi needs to reach a
-  provider — plus `gpg-agent.conf`. Without it Pi has no configured provider.
-- "Manage SSH/Claude/opencode settings" (`personal_keys`) additionally manages
-  `~/.ssh`, `~/.claude`, and `~/.config/opencode`. These are machine-local: applying
-  them overwrites what the machine already has, so on a second machine keep this off.
-  It fails safe — a config without `personal_keys` leaves them unmanaged.
 
 ## Managed
 

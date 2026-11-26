@@ -1,3 +1,9 @@
+{{/* What this machine manages, from the single "profile" answer (see
+     .chezmoi.yaml.tmpl): tools, providers, or all. A config without "profile" is
+     treated as "tools", which manages the fewest files. */}}
+{{- $profile := default "tools" (get . "profile") -}}
+{{- $secrets := ne $profile "tools" -}}
+{{- $keys := eq $profile "all" -}}
 README.md
 
 {{ if not .is_desktop }}
@@ -25,19 +31,19 @@ README.md
 
 {{/* SSH keys, Claude settings, and opencode settings are machine-local: a second
      machine usually already has its own and applying these overwrites it, so they
-     are opt-in separately from the encrypted Pi provider keys. */}}
-{{ if not (get . "personal_keys") }}
+     are only managed at the "all" level. */}}
+{{ if not $keys }}
 .ssh
 .claude
 {{ end }}
 
 {{/* GnuPG reads ~/.gnupg on macOS/Linux and %APPDATA%\gnupg on Windows, so only the
      directory gpg actually uses is managed, and only once the secrets are unlocked. */}}
-{{ if or (not .personal_secrets) (eq .chezmoi.os "windows") }}
+{{ if or (not $secrets) (eq .chezmoi.os "windows") }}
 .gnupg
 {{ end }}
 
-{{ if or (not .personal_secrets) (ne .chezmoi.os "windows") }}
+{{ if or (not $secrets) (ne .chezmoi.os "windows") }}
 AppData
 {{ end }}
 
@@ -56,7 +62,7 @@ AppData
 {{/* The opencode config is encrypted and machine-local, so it needs both the
      unlocked secrets and the explicit opt-in. */}}
 {{- $hasOpenCode := or (stat (joinPath .chezmoi.homeDir ".opencode" "bin")) (lookPath "opencode") -}}
-{{- if or (not (get . "personal_keys")) (not $hasOpenCode) }}
+{{- if or (not $keys) (not $hasOpenCode) }}
 .config/opencode
 {{- end }}
 
@@ -80,7 +86,7 @@ AppData
 .pi
 {{- end }}
 
-{{- if not .personal_secrets }}
+{{- if not $secrets }}
 .pi/agent/models.json
 {{- end }}
 

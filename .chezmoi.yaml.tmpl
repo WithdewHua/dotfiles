@@ -35,23 +35,25 @@
 {{-   end -}}
 {{- end -}}
 
+{{/* What this machine manages: one question with three levels, so there is only one
+     switch to remember.
+       tools     - tool configs only (Neovim, Pi without providers, Git, GnuPG, Python); no GPG needed
+       providers - plus the GPG-encrypted Pi provider keys (~/.pi/agent/models.json)
+       all       - plus machine-local personal state: SSH keys, Claude, opencode
+     "all" overwrites what the machine already has, so a second machine stops at
+     "providers". personal_secrets/personal_keys below are derived, not asked. */}}
+{{- $profile := promptChoiceOnce . "profile" "This machine manages (tools / providers / all)" (list "tools" "providers" "all") "tools" -}}
+{{- $personal_secrets := ne $profile "tools" -}}
+{{- $personal_keys := eq $profile "all" -}}
+
 {{- $gpg_encrypt_key_id := "" -}}
 {{- $gpg_sign_key_id := "" -}}
-{{- $personal_secrets := promptBoolOnce . "personal_secrets" "Decrypt encrypted data" -}}
 {{- if $personal_secrets -}}
 {{-     if not $gpg_path -}}
 {{-         warnf "gpg was not found on PATH; the encrypted files will fail to decrypt. Install GnuPG (winget install --id GnuPG.GnuPG --exact) and re-run chezmoi init." -}}
 {{-     end -}}
 {{-     $gpg_encrypt_key_id = promptStringOnce . "gpg_encrypt_key_id" "GPG Key ID for encryption: " -}}
 {{-     $gpg_sign_key_id = promptStringOnce . "gpg_sign_key_id" "GPG Key ID for signing: " -}}
-{{- end -}}
-
-{{/* Machine-local personal state (SSH keys, Claude and opencode settings). A second
-     machine usually has its own, and applying these overwrites it, so they are
-     opt-in separately from the Pi provider keys inside personal_secrets. */}}
-{{- $personal_keys := false -}}
-{{- if $personal_secrets -}}
-{{-     $personal_keys = promptBoolOnce . "personal_keys" "Manage SSH/Claude/opencode settings (overwrites existing ones)" -}}
 {{- end -}}
 
 {{- $is_desktop := promptBoolOnce . "is_desktop" "Desktop?" -}}
@@ -70,6 +72,7 @@ data:
   config_python_format_tools: {{ $config_python_format_tools }}
   install_more_packages: {{ $install_more_packages }}
   is_desktop: {{ $is_desktop }}
+  profile: {{ $profile }}
   personal_secrets: {{ $personal_secrets }}
   personal_keys: {{ $personal_keys }}
   zsh_theme: {{ $zsh_theme }}
